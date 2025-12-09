@@ -669,7 +669,7 @@ bool _initialized = false;
 /// It's safe to call multiple times - subsequent calls are no-ops.
 ///
 /// Throws [VipsException] if initialization fails.
-void initVips([String appName = 'flutter_vips']) {
+void initVips([String appName = 'libvips_ffi']) {
   if (_initialized) return;
 
   final appNamePtr = appName.toNativeUtf8();

@@ -131,13 +131,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_vips:
-    dependency: "direct main"
-    description:
-      path: ".."
-      relative: true
-    source: path
-    version: "0.0.1"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -247,6 +240,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.1"
+  libvips_ffi:
+    dependency: "direct main"
+    description:
+      path: ".."
+      relative: true
+    source: path
+    version: "0.0.1"
   lints:
     dependency: transitive
     description:

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_vips/flutter_vips.dart';
+import 'package:libvips_ffi/libvips_ffi.dart';
 
 import 'pages/all_tests_page.dart';
 import 'pages/benchmark_page.dart';
@@ -163,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      'This example demonstrates the flutter_vips plugin, '
+                      'This example demonstrates the libvips_ffi plugin, '
                       'which provides FFI bindings for the libvips image processing library.\n\n'
                       '• Sync API: Direct calls, may block UI\n'
                       '• Async API: Runs in isolate, keeps UI responsive',

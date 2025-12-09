@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_vips/flutter_vips.dart';
+import 'package:libvips_ffi/libvips_ffi.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// Test result callback

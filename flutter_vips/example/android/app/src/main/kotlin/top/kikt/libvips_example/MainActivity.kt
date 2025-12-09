@@ -1,4 +1,4 @@
-package com.example.flutter_vips_example
+package top.kikt.libvips_example
 
 import io.flutter.embedding.android.FlutterActivity
 

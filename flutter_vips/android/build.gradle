@@ -1,6 +1,6 @@
 // Flutter FFI plugin for libvips - uses precompiled .so files
 
-group = "com.example.flutter_vips"
+group = "top.kikt.libvips_ffi"
 version = "1.0"
 
 buildscript {
@@ -25,7 +25,7 @@ apply plugin: "com.android.library"
 
 android {
     if (project.android.hasProperty("namespace")) {
-        namespace = "com.example.flutter_vips"
+        namespace = "top.kikt.libvips_ffi"
     }
 
     compileSdk = 34

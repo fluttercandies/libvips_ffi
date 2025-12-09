@@ -1,9 +1,9 @@
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint flutter_vips.podspec` to validate before publishing.
+# Run `pod lib lint libvips_ffi.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'flutter_vips'
+  s.name             = 'libvips_ffi'
   s.version          = '0.0.1'
   s.summary          = 'Flutter FFI bindings for libvips image processing library.'
   s.description      = <<-DESC

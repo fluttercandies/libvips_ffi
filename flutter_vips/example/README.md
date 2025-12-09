@@ -1,6 +1,6 @@
-# flutter_vips_example
+# libvips_ffi_example
 
-Demonstrates how to use the flutter_vips plugin.
+Demonstrates how to use the libvips_ffi plugin.
 
 ## Getting Started
 

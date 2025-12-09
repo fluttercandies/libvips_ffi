@@ -1,36 +1,23 @@
 /// Flutter FFI bindings for libvips image processing library.
 ///
-/// This library provides Dart bindings for libvips, a fast image processing
-/// library. It supports loading, manipulating, and saving images in various
-/// formats.
+/// This library provides Dart bindings for the libvips image processing
+/// library, allowing you to perform high-performance image operations
+/// in Flutter applications.
 ///
 /// ## Getting Started
 ///
+/// First, initialize the library:
+///
 /// ```dart
-/// import 'package:flutter_vips/flutter_vips.dart';
+/// import 'package:libvips_ffi/libvips_ffi.dart';
 ///
 /// void main() {
-///   // Initialize libvips (called automatically, but can be explicit)
 ///   initVips();
-///
-///   // Load an image
-///   final image = VipsImageWrapper.fromFile('/path/to/image.jpg');
-///
-///   // Get image info
-///   print('Size: ${image.width}x${image.height}');
-///   print('Bands: ${image.bands}');
-///
-///   // Save to a different format
-///   image.writeToFile('/path/to/output.png');
-///
-///   // Don't forget to dispose
-///   image.dispose();
-///
-///   // Shutdown when done (optional)
+///   // Your code here
 ///   shutdownVips();
 /// }
 /// ```
-library flutter_vips;
+library libvips_ffi;
 
 export 'src/vips_image.dart'
     show

@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_vips/flutter_vips.dart';
+import 'package:libvips_ffi/libvips_ffi.dart';
 import 'package:image_picker/image_picker.dart';
 
 void _log(String message) {

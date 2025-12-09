@@ -1,4 +1,4 @@
-# flutter_vips
+# libvips_ffi
 
 Flutter FFI bindings for [libvips](https://www.libvips.org/) - a fast image processing library.
 
@@ -9,6 +9,7 @@ Flutter FFI bindings for [libvips](https://www.libvips.org/) - a fast image proc
 - Simple, Dart-friendly API
 - Auto-generated FFI bindings using ffigen
 - Platform-specific library loading handled automatically
+- Async API using Dart Isolates to avoid UI blocking
 
 ## Installation
 
@@ -16,7 +17,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_vips:
+  libvips_ffi:
     git:
       url: https://github.com/CaiJingLong/libvips_ffi
       path: flutter_vips
@@ -54,7 +55,7 @@ Download from: <https://github.com/CaiJingLong/libvips_precompile_mobile/release
 ## Usage
 
 ```dart
-import 'package:flutter_vips/flutter_vips.dart';
+import 'package:libvips_ffi/libvips_ffi.dart';
 
 void main() {
   // Initialize libvips (called automatically on first use)
@@ -89,7 +90,7 @@ void main() {
 For advanced users who need direct access to libvips functions:
 
 ```dart
-import 'package:flutter_vips/flutter_vips.dart';
+import 'package:libvips_ffi/libvips_ffi.dart';
 
 // Access raw bindings
 final bindings = VipsBindings(vipsLibrary);

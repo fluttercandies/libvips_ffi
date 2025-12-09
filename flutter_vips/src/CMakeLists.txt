@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22.1)
 
-project("flutter_vips")
+project("libvips_ffi")
 
 # 设置预编译库路径
 set(VIPS_LIB_DIR ${CMAKE_SOURCE_DIR}/../android/src/main/jniLibs/${ANDROID_ABI})
@@ -22,7 +22,7 @@ set_target_properties(gio-2.0 PROPERTIES IMPORTED_LOCATION ${VIPS_LIB_DIR}/libgi
 # 创建一个空的 dummy 库来触发 libc++_shared.so 的链接
 # 这个库不包含任何代码，只是用来确保 c++_shared STL 被打包
 add_library(${CMAKE_PROJECT_NAME} SHARED
-    flutter_vips_dummy.cpp
+    libvips_ffi_dummy.cpp
 )
 
 # 链接库 - 这会触发 NDK 自动包含 libc++_shared.so

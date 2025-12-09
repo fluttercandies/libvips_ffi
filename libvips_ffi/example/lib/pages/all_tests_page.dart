@@ -109,52 +109,53 @@ class _AllTestsPageState extends State<AllTestsPage> {
     }
   }
 
+  // Use VipsCompute API for better performance (loads from file directly)
   Future<void> _testResize() async =>
-      _runSingleTestAsync('Resize', VipsTestOperationsAsync.resize);
+      _runSingleTestCompute('Resize', VipsTestOperationsCompute.resize);
 
   Future<void> _testThumbnail() async =>
-      _runSingleTestAsync('Thumbnail', VipsTestOperationsAsync.thumbnail);
+      _runSingleTestCompute('Thumbnail', VipsTestOperationsCompute.thumbnail);
 
   Future<void> _testRotate() async =>
-      _runSingleTestAsync('Rotate', VipsTestOperationsAsync.rotate);
+      _runSingleTestCompute('Rotate', VipsTestOperationsCompute.rotate);
 
   Future<void> _testCrop() async =>
-      _runSingleTestAsync('Crop', VipsTestOperationsAsync.crop);
+      _runSingleTestCompute('Crop', VipsTestOperationsCompute.crop);
 
   Future<void> _testFlipH() async =>
-      _runSingleTestAsync('Flip Horizontal', VipsTestOperationsAsync.flipH);
+      _runSingleTestCompute('Flip Horizontal', VipsTestOperationsCompute.flipH);
 
   Future<void> _testFlipV() async =>
-      _runSingleTestAsync('Flip Vertical', VipsTestOperationsAsync.flipV);
+      _runSingleTestCompute('Flip Vertical', VipsTestOperationsCompute.flipV);
 
   Future<void> _testBlur() async =>
-      _runSingleTestAsync('Gaussian Blur', VipsTestOperationsAsync.blur);
+      _runSingleTestCompute('Gaussian Blur', VipsTestOperationsCompute.blur);
 
   Future<void> _testSharpen() async =>
-      _runSingleTestAsync('Sharpen', VipsTestOperationsAsync.sharpen);
+      _runSingleTestCompute('Sharpen', VipsTestOperationsCompute.sharpen);
 
   Future<void> _testInvert() async =>
-      _runSingleTestAsync('Invert', VipsTestOperationsAsync.invert);
+      _runSingleTestCompute('Invert', VipsTestOperationsCompute.invert);
 
   Future<void> _testBrightness() async =>
-      _runSingleTestAsync(
-          'Brightness +20%', VipsTestOperationsAsync.brightness);
+      _runSingleTestCompute(
+          'Brightness +20%', VipsTestOperationsCompute.brightness);
 
   Future<void> _testContrast() async =>
-      _runSingleTestAsync('Contrast +30%', VipsTestOperationsAsync.contrast);
+      _runSingleTestCompute('Contrast +30%', VipsTestOperationsCompute.contrast);
 
   Future<void> _testAutoRotate() async =>
-      _runSingleTestAsync('Auto Rotate', VipsTestOperationsAsync.autoRotate);
+      _runSingleTestCompute('Auto Rotate', VipsTestOperationsCompute.autoRotate);
 
   Future<void> _testSmartCrop() async =>
-      _runSingleTestAsync('Smart Crop', VipsTestOperationsAsync.smartCrop);
+      _runSingleTestCompute('Smart Crop', VipsTestOperationsCompute.smartCrop);
 
   Future<void> _testGrayscale() async =>
-      _runSingleTestAsync('Grayscale', VipsTestOperationsAsync.grayscale);
+      _runSingleTestCompute('Grayscale', VipsTestOperationsCompute.grayscale);
 
-  Future<void> _runSingleTestAsync(
+  Future<void> _runSingleTestCompute(
     String name,
-    AsyncTestOperation operation,
+    ComputeTestOperation operation,
   ) async {
     if (_selectedImagePath == null || _isLoading) return;
 
@@ -164,7 +165,7 @@ class _AllTestsPageState extends State<AllTestsPage> {
     });
 
     try {
-      final (result, imageData) = await _testRunner.runSingleTestAsync(
+      final (result, imageData) = await _testRunner.runSingleTestCompute(
           _selectedImagePath!, name, operation);
       setState(() {
         _testResult = result;

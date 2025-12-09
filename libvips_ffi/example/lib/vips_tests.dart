@@ -10,8 +10,11 @@ typedef TestResultCallback = void Function(String result, Uint8List? imageData);
 /// Log callback
 typedef LogCallback = void Function(String message);
 
-/// Async test operation type
+/// Async test operation type (takes image data)
 typedef AsyncTestOperation = Future<VipsImageData> Function(Uint8List imageData);
+
+/// Compute test operation type (takes file path, more efficient)
+typedef ComputeTestOperation = Future<VipsComputeResult> Function(String filePath);
 
 /// Vips test runner using async API (runs in isolate)
 class VipsTestRunner {
@@ -173,6 +176,40 @@ class VipsTestRunner {
     return (resultText, result.data);
   }
 
+  /// Run a single test using VipsCompute (more efficient, loads from file directly)
+  Future<(String, Uint8List?)> runSingleTestCompute(
+    String imagePath,
+    String name,
+    ComputeTestOperation operation,
+  ) async {
+    _log('=== Running $name Test (Compute) ===');
+    _log('Image path: $imagePath');
+
+    final stopwatch = Stopwatch()..start();
+
+    _log('Checking if file exists...');
+    final file = File(imagePath);
+    final exists = await file.exists();
+    _log('File exists: $exists');
+    if (exists) {
+      final fileSize = await file.length();
+      _log('File size: $fileSize bytes');
+    }
+
+    _log('Executing $name operation...');
+    final result = await operation(imagePath);
+    _log('Operation result: ${result.width}x${result.height}');
+
+    stopwatch.stop();
+    _log('$name completed in ${stopwatch.elapsedMilliseconds}ms');
+
+    final resultText = '✓ $name completed in ${stopwatch.elapsedMilliseconds}ms\n'
+        '  Output: ${result.width}x${result.height}\n'
+        '  Size: ${(result.data.length / 1024).toStringAsFixed(1)} KB';
+
+    return (resultText, result.data);
+  }
+
   /// Run a single test (sync version for backward compatibility)
   Future<(String, Uint8List?)> runSingleTest(
     String imagePath,
@@ -295,4 +332,44 @@ class VipsTestOperationsAsync {
 
   static Future<VipsImageData> grayscale(Uint8List data) =>
       VipsImageAsync.colourspace(data, VipsInterpretation.bw);
+}
+
+/// Predefined compute test operations (more efficient, loads from file directly)
+class VipsTestOperationsCompute {
+  static Future<VipsComputeResult> resize(String path) =>
+      VipsCompute.resizeFile(path, 0.5);
+  static Future<VipsComputeResult> thumbnail(String path) =>
+      VipsCompute.thumbnailFile(path, 200);
+  static Future<VipsComputeResult> rotate(String path) =>
+      VipsCompute.rotateFile(path, 90);
+  static Future<VipsComputeResult> flipH(String path) =>
+      VipsCompute.flipFile(path, VipsDirection.horizontal);
+  static Future<VipsComputeResult> flipV(String path) =>
+      VipsCompute.flipFile(path, VipsDirection.vertical);
+  static Future<VipsComputeResult> blur(String path) =>
+      VipsCompute.blurFile(path, 5.0);
+  static Future<VipsComputeResult> sharpen(String path) =>
+      VipsCompute.sharpenFile(path);
+  static Future<VipsComputeResult> invert(String path) =>
+      VipsCompute.invertFile(path);
+  static Future<VipsComputeResult> brightness(String path) =>
+      VipsCompute.brightnessFile(path, 1.2);
+  static Future<VipsComputeResult> contrast(String path) =>
+      VipsCompute.contrastFile(path, 1.3);
+  static Future<VipsComputeResult> autoRotate(String path) =>
+      VipsCompute.autoRotateFile(path);
+  // Note: crop, smartCrop, grayscale need additional methods in VipsCompute
+  // or can use processFile with custom operation
+  static Future<VipsComputeResult> crop(String path) =>
+      VipsCompute.processFile(path, (img) {
+        final size = img.width < img.height ? img.width : img.height;
+        return img.crop(0, 0, size ~/ 2, size ~/ 2);
+      });
+  static Future<VipsComputeResult> smartCrop(String path) =>
+      VipsCompute.processFile(path, (img) {
+        final size = img.width < img.height ? img.width ~/ 2 : img.height ~/ 2;
+        return img.smartCrop(size, size);
+      });
+  static Future<VipsComputeResult> grayscale(String path) =>
+      VipsCompute.processFile(path, (img) => img.colourspace(VipsInterpretation.bw));
 }

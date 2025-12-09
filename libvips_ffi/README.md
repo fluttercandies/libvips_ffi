@@ -20,7 +20,7 @@ dependencies:
   libvips_ffi:
     git:
       url: https://github.com/CaiJingLong/libvips_ffi
-      path: flutter_vips
+      path: libvips_ffi
 ```
 
 ### Platform Setup

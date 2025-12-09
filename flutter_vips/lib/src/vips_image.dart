@@ -9,6 +9,268 @@ import 'vips_library.dart';
 /// Global libvips bindings instance.
 final VipsBindings _bindings = VipsBindings(vipsLibrary);
 
+// Custom function types for variadic functions that need NULL termination
+typedef _VipsImageNewFromFileNative = ffi.Pointer<VipsImage> Function(
+  ffi.Pointer<ffi.Char> name,
+  ffi.Pointer<ffi.Void> terminator, // NULL terminator
+);
+typedef _VipsImageNewFromFileDart = ffi.Pointer<VipsImage> Function(
+  ffi.Pointer<ffi.Char> name,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef _VipsImageWriteToFileNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> image,
+  ffi.Pointer<ffi.Char> name,
+  ffi.Pointer<ffi.Void> terminator, // NULL terminator
+);
+typedef _VipsImageWriteToFileDart = int Function(
+  ffi.Pointer<VipsImage> image,
+  ffi.Pointer<ffi.Char> name,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef _VipsImageWriteToBufferNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> image,
+  ffi.Pointer<ffi.Char> suffix,
+  ffi.Pointer<ffi.Pointer<ffi.Void>> buf,
+  ffi.Pointer<ffi.Size> size,
+  ffi.Pointer<ffi.Void> terminator, // NULL terminator
+);
+typedef _VipsImageWriteToBufferDart = int Function(
+  ffi.Pointer<VipsImage> image,
+  ffi.Pointer<ffi.Char> suffix,
+  ffi.Pointer<ffi.Pointer<ffi.Void>> buf,
+  ffi.Pointer<ffi.Size> size,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef _VipsImageNewFromBufferNative = ffi.Pointer<VipsImage> Function(
+  ffi.Pointer<ffi.Void> buf,
+  ffi.Size len,
+  ffi.Pointer<ffi.Char> option_string,
+  ffi.Pointer<ffi.Void> terminator, // NULL terminator
+);
+typedef _VipsImageNewFromBufferDart = ffi.Pointer<VipsImage> Function(
+  ffi.Pointer<ffi.Void> buf,
+  int len,
+  ffi.Pointer<ffi.Char> option_string,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef _VipsResizeNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in1,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Double scale,
+  ffi.Pointer<ffi.Void> terminator,
+);
+typedef _VipsResizeDart = int Function(
+  ffi.Pointer<VipsImage> in1,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  double scale,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef _VipsRotateNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in1,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Double angle,
+  ffi.Pointer<ffi.Void> terminator,
+);
+typedef _VipsRotateDart = int Function(
+  ffi.Pointer<VipsImage> in1,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  double angle,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef _VipsCropNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in1,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Int left,
+  ffi.Int top,
+  ffi.Int width,
+  ffi.Int height,
+  ffi.Pointer<ffi.Void> terminator,
+);
+typedef _VipsCropDart = int Function(
+  ffi.Pointer<VipsImage> in1,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  int left,
+  int top,
+  int width,
+  int height,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef _VipsThumbnailImageNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in1,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Int width,
+  ffi.Pointer<ffi.Void> terminator,
+);
+typedef _VipsThumbnailImageDart = int Function(
+  ffi.Pointer<VipsImage> in1,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  int width,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef _VipsThumbnailNative = ffi.Int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Int width,
+  ffi.Pointer<ffi.Void> terminator,
+);
+typedef _VipsThumbnailDart = int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  int width,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef _VipsThumbnailBufferNative = ffi.Int Function(
+  ffi.Pointer<ffi.Void> buf,
+  ffi.Size len,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Int width,
+  ffi.Pointer<ffi.Void> terminator,
+);
+typedef _VipsThumbnailBufferDart = int Function(
+  ffi.Pointer<ffi.Void> buf,
+  int len,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  int width,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+/// Custom bindings for variadic functions that need NULL termination
+class _VipsVariadicBindings {
+  final ffi.DynamicLibrary _lib;
+  
+  _VipsVariadicBindings(this._lib);
+  
+  late final _vipsImageNewFromFile = _lib
+      .lookup<ffi.NativeFunction<_VipsImageNewFromFileNative>>('vips_image_new_from_file')
+      .asFunction<_VipsImageNewFromFileDart>();
+  
+  late final _vipsImageWriteToFile = _lib
+      .lookup<ffi.NativeFunction<_VipsImageWriteToFileNative>>('vips_image_write_to_file')
+      .asFunction<_VipsImageWriteToFileDart>();
+  
+  late final _vipsImageWriteToBuffer = _lib
+      .lookup<ffi.NativeFunction<_VipsImageWriteToBufferNative>>('vips_image_write_to_buffer')
+      .asFunction<_VipsImageWriteToBufferDart>();
+  
+  late final _vipsImageNewFromBuffer = _lib
+      .lookup<ffi.NativeFunction<_VipsImageNewFromBufferNative>>('vips_image_new_from_buffer')
+      .asFunction<_VipsImageNewFromBufferDart>();
+  
+  late final _vipsResize = _lib
+      .lookup<ffi.NativeFunction<_VipsResizeNative>>('vips_resize')
+      .asFunction<_VipsResizeDart>();
+  
+  late final _vipsRotate = _lib
+      .lookup<ffi.NativeFunction<_VipsRotateNative>>('vips_rotate')
+      .asFunction<_VipsRotateDart>();
+  
+  late final _vipsCrop = _lib
+      .lookup<ffi.NativeFunction<_VipsCropNative>>('vips_crop')
+      .asFunction<_VipsCropDart>();
+  
+  late final _vipsThumbnailImage = _lib
+      .lookup<ffi.NativeFunction<_VipsThumbnailImageNative>>('vips_thumbnail_image')
+      .asFunction<_VipsThumbnailImageDart>();
+  
+  late final _vipsThumbnail = _lib
+      .lookup<ffi.NativeFunction<_VipsThumbnailNative>>('vips_thumbnail')
+      .asFunction<_VipsThumbnailDart>();
+  
+  late final _vipsThumbnailBuffer = _lib
+      .lookup<ffi.NativeFunction<_VipsThumbnailBufferNative>>('vips_thumbnail_buffer')
+      .asFunction<_VipsThumbnailBufferDart>();
+  
+  ffi.Pointer<VipsImage> imageNewFromFile(ffi.Pointer<ffi.Char> name) {
+    return _vipsImageNewFromFile(name, ffi.nullptr);
+  }
+  
+  int imageWriteToFile(ffi.Pointer<VipsImage> image, ffi.Pointer<ffi.Char> name) {
+    return _vipsImageWriteToFile(image, name, ffi.nullptr);
+  }
+  
+  int imageWriteToBuffer(
+    ffi.Pointer<VipsImage> image,
+    ffi.Pointer<ffi.Char> suffix,
+    ffi.Pointer<ffi.Pointer<ffi.Void>> buf,
+    ffi.Pointer<ffi.Size> size,
+  ) {
+    return _vipsImageWriteToBuffer(image, suffix, buf, size, ffi.nullptr);
+  }
+  
+  ffi.Pointer<VipsImage> imageNewFromBuffer(
+    ffi.Pointer<ffi.Void> buf,
+    int len,
+    ffi.Pointer<ffi.Char> optionString,
+  ) {
+    return _vipsImageNewFromBuffer(buf, len, optionString, ffi.nullptr);
+  }
+  
+  int resize(
+    ffi.Pointer<VipsImage> in1,
+    ffi.Pointer<ffi.Pointer<VipsImage>> out,
+    double scale,
+  ) {
+    return _vipsResize(in1, out, scale, ffi.nullptr);
+  }
+  
+  int rotate(
+    ffi.Pointer<VipsImage> in1,
+    ffi.Pointer<ffi.Pointer<VipsImage>> out,
+    double angle,
+  ) {
+    return _vipsRotate(in1, out, angle, ffi.nullptr);
+  }
+  
+  int crop(
+    ffi.Pointer<VipsImage> in1,
+    ffi.Pointer<ffi.Pointer<VipsImage>> out,
+    int left,
+    int top,
+    int width,
+    int height,
+  ) {
+    return _vipsCrop(in1, out, left, top, width, height, ffi.nullptr);
+  }
+  
+  int thumbnailImage(
+    ffi.Pointer<VipsImage> in1,
+    ffi.Pointer<ffi.Pointer<VipsImage>> out,
+    int width,
+  ) {
+    return _vipsThumbnailImage(in1, out, width, ffi.nullptr);
+  }
+  
+  int thumbnail(
+    ffi.Pointer<ffi.Char> filename,
+    ffi.Pointer<ffi.Pointer<VipsImage>> out,
+    int width,
+  ) {
+    return _vipsThumbnail(filename, out, width, ffi.nullptr);
+  }
+  
+  int thumbnailBuffer(
+    ffi.Pointer<ffi.Void> buf,
+    int len,
+    ffi.Pointer<ffi.Pointer<VipsImage>> out,
+    int width,
+  ) {
+    return _vipsThumbnailBuffer(buf, len, out, width, ffi.nullptr);
+  }
+}
+
+/// Custom variadic bindings instance
+final _VipsVariadicBindings _variadicBindings = _VipsVariadicBindings(vipsLibrary);
+
 /// Whether libvips has been initialized.
 bool _initialized = false;
 
@@ -46,7 +308,30 @@ void shutdownVips() {
 String? getVipsError() {
   final errorPtr = _bindings.vips_error_buffer();
   if (errorPtr == ffi.nullptr) return null;
-  return errorPtr.cast<Utf8>().toDartString();
+  
+  try {
+    // Try to decode as UTF-8, but handle potential encoding issues
+    return errorPtr.cast<Utf8>().toDartString();
+  } catch (e) {
+    // If UTF-8 decoding fails, try to read as raw bytes and convert
+    // This can happen if the error message contains non-UTF-8 characters
+    try {
+      // Read bytes until null terminator
+      final bytes = <int>[];
+      var i = 0;
+      while (true) {
+        final byte = errorPtr.cast<ffi.Uint8>()[i];
+        if (byte == 0) break;
+        bytes.add(byte);
+        i++;
+        if (i > 4096) break; // Safety limit
+      }
+      // Replace invalid UTF-8 sequences
+      return String.fromCharCodes(bytes.where((b) => b < 128));
+    } catch (_) {
+      return 'Error reading vips error buffer';
+    }
+  }
 }
 
 /// Clear the libvips error buffer.
@@ -115,11 +400,14 @@ class VipsImageWrapper {
 
     final filenamePtr = filename.toNativeUtf8();
     try {
-      final imagePtr = _bindings.vips_image_new_from_file(filenamePtr.cast());
+      // Use custom binding with NULL terminator for variadic function
+      final imagePtr = _variadicBindings.imageNewFromFile(filenamePtr.cast());
 
       if (imagePtr == ffi.nullptr) {
+        final error = getVipsError();
+        clearVipsError();
         throw VipsException(
-          'Failed to load image: $filename. ${getVipsError() ?? "Unknown error"}',
+          'Failed to load image: $filename. ${error ?? "Unknown error"}',
         );
       }
 
@@ -151,7 +439,8 @@ class VipsImageWrapper {
         dataPtr[i] = data[i];
       }
 
-      final imagePtr = _bindings.vips_image_new_from_buffer(
+      // Use custom binding with NULL terminator for variadic function
+      final imagePtr = _variadicBindings.imageNewFromBuffer(
         dataPtr.cast(),
         data.length,
         optionPtr.cast(),
@@ -199,7 +488,8 @@ class VipsImageWrapper {
 
     final filenamePtr = filename.toNativeUtf8();
     try {
-      final result = _bindings.vips_image_write_to_file(_pointer, filenamePtr.cast());
+      // Use custom binding with NULL terminator for variadic function
+      final result = _variadicBindings.imageWriteToFile(_pointer, filenamePtr.cast());
 
       if (result != 0) {
         throw VipsException(
@@ -226,7 +516,8 @@ class VipsImageWrapper {
     final sizePtr = calloc<ffi.Size>();
 
     try {
-      final result = _bindings.vips_image_write_to_buffer(
+      // Use custom binding with NULL terminator for variadic function
+      final result = _variadicBindings.imageWriteToBuffer(
         _pointer,
         suffixPtr.cast(),
         bufPtr,
@@ -272,7 +563,8 @@ class VipsImageWrapper {
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = _bindings.vips_resize(_pointer, outPtr, scale);
+      // Use custom binding with NULL terminator for variadic function
+      final result = _variadicBindings.resize(_pointer, outPtr, scale);
 
       if (result != 0) {
         throw VipsException(
@@ -298,7 +590,8 @@ class VipsImageWrapper {
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = _bindings.vips_rotate(_pointer, outPtr, angle);
+      // Use custom binding with NULL terminator for variadic function
+      final result = _variadicBindings.rotate(_pointer, outPtr, angle);
 
       if (result != 0) {
         throw VipsException(
@@ -325,7 +618,8 @@ class VipsImageWrapper {
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = _bindings.vips_crop(_pointer, outPtr, left, top, width, height);
+      // Use custom binding with NULL terminator for variadic function
+      final result = _variadicBindings.crop(_pointer, outPtr, left, top, width, height);
 
       if (result != 0) {
         throw VipsException(
@@ -355,7 +649,8 @@ class VipsImageWrapper {
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = _bindings.vips_thumbnail_image(_pointer, outPtr, targetWidth);
+      // Use custom binding with NULL terminator for variadic function
+      final result = _variadicBindings.thumbnailImage(_pointer, outPtr, targetWidth);
 
       if (result != 0) {
         throw VipsException(
@@ -389,7 +684,8 @@ class VipsImageWrapper {
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
 
     try {
-      final result = _bindings.vips_thumbnail(filenamePtr.cast(), outPtr, targetWidth);
+      // Use custom binding with NULL terminator for variadic function
+      final result = _variadicBindings.thumbnail(filenamePtr.cast(), outPtr, targetWidth);
 
       if (result != 0) {
         throw VipsException(
@@ -427,7 +723,8 @@ class VipsImageWrapper {
         dataPtr[i] = data[i];
       }
 
-      final result = _bindings.vips_thumbnail_buffer(
+      // Use custom binding with NULL terminator for variadic function
+      final result = _variadicBindings.thumbnailBuffer(
         dataPtr.cast(),
         data.length,
         outPtr,

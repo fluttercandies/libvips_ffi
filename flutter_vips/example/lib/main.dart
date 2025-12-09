@@ -1,10 +1,16 @@
+import 'dart:developer' as developer;
 import 'dart:io';
-import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vips/flutter_vips.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+
+void _log(String message) {
+  debugPrint('[FlutterVips] $message');
+  developer.log(message, name: 'FlutterVips');
+}
 
 void main() {
   runApp(const MyApp());
@@ -34,13 +40,30 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _initVips() async {
+    _log('Initializing libvips...');
+    _log('Platform: ${Platform.operatingSystem}');
     try {
+      _log('Loading vips library...');
+      // This will trigger library loading
       initVips();
+      _log('vips_init() called successfully');
+      
+      final major = vipsVersion(0);
+      final minor = vipsVersion(1);
+      final micro = vipsVersion(2);
+      final version = '$major.$minor.$micro';
+      _log('libvips version: $version');
+      _log('Library current: ${vipsVersion(3)}');
+      _log('Library revision: ${vipsVersion(4)}');
+      _log('Library age: ${vipsVersion(5)}');
+      
       setState(() {
-        _vipsVersion = vipsVersionString;
+        _vipsVersion = version;
         _status = 'libvips initialized successfully ✓';
       });
-    } catch (e) {
+    } catch (e, stack) {
+      _log('Failed to initialize libvips: $e');
+      _log('Stack trace: $stack');
       setState(() {
         _vipsVersion = 'Error';
         _status = 'Failed to initialize: $e';
@@ -49,18 +72,25 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _pickImage() async {
+    _log('Opening image picker...');
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
+      _log('Image selected: ${image.path}');
       setState(() {
         _selectedImagePath = image.path;
         _testResult = null;
         _processedImageData = null;
       });
+    } else {
+      _log('No image selected');
     }
   }
 
   Future<void> _runAllTests() async {
     if (_selectedImagePath == null || _isLoading) return;
+
+    _log('=== Running All Tests ===');
+    _log('Image path: $_selectedImagePath');
 
     setState(() {
       _isLoading = true;
@@ -73,49 +103,67 @@ class _MyAppState extends State<MyApp> {
       final stopwatch = Stopwatch()..start();
 
       // Load the image
+      _log('Loading image...');
       final image = VipsImageWrapper.fromFile(_selectedImagePath!);
+      _log('Image loaded: ${image.width}x${image.height}, ${image.bands} bands');
       result.writeln('✓ Image loaded: ${image.width}x${image.height}, ${image.bands} bands');
 
       // Test resize
+      _log('Testing resize...');
       final resized = image.resize(0.5);
+      _log('Resize result: ${resized.width}x${resized.height}');
       result.writeln('✓ Resize (0.5x): ${resized.width}x${resized.height}');
       resized.dispose();
 
       // Test thumbnail
+      _log('Testing thumbnail...');
       final thumb = image.thumbnail(200);
+      _log('Thumbnail result: ${thumb.width}x${thumb.height}');
       result.writeln('✓ Thumbnail (200px): ${thumb.width}x${thumb.height}');
 
       // Test rotate
+      _log('Testing rotate...');
       final rotated = image.rotate(45);
+      _log('Rotate result: ${rotated.width}x${rotated.height}');
       result.writeln('✓ Rotate (45°): ${rotated.width}x${rotated.height}');
       rotated.dispose();
 
       // Test crop (if image is large enough)
       if (image.width >= 100 && image.height >= 100) {
+        _log('Testing crop...');
         final cropped = image.crop(0, 0, 100, 100);
+        _log('Crop result: ${cropped.width}x${cropped.height}');
         result.writeln('✓ Crop (100x100): ${cropped.width}x${cropped.height}');
         cropped.dispose();
       }
 
       // Test write to buffer (JPEG)
+      _log('Testing writeToBuffer (JPEG)...');
       final jpegData = image.writeToBuffer('.jpg');
+      _log('JPEG buffer size: ${jpegData.length} bytes');
       result.writeln('✓ Write to JPEG: ${(jpegData.length / 1024).toStringAsFixed(1)} KB');
 
       // Test write to buffer (PNG)
+      _log('Testing writeToBuffer (PNG)...');
       final pngData = thumb.writeToBuffer('.png');
+      _log('PNG buffer size: ${pngData.length} bytes');
       result.writeln('✓ Write to PNG: ${(pngData.length / 1024).toStringAsFixed(1)} KB');
 
       // Test write to file
+      _log('Testing writeToFile...');
       final tempDir = await getTemporaryDirectory();
       final outputPath = '${tempDir.path}/vips_output.jpg';
+      _log('Output path: $outputPath');
       image.writeToFile(outputPath);
       final outputFile = File(outputPath);
       if (await outputFile.exists()) {
         final size = await outputFile.length();
+        _log('File written: $size bytes');
         result.writeln('✓ Write to file: ${(size / 1024).toStringAsFixed(1)} KB');
       }
 
       stopwatch.stop();
+      _log('All tests completed in ${stopwatch.elapsedMilliseconds}ms');
       result.writeln('\n✓ All tests passed in ${stopwatch.elapsedMilliseconds}ms!');
 
       // Keep thumbnail data for display
@@ -125,11 +173,14 @@ class _MyAppState extends State<MyApp> {
 
       thumb.dispose();
       image.dispose();
+      _log('Resources disposed');
 
       setState(() {
         _testResult = result.toString();
       });
     } catch (e, stack) {
+      _log('ERROR: $e');
+      _log('Stack trace: $stack');
       setState(() {
         _testResult = '✗ Test failed: $e\n\n$stack';
       });
@@ -165,6 +216,9 @@ class _MyAppState extends State<MyApp> {
   ) async {
     if (_selectedImagePath == null || _isLoading) return;
 
+    _log('=== Running $name Test ===');
+    _log('Image path: $_selectedImagePath');
+
     setState(() {
       _isLoading = true;
       _testResult = 'Running $name...';
@@ -173,11 +227,28 @@ class _MyAppState extends State<MyApp> {
     try {
       final stopwatch = Stopwatch()..start();
 
+      _log('Loading image...');
+      _log('Checking if file exists...');
+      final file = File(_selectedImagePath!);
+      final exists = await file.exists();
+      _log('File exists: $exists');
+      if (exists) {
+        final fileSize = await file.length();
+        _log('File size: $fileSize bytes');
+      }
       final image = VipsImageWrapper.fromFile(_selectedImagePath!);
+      _log('Image loaded: ${image.width}x${image.height}');
+
+      _log('Executing $name operation...');
       final result = operation(image);
+      _log('Operation result: ${result.width}x${result.height}');
+
+      _log('Writing to PNG buffer...');
       final pngData = result.writeToBuffer('.png');
+      _log('PNG buffer size: ${pngData.length} bytes');
 
       stopwatch.stop();
+      _log('$name completed in ${stopwatch.elapsedMilliseconds}ms');
 
       setState(() {
         _testResult = '✓ $name completed in ${stopwatch.elapsedMilliseconds}ms\n'
@@ -189,7 +260,10 @@ class _MyAppState extends State<MyApp> {
 
       result.dispose();
       image.dispose();
-    } catch (e) {
+      _log('Resources disposed');
+    } catch (e, stack) {
+      _log('ERROR in $name: $e');
+      _log('Stack trace: $stack');
       setState(() {
         _testResult = '✗ $name failed: $e';
       });

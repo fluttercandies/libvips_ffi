@@ -155,10 +155,9 @@ class VipsImageWrapper extends VipsImageBase
     final optionPtr = optionString.toNativeUtf8();
 
     try {
-      // Copy data to native memory
-      for (var i = 0; i < data.length; i++) {
-        dataPtr[i] = data[i];
-      }
+      // Copy data to native memory using batch copy (much faster than byte-by-byte)
+      // 使用批量拷贝将数据复制到原生内存（比逐字节拷贝快得多）
+      dataPtr.asTypedList(data.length).setAll(0, data);
 
       final imagePtr = variadicBindings.imageNewFromBuffer(
         dataPtr.cast(),
@@ -283,10 +282,9 @@ class VipsImageWrapper extends VipsImageBase
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
 
     try {
-      // Copy data to native memory
-      for (var i = 0; i < data.length; i++) {
-        dataPtr[i] = data[i];
-      }
+      // Copy data to native memory using batch copy (much faster than byte-by-byte)
+      // 使用批量拷贝将数据复制到原生内存（比逐字节拷贝快得多）
+      dataPtr.asTypedList(data.length).setAll(0, data);
 
       final result = variadicBindings.thumbnailBuffer(
         dataPtr.cast(),

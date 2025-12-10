@@ -78,12 +78,10 @@ mixin VipsIOMixin on VipsImageBase, VipsBindingsAccess {
       }
 
       final size = sizePtr.value;
-      final data = Uint8List(size);
       final dataPtr = bufPtr.value.cast<ffi.Uint8>();
-
-      for (var i = 0; i < size; i++) {
-        data[i] = dataPtr[i];
-      }
+      // Use batch copy from native memory (much faster than byte-by-byte)
+      // 使用批量拷贝从原生内存复制（比逐字节拷贝快得多）
+      final data = Uint8List.fromList(dataPtr.asTypedList(size));
 
       // Free the buffer allocated by vips
       stdBindings.g_free(bufPtr.value);

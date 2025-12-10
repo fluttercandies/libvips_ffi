@@ -38,7 +38,9 @@ dependencies:
       path: libvips_ffi
 ```
 
-## Usage
+## Quick Start
+
+### Basic Usage (Sync API)
 
 ```dart
 import 'package:libvips_ffi/libvips_ffi.dart';
@@ -52,22 +54,124 @@ void main() {
 
   // Load an image
   final image = VipsImageWrapper.fromFile('/path/to/image.jpg');
-
-  // Get image info
   print('Size: ${image.width}x${image.height}');
-  print('Bands: ${image.bands}');
 
-  // Save to a different format
-  image.writeToFile('/path/to/output.png');
+  // Process image
+  final resized = image.resize(0.5);  // 50% size
+  final blurred = resized.gaussianBlur(3.0);
 
-  // Or get as bytes
-  final pngBytes = image.writeToBuffer('.png');
+  // Save result
+  blurred.writeToFile('/path/to/output.jpg');
 
-  // Don't forget to dispose
+  // Always dispose when done (in reverse order)
+  blurred.dispose();
+  resized.dispose();
   image.dispose();
 
-  // Shutdown when done (optional)
   shutdownVips();
+}
+```
+
+### Flutter Usage (Async API - Recommended)
+
+**Important:** Use the async API in Flutter to avoid blocking the UI thread.
+
+```dart
+import 'package:libvips_ffi/libvips_ffi.dart';
+
+// Simple one-off operations using VipsCompute
+Future<void> processImage() async {
+  // Resize image (runs in isolate, doesn't block UI)
+  final result = await VipsCompute.resizeFile('input.jpg', 0.5);
+  
+  // result.data contains the processed image bytes
+  // result.width, result.height contain dimensions
+  
+  // Display in Flutter
+  Image.memory(result.data);
+}
+
+// More operations
+Future<void> moreExamples() async {
+  // Thumbnail (most efficient for previews)
+  final thumb = await VipsCompute.thumbnailFile('input.jpg', 200);
+  
+  // Rotate
+  final rotated = await VipsCompute.rotateFile('input.jpg', 90);
+  
+  // Blur
+  final blurred = await VipsCompute.blurFile('input.jpg', 5.0);
+  
+  // Custom operation chain
+  final custom = await VipsCompute.processFile('input.jpg', (img) {
+    final step1 = img.resize(0.5);
+    final step2 = step1.gaussianBlur(2.0);
+    step1.dispose();  // Clean up intermediate
+    return step2;
+  });
+}
+```
+
+### Common Operations
+
+```dart
+// Resize by scale factor
+final resized = image.resize(0.5);  // 50% of original
+
+// Create thumbnail (maintains aspect ratio)
+final thumb = image.thumbnail(200);  // 200px width
+
+// Rotate by angle
+final rotated = image.rotate(90);  // 90 degrees
+
+// Crop region
+final cropped = image.crop(100, 100, 200, 200);  // left, top, width, height
+
+// Flip
+final flippedH = image.flip(VipsDirection.horizontal);
+final flippedV = image.flip(VipsDirection.vertical);
+
+// Blur
+final blurred = image.gaussianBlur(5.0);  // sigma value
+
+// Sharpen
+final sharpened = image.sharpen();
+
+// Adjust brightness (1.0 = no change, >1 = brighter)
+final brighter = image.brightness(1.3);
+
+// Adjust contrast
+final highContrast = image.contrast(1.5);
+
+// Convert to grayscale
+final gray = image.colourspace(VipsInterpretation.bw);
+
+// Smart crop (focus on interesting area)
+final smartCropped = image.smartCrop(300, 300);
+
+// Auto-rotate based on EXIF
+final autoRotated = image.autoRotate();
+```
+
+### Memory Management
+
+```dart
+// Always dispose images when done
+final image = VipsImageWrapper.fromFile('input.jpg');
+try {
+  final result = image.resize(0.5);
+  try {
+    result.writeToFile('output.jpg');
+  } finally {
+    result.dispose();
+  }
+} finally {
+  image.dispose();
+}
+
+// Check for memory leaks (development only)
+if (VipsPointerManager.instance.hasLeaks) {
+  print(VipsPointerManager.instance.getLeakReport());
 }
 ```
 

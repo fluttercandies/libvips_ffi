@@ -38,7 +38,9 @@ dependencies:
       path: libvips_ffi
 ```
 
-## 使用示例
+## 快速开始
+
+### 基础用法（同步 API）
 
 ```dart
 import 'package:libvips_ffi/libvips_ffi.dart';
@@ -52,22 +54,124 @@ void main() {
 
   // 加载图片
   final image = VipsImageWrapper.fromFile('/path/to/image.jpg');
+  print('尺寸: ${image.width}x${image.height}');
 
-  // 获取图片信息
-  print('Size: ${image.width}x${image.height}');
-  print('Bands: ${image.bands}');
+  // 处理图片
+  final resized = image.resize(0.5);  // 缩小到 50%
+  final blurred = resized.gaussianBlur(3.0);
 
-  // 保存为其他格式
-  image.writeToFile('/path/to/output.png');
+  // 保存结果
+  blurred.writeToFile('/path/to/output.jpg');
 
-  // 或导出为字节数据
-  final pngBytes = image.writeToBuffer('.png');
-
-  // 使用完记得释放资源
+  // 使用完记得释放资源（按逆序释放）
+  blurred.dispose();
+  resized.dispose();
   image.dispose();
 
-  // 全部处理完成后（可选）关闭 libvips
   shutdownVips();
+}
+```
+
+### Flutter 用法（异步 API - 推荐）
+
+**重要：** 在 Flutter 中请使用异步 API，避免阻塞 UI 线程。
+
+```dart
+import 'package:libvips_ffi/libvips_ffi.dart';
+
+// 使用 VipsCompute 进行简单的一次性操作
+Future<void> processImage() async {
+  // 调整图片大小（在 isolate 中运行，不阻塞 UI）
+  final result = await VipsCompute.resizeFile('input.jpg', 0.5);
+  
+  // result.data 包含处理后的图片字节数据
+  // result.width, result.height 包含尺寸信息
+  
+  // 在 Flutter 中显示
+  Image.memory(result.data);
+}
+
+// 更多操作示例
+Future<void> moreExamples() async {
+  // 缩略图（预览图最高效的方式）
+  final thumb = await VipsCompute.thumbnailFile('input.jpg', 200);
+  
+  // 旋转
+  final rotated = await VipsCompute.rotateFile('input.jpg', 90);
+  
+  // 模糊
+  final blurred = await VipsCompute.blurFile('input.jpg', 5.0);
+  
+  // 自定义操作链
+  final custom = await VipsCompute.processFile('input.jpg', (img) {
+    final step1 = img.resize(0.5);
+    final step2 = step1.gaussianBlur(2.0);
+    step1.dispose();  // 清理中间结果
+    return step2;
+  });
+}
+```
+
+### 常用操作
+
+```dart
+// 按比例缩放
+final resized = image.resize(0.5);  // 原图的 50%
+
+// 创建缩略图（保持宽高比）
+final thumb = image.thumbnail(200);  // 宽度 200px
+
+// 按角度旋转
+final rotated = image.rotate(90);  // 90 度
+
+// 裁剪区域
+final cropped = image.crop(100, 100, 200, 200);  // left, top, width, height
+
+// 翻转
+final flippedH = image.flip(VipsDirection.horizontal);  // 水平翻转
+final flippedV = image.flip(VipsDirection.vertical);    // 垂直翻转
+
+// 模糊
+final blurred = image.gaussianBlur(5.0);  // sigma 值
+
+// 锐化
+final sharpened = image.sharpen();
+
+// 调整亮度（1.0 = 不变，>1 = 更亮）
+final brighter = image.brightness(1.3);
+
+// 调整对比度
+final highContrast = image.contrast(1.5);
+
+// 转换为灰度
+final gray = image.colourspace(VipsInterpretation.bw);
+
+// 智能裁剪（聚焦于有趣的区域）
+final smartCropped = image.smartCrop(300, 300);
+
+// 根据 EXIF 自动旋转
+final autoRotated = image.autoRotate();
+```
+
+### 内存管理
+
+```dart
+// 使用完图片后务必释放
+final image = VipsImageWrapper.fromFile('input.jpg');
+try {
+  final result = image.resize(0.5);
+  try {
+    result.writeToFile('output.jpg');
+  } finally {
+    result.dispose();
+  }
+} finally {
+  image.dispose();
+}
+
+// 检查内存泄漏（仅开发阶段使用）
+if (VipsPointerManager.instance.hasLeaks) {
+  print(VipsPointerManager.instance.getLeakReport());
 }
 ```
 

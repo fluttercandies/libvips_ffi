@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:libvips_ffi/libvips_ffi.dart';
 
-import 'pages/all_tests_page.dart';
-import 'pages/benchmark_page.dart';
-import 'pages/memory_diagnostics_page.dart';
+import 'pages/developer_tools_page.dart';
+import 'pages/examples_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -111,43 +110,33 @@ class _HomePageState extends State<HomePage> {
 
             // Navigation Buttons
             Text(
-              'Select a test mode:',
+              'Get Started / 开始使用',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
 
             _buildNavButton(
               context,
-              title: 'All Tests',
-              subtitle: 'Test all image operations with async API',
-              icon: Icons.science,
+              title: 'Examples / 示例',
+              subtitle: 'Learn with code examples and try them live',
+              icon: Icons.code,
+              color: Colors.green,
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const AllTestsPage()),
+                MaterialPageRoute(builder: (_) => const ExamplesPage()),
               ),
             ),
             const SizedBox(height: 12),
 
             _buildNavButton(
               context,
-              title: 'Benchmark',
-              subtitle: 'Compare sync vs async performance',
-              icon: Icons.speed,
+              title: 'Developer Tools / 开发者工具',
+              subtitle: 'Testing, benchmarking, and diagnostics',
+              icon: Icons.developer_mode,
+              color: Colors.orange,
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const BenchmarkPage()),
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            _buildNavButton(
-              context,
-              title: 'Memory Diagnostics',
-              subtitle: 'Monitor pointer usage and detect leaks',
-              icon: Icons.memory,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const MemoryDiagnosticsPage()),
+                MaterialPageRoute(builder: (_) => const DeveloperToolsPage()),
               ),
             ),
 
@@ -198,6 +187,7 @@ class _HomePageState extends State<HomePage> {
     required String subtitle,
     required IconData icon,
     required VoidCallback onTap,
+    Color color = Colors.blue,
   }) {
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -210,10 +200,10 @@ class _HomePageState extends State<HomePage> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
+                  color: color.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, size: 32, color: Colors.blue.shade700),
+                child: Icon(icon, size: 32, color: color),
               ),
               const SizedBox(width: 16),
               Expanded(

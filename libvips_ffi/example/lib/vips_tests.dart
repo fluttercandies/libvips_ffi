@@ -26,6 +26,64 @@ class VipsTestRunner {
     onLog?.call(message);
   }
 
+  /// Gets the current pointer leak report.
+  ///
+  /// 获取当前指针泄漏报告。
+  String getLeakReport() {
+    return VipsPointerManager.instance.getLeakReport();
+  }
+
+  /// Gets the number of active (potentially leaked) pointers.
+  ///
+  /// 获取活跃（可能泄漏）的指针数量。
+  int get activePointerCount => VipsPointerManager.instance.activeCount;
+
+  /// Whether there are any potential memory leaks.
+  ///
+  /// 是否有任何潜在的内存泄漏。
+  bool get hasLeaks => VipsPointerManager.instance.hasLeaks;
+
+  /// Enables stack trace tracking for leak debugging.
+  ///
+  /// 启用堆栈跟踪以进行泄漏调试。
+  void enableStackTraceTracking() {
+    VipsPointerManager.instance.trackStackTraces = true;
+  }
+
+  /// Disables stack trace tracking.
+  ///
+  /// 禁用堆栈跟踪。
+  void disableStackTraceTracking() {
+    VipsPointerManager.instance.trackStackTraces = false;
+  }
+
+  /// Forces disposal of all active pointers (emergency cleanup).
+  ///
+  /// 强制释放所有活跃指针（紧急清理）。
+  ///
+  /// Returns the number of pointers that were disposed.
+  /// 返回已释放的指针数量。
+  int forceDisposeAll() {
+    _log('WARNING: Force disposing all active pointers!');
+    final count = VipsPointerManager.instance.forceDisposeAll();
+    _log('Disposed $count pointers');
+    return count;
+  }
+
+  /// Resets the pointer manager state.
+  ///
+  /// 重置指针管理器状态。
+  void resetPointerManager() {
+    VipsPointerManager.instance.reset();
+  }
+
+  /// Gets pointer usage statistics.
+  ///
+  /// 获取指针使用统计信息。
+  Map<String, dynamic> getPointerStatistics() {
+    return VipsPointerManager.instance.getStatistics();
+  }
+
   /// Run all tests using async API
   Future<(String, Uint8List?)> runAllTests(String imagePath) async {
     _log('=== Running All Tests (Async) ===');

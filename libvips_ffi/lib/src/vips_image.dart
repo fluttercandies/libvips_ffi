@@ -11,6 +11,7 @@ import 'images/vips_io_mixin.dart';
 import 'images/vips_transform_mixin.dart';
 import 'images/vips_utility_mixin.dart';
 import 'vips_core.dart';
+import 'vips_pointer_manager.dart';
 import 'vips_variadic_bindings.dart';
 
 // Re-export core functions and types for convenience.
@@ -25,6 +26,7 @@ export 'vips_core.dart'
         vipsVersion,
         vipsVersionString;
 export 'vips_enums.dart' show VipsDirection, VipsInterpretation;
+export 'vips_pointer_manager.dart' show VipsPointerManager;
 
 /// High-level wrapper for VipsImage.
 ///
@@ -68,7 +70,9 @@ class VipsImageWrapper extends VipsImageBase
   /// 需要缓冲区在图像被释放之前保持有效。
   ffi.Pointer<ffi.Uint8>? _bufferPtr;
 
-  VipsImageWrapper._(this._pointer, [this._bufferPtr]);
+  VipsImageWrapper._(this._pointer, [this._bufferPtr, String? label]) {
+    VipsPointerManager.instance.register(_pointer, label);
+  }
 
   /// Whether this image has been disposed.
   ///
@@ -98,7 +102,7 @@ class VipsImageWrapper extends VipsImageBase
     ffi.Pointer<VipsImage> pointer, [
     ffi.Pointer<ffi.Uint8>? bufferPtr,
   ]) {
-    return VipsImageWrapper._(pointer, bufferPtr);
+    return VipsImageWrapper._(pointer, bufferPtr, 'createFromPointer');
   }
 
   /// Loads an image from a file.
@@ -126,7 +130,7 @@ class VipsImageWrapper extends VipsImageBase
         );
       }
 
-      return VipsImageWrapper._(imagePtr);
+      return VipsImageWrapper._(imagePtr, null, 'fromFile: $filename');
     } finally {
       calloc.free(filenamePtr);
     }
@@ -177,7 +181,7 @@ class VipsImageWrapper extends VipsImageBase
       // vips_image_new_from_buffer does lazy loading and requires the buffer
       // to remain valid until the image is disposed. The buffer will be freed
       // in dispose().
-      return VipsImageWrapper._(imagePtr, dataPtr);
+      return VipsImageWrapper._(imagePtr, dataPtr, 'fromBuffer');
     } finally {
       // Only free optionPtr, NOT dataPtr - it must stay alive for lazy loading
       calloc.free(optionPtr);
@@ -247,7 +251,7 @@ class VipsImageWrapper extends VipsImageBase
         );
       }
 
-      return VipsImageWrapper._(outPtr.value);
+      return VipsImageWrapper._(outPtr.value, null, 'thumbnailFromFile: $filename');
     } finally {
       calloc.free(filenamePtr);
       calloc.free(outPtr);
@@ -305,7 +309,7 @@ class VipsImageWrapper extends VipsImageBase
       // vips_thumbnail_buffer does lazy loading and requires the buffer
       // to remain valid until the image is disposed. The buffer will be freed
       // in dispose().
-      return VipsImageWrapper._(outPtr.value, dataPtr);
+      return VipsImageWrapper._(outPtr.value, dataPtr, 'thumbnailFromBuffer');
     } finally {
       // Only free outPtr, NOT dataPtr - it must stay alive for lazy loading
       calloc.free(outPtr);
@@ -320,6 +324,7 @@ class VipsImageWrapper extends VipsImageBase
   /// 调用 dispose 后，此对象不应再被使用。
   void dispose() {
     if (_disposed) return;
+    VipsPointerManager.instance.unregister(_pointer);
     vipsBindings.g_object_unref(_pointer.cast());
     // Free the buffer pointer if it was allocated (from fromBuffer constructor)
     if (_bufferPtr != null) {

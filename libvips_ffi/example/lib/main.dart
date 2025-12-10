@@ -3,6 +3,7 @@ import 'package:libvips_ffi/libvips_ffi.dart';
 
 import 'pages/all_tests_page.dart';
 import 'pages/benchmark_page.dart';
+import 'pages/memory_diagnostics_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -135,6 +136,18 @@ class _HomePageState extends State<HomePage> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const BenchmarkPage()),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            _buildNavButton(
+              context,
+              title: 'Memory Diagnostics',
+              subtitle: 'Monitor pointer usage and detect leaks',
+              icon: Icons.memory,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const MemoryDiagnosticsPage()),
               ),
             ),
 

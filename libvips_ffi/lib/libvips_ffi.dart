@@ -68,6 +68,7 @@ export 'src/vips_image.dart'
         VipsException,
         VipsDirection,
         VipsInterpretation,
+        VipsPointerManager,
         initVips,
         shutdownVips,
         getVipsError,

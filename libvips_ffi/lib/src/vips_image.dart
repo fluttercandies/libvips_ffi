@@ -7,9 +7,12 @@ import 'bindings/vips_bindings_generated.dart';
 import 'vips_library.dart';
 
 /// Global libvips bindings instance.
+///
+/// 全局 libvips 绑定实例。
 final VipsBindings _bindings = VipsBindings(vipsLibrary);
 
-// Custom function types for variadic functions that need NULL termination
+// Custom function types for variadic functions that need NULL termination.
+// 需要 NULL 终止的可变参数函数的自定义函数类型。
 typedef _VipsImageNewFromFileNative = ffi.Pointer<VipsImage> Function(
   ffi.Pointer<ffi.Char> name,
   ffi.Pointer<ffi.Void> terminator, // NULL terminator
@@ -347,7 +350,14 @@ typedef _VipsLinear1Dart = int Function(
   ffi.Pointer<ffi.Void> terminator,
 );
 
-/// Custom bindings for variadic functions that need NULL termination
+/// Custom bindings for variadic functions that need NULL termination.
+///
+/// 需要 NULL 终止的可变参数函数的自定义绑定。
+///
+/// These bindings wrap libvips C functions that use variadic arguments,
+/// providing proper NULL termination for safe FFI calls.
+/// 这些绑定封装了使用可变参数的 libvips C 函数，
+/// 为安全的 FFI 调用提供正确的 NULL 终止。
 class _VipsVariadicBindings {
   final ffi.DynamicLibrary _lib;
   
@@ -657,18 +667,30 @@ class _VipsVariadicBindings {
   }
 }
 
-/// Custom variadic bindings instance
+/// Custom variadic bindings instance.
+///
+/// 自定义可变参数绑定实例。
 final _VipsVariadicBindings _variadicBindings = _VipsVariadicBindings(vipsLibrary);
 
 /// Whether libvips has been initialized.
+///
+/// libvips 是否已初始化。
 bool _initialized = false;
 
-/// Initialize libvips.
+/// Initializes libvips.
+///
+/// 初始化 libvips。
 ///
 /// This must be called before using any other libvips functions.
 /// It's safe to call multiple times - subsequent calls are no-ops.
+/// 在使用任何其他 libvips 函数之前必须调用此函数。
+/// 多次调用是安全的 - 后续调用不执行任何操作。
+///
+/// [appName] is the application name for libvips logging.
+/// [appName] 是用于 libvips 日志记录的应用程序名称。
 ///
 /// Throws [VipsException] if initialization fails.
+/// 如果初始化失败，则抛出 [VipsException]。
 void initVips([String appName = 'libvips_ffi']) {
   if (_initialized) return;
 
@@ -684,16 +706,30 @@ void initVips([String appName = 'libvips_ffi']) {
   }
 }
 
-/// Shutdown libvips and free resources.
+/// Shuts down libvips and frees resources.
+///
+/// 关闭 libvips 并释放资源。
 ///
 /// Call this when you're done using libvips.
+/// 当你完成 libvips 的使用时调用此函数。
+///
+/// It's safe to call multiple times - subsequent calls are no-ops.
+/// 多次调用是安全的 - 后续调用不执行任何操作。
 void shutdownVips() {
   if (!_initialized) return;
   _bindings.vips_shutdown();
   _initialized = false;
 }
 
-/// Get the current libvips error message.
+/// Gets the current libvips error message.
+///
+/// 获取当前的 libvips 错误消息。
+///
+/// Returns the error message string, or `null` if no error.
+/// 返回错误消息字符串，如果没有错误则返回 `null`。
+///
+/// The error buffer may contain non-UTF-8 characters, which are handled gracefully.
+/// 错误缓冲区可能包含非 UTF-8 字符，这些字符会被优雅地处理。
 String? getVipsError() {
   final errorPtr = _bindings.vips_error_buffer();
   if (errorPtr == ffi.nullptr) return null;
@@ -723,33 +759,61 @@ String? getVipsError() {
   }
 }
 
-/// Clear the libvips error buffer.
+/// Clears the libvips error buffer.
+///
+/// 清除 libvips 错误缓冲区。
+///
+/// Call this before operations to ensure you get fresh error messages.
+/// 在操作前调用此函数以确保获取最新的错误消息。
 void clearVipsError() {
   _bindings.vips_error_clear();
 }
 
-/// Get libvips version information.
+/// Gets libvips version information.
+///
+/// 获取 libvips 版本信息。
 ///
 /// [flag] determines what version info to return:
-/// - 0: major version
-/// - 1: minor version
-/// - 2: micro version
-/// - 3: library current
-/// - 4: library revision
-/// - 5: library age
+/// [flag] 决定返回什么版本信息：
+///
+/// - 0: major version / 主版本号
+/// - 1: minor version / 次版本号
+/// - 2: micro version / 微版本号
+/// - 3: library current / 库当前版本
+/// - 4: library revision / 库修订版本
+/// - 5: library age / 库年龄
+///
+/// Returns the requested version number.
+/// 返回请求的版本号。
 int vipsVersion(int flag) {
   return _bindings.vips_version(flag);
 }
 
-/// Get libvips version as a string (e.g., "8.15.0").
+/// Gets libvips version as a string (e.g., "8.15.0").
+///
+/// 以字符串形式获取 libvips 版本（例如 "8.15.0"）。
+///
+/// Returns a formatted version string in "major.minor.micro" format.
+/// 返回格式化的版本字符串，格式为 "主版本.次版本.微版本"。
 String get vipsVersionString {
   return '${vipsVersion(0)}.${vipsVersion(1)}.${vipsVersion(2)}';
 }
 
 /// Exception thrown by libvips operations.
+///
+/// libvips 操作抛出的异常。
+///
+/// This exception is thrown when a libvips operation fails.
+/// 当 libvips 操作失败时抛出此异常。
 class VipsException implements Exception {
+  /// The error message describing what went wrong.
+  ///
+  /// 描述错误原因的错误消息。
   final String message;
 
+  /// Creates a new [VipsException] with the given [message].
+  ///
+  /// 使用给定的 [message] 创建新的 [VipsException]。
   VipsException(this.message);
 
   @override
@@ -758,36 +822,71 @@ class VipsException implements Exception {
 
 /// High-level wrapper for VipsImage.
 ///
+/// VipsImage 的高级封装。
+///
 /// This class provides a safe, Dart-friendly interface to libvips images.
 /// Resources are automatically managed - call [dispose] when done.
+/// 此类提供了一个安全的、对 Dart 友好的 libvips 图像接口。
+/// 资源自动管理 - 完成后调用 [dispose]。
+///
+/// ## Example / 示例
+///
+/// ```dart
+/// final image = VipsImageWrapper.fromFile('input.jpg');
+/// try {
+///   final resized = image.resize(0.5);
+///   resized.writeToFile('output.jpg');
+///   resized.dispose();
+/// } finally {
+///   image.dispose();
+/// }
+/// ```
 class VipsImageWrapper {
   final ffi.Pointer<VipsImage> _pointer;
   bool _disposed = false;
   
   /// Buffer pointer that must be kept alive for the lifetime of the image.
+  ///
+  /// 必须在图像生命周期内保持活动的缓冲区指针。
+  ///
   /// This is needed because vips_image_new_from_buffer does lazy loading
   /// and requires the buffer to remain valid until the image is disposed.
+  /// 这是必需的，因为 vips_image_new_from_buffer 执行延迟加载，
+  /// 需要缓冲区在图像被释放之前保持有效。
   ffi.Pointer<ffi.Uint8>? _bufferPtr;
 
   VipsImageWrapper._(this._pointer, [this._bufferPtr]);
 
   /// Whether this image has been disposed.
+  ///
+  /// 此图像是否已被释放。
   bool get isDisposed => _disposed;
 
   /// Whether the underlying pointer is null.
+  ///
+  /// 底层指针是否为空。
   bool get isNull => _pointer == ffi.nullptr;
 
-  /// Get the underlying pointer (for advanced use).
+  /// Gets the underlying pointer (for advanced use).
+  ///
+  /// 获取底层指针（用于高级用法）。
   ///
   /// Throws [StateError] if the image has been disposed.
+  /// 如果图像已被释放，则抛出 [StateError]。
   ffi.Pointer<VipsImage> get pointer {
     _checkDisposed();
     return _pointer;
   }
 
-  /// Load an image from a file.
+  /// Loads an image from a file.
+  ///
+  /// 从文件加载图像。
+  ///
+  /// [filename] is the path to the image file.
+  /// [filename] 是图像文件的路径。
   ///
   /// Throws [VipsException] if loading fails.
+  /// 如果加载失败，则抛出 [VipsException]。
   factory VipsImageWrapper.fromFile(String filename) {
     initVips();
     clearVipsError();
@@ -811,12 +910,18 @@ class VipsImageWrapper {
     }
   }
 
-  /// Load an image from memory buffer.
+  /// Loads an image from memory buffer.
+  ///
+  /// 从内存缓冲区加载图像。
   ///
   /// [data] is the image data in any supported format (JPEG, PNG, etc.).
+  /// [data] 是任何支持格式（JPEG、PNG 等）的图像数据。
+  ///
   /// [optionString] can specify format options.
+  /// [optionString] 可以指定格式选项。
   ///
   /// Throws [VipsException] if loading fails.
+  /// 如果加载失败，则抛出 [VipsException]。
   factory VipsImageWrapper.fromBuffer(
     Uint8List data, {
     String optionString = '',
@@ -859,29 +964,42 @@ class VipsImageWrapper {
     }
   }
 
-  /// Get image width in pixels.
+  /// Gets image width in pixels.
+  ///
+  /// 获取图像宽度（以像素为单位）。
   int get width {
     _checkDisposed();
     return _bindings.vips_image_get_width(_pointer);
   }
 
-  /// Get image height in pixels.
+  /// Gets image height in pixels.
+  ///
+  /// 获取图像高度（以像素为单位）。
   int get height {
     _checkDisposed();
     return _bindings.vips_image_get_height(_pointer);
   }
 
-  /// Get number of bands (channels) in the image.
+  /// Gets number of bands (channels) in the image.
+  ///
+  /// 获取图像的通道数。
   int get bands {
     _checkDisposed();
     return _bindings.vips_image_get_bands(_pointer);
   }
 
-  /// Write the image to a file.
+  /// Writes the image to a file.
+  ///
+  /// 将图像写入文件。
   ///
   /// The format is determined by the file extension.
+  /// 格式由文件扩展名决定。
+  ///
+  /// [filename] is the path to write the image to.
+  /// [filename] 是要写入图像的路径。
   ///
   /// Throws [VipsException] if writing fails.
+  /// 如果写入失败，则抛出 [VipsException]。
   void writeToFile(String filename) {
     _checkDisposed();
     clearVipsError();
@@ -901,12 +1019,18 @@ class VipsImageWrapper {
     }
   }
 
-  /// Write the image to a memory buffer.
+  /// Writes the image to a memory buffer.
+  ///
+  /// 将图像写入内存缓冲区。
   ///
   /// [suffix] determines the format (e.g., '.jpg', '.png', '.webp').
+  /// [suffix] 决定格式（例如 '.jpg'、'.png'、'.webp'）。
   ///
   /// Returns the encoded image data.
+  /// 返回编码后的图像数据。
+  ///
   /// Throws [VipsException] if encoding fails.
+  /// 如果编码失败，则抛出 [VipsException]。
   Uint8List writeToBuffer(String suffix) {
     _checkDisposed();
     clearVipsError();
@@ -950,13 +1074,20 @@ class VipsImageWrapper {
   }
 
   // ============ Image Processing Operations ============
+  // ============ 图像处理操作 ============
 
-  /// Resize the image by a scale factor.
+  /// Resizes the image by a scale factor.
+  ///
+  /// 按比例因子调整图像大小。
   ///
   /// [scale] is the resize factor (e.g., 0.5 for half size, 2.0 for double).
+  /// [scale] 是调整大小的因子（例如 0.5 表示一半大小，2.0 表示两倍）。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper resize(double scale) {
     _checkDisposed();
     clearVipsError();
@@ -978,12 +1109,18 @@ class VipsImageWrapper {
     }
   }
 
-  /// Rotate the image by an angle in degrees.
+  /// Rotates the image by an angle in degrees.
+  ///
+  /// 按角度旋转图像。
   ///
   /// [angle] is the rotation angle in degrees (positive = counter-clockwise).
+  /// [angle] 是旋转角度（度数，正值 = 逆时针）。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper rotate(double angle) {
     _checkDisposed();
     clearVipsError();
@@ -1005,13 +1142,21 @@ class VipsImageWrapper {
     }
   }
 
-  /// Crop a region from the image.
+  /// Crops a region from the image.
+  ///
+  /// 从图像裁剪一个区域。
   ///
   /// [left], [top] specify the top-left corner of the crop region.
+  /// [left]、[top] 指定裁剪区域的左上角。
+  ///
   /// [width], [height] specify the size of the crop region.
+  /// [width]、[height] 指定裁剪区域的大小。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper crop(int left, int top, int width, int height) {
     _checkDisposed();
     clearVipsError();
@@ -1033,16 +1178,24 @@ class VipsImageWrapper {
     }
   }
 
-  /// Create a thumbnail of the image with a target width.
+  /// Creates a thumbnail of the image with a target width.
+  ///
+  /// 创建指定宽度的图像缩略图。
   ///
   /// This is optimized for creating thumbnails - it will shrink the image
   /// as it loads, making it much faster than loading then resizing.
+  /// 这是为创建缩略图优化的 - 它会在加载时缩小图像，
+  /// 比先加载再调整大小快得多。
   ///
   /// [targetWidth] is the desired width in pixels. Height is calculated
   /// to maintain aspect ratio.
+  /// [targetWidth] 是期望的宽度（像素）。高度会自动计算以保持宽高比。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper thumbnail(int targetWidth) {
     _checkDisposed();
     clearVipsError();
@@ -1065,17 +1218,27 @@ class VipsImageWrapper {
   }
 
   // ============ Static Factory Methods ============
+  // ============ 静态工厂方法 ============
 
-  /// Create a thumbnail directly from a file path.
+  /// Creates a thumbnail directly from a file path.
+  ///
+  /// 直接从文件路径创建缩略图。
   ///
   /// This is more efficient than loading then thumbnailing, as it
   /// shrinks the image during load.
+  /// 这比先加载再创建缩略图更高效，因为它在加载时就缩小图像。
   ///
   /// [filename] is the path to the image file.
+  /// [filename] 是图像文件的路径。
+  ///
   /// [targetWidth] is the desired width in pixels.
+  /// [targetWidth] 是期望的宽度（像素）。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   static VipsImageWrapper thumbnailFromFile(String filename, int targetWidth) {
     initVips();
     clearVipsError();
@@ -1100,16 +1263,25 @@ class VipsImageWrapper {
     }
   }
 
-  /// Create a thumbnail directly from a memory buffer.
+  /// Creates a thumbnail directly from a memory buffer.
+  ///
+  /// 直接从内存缓冲区创建缩略图。
   ///
   /// This is more efficient than loading then thumbnailing, as it
   /// shrinks the image during load.
+  /// 这比先加载再创建缩略图更高效，因为它在加载时就缩小图像。
   ///
   /// [data] is the image data in any supported format.
+  /// [data] 是任何支持格式的图像数据。
+  ///
   /// [targetWidth] is the desired width in pixels.
+  /// [targetWidth] 是期望的宽度（像素）。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   static VipsImageWrapper thumbnailFromBuffer(Uint8List data, int targetWidth) {
     initVips();
     clearVipsError();
@@ -1151,15 +1323,23 @@ class VipsImageWrapper {
   }
 
   // ============ Additional Image Processing Operations ============
+  // ============ 额外的图像处理操作 ============
 
-  /// Flip the image horizontally or vertically.
+  /// Flips the image horizontally or vertically.
+  ///
+  /// 水平或垂直翻转图像。
   ///
   /// [direction] determines the flip direction:
-  /// - [VipsDirection.horizontal] (0): flip left-right
-  /// - [VipsDirection.vertical] (1): flip top-bottom
+  /// [direction] 决定翻转方向：
+  ///
+  /// - [VipsDirection.horizontal] (0): flip left-right / 左右翻转
+  /// - [VipsDirection.vertical] (1): flip top-bottom / 上下翻转
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper flip(VipsDirection direction) {
     _checkDisposed();
     clearVipsError();
@@ -1180,13 +1360,20 @@ class VipsImageWrapper {
     }
   }
 
-  /// Apply Gaussian blur to the image.
+  /// Applies Gaussian blur to the image.
+  ///
+  /// 对图像应用高斯模糊。
   ///
   /// [sigma] is the standard deviation of the Gaussian (larger = more blur).
   /// Typical values are 1.0 to 10.0.
+  /// [sigma] 是高斯分布的标准差（越大 = 越模糊）。
+  /// 典型值为 1.0 到 10.0。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper gaussianBlur(double sigma) {
     _checkDisposed();
     clearVipsError();
@@ -1207,10 +1394,15 @@ class VipsImageWrapper {
     }
   }
 
-  /// Sharpen the image using unsharp masking.
+  /// Sharpens the image using unsharp masking.
+  ///
+  /// 使用反锐化蒙版锐化图像。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper sharpen() {
     _checkDisposed();
     clearVipsError();
@@ -1231,10 +1423,15 @@ class VipsImageWrapper {
     }
   }
 
-  /// Invert the image colors (create a negative).
+  /// Inverts the image colors (creates a negative).
+  ///
+  /// 反转图像颜色（创建负片效果）。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper invert() {
     _checkDisposed();
     clearVipsError();
@@ -1255,13 +1452,19 @@ class VipsImageWrapper {
     }
   }
 
-  /// Flatten an image with alpha channel to RGB.
+  /// Flattens an image with alpha channel to RGB.
+  ///
+  /// 将带有 alpha 通道的图像平坦化为 RGB。
   ///
   /// The alpha channel is removed and the image is composited against
   /// a white background.
+  /// alpha 通道被移除，图像与白色背景合成。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper flatten() {
     _checkDisposed();
     clearVipsError();
@@ -1282,10 +1485,15 @@ class VipsImageWrapper {
     }
   }
 
-  /// Apply gamma correction to the image.
+  /// Applies gamma correction to the image.
+  ///
+  /// 对图像应用伽马校正。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper gamma() {
     _checkDisposed();
     clearVipsError();
@@ -1306,10 +1514,15 @@ class VipsImageWrapper {
     }
   }
 
-  /// Auto-rotate the image based on EXIF orientation tag.
+  /// Auto-rotates the image based on EXIF orientation tag.
+  ///
+  /// 根据 EXIF 方向标签自动旋转图像。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper autoRotate() {
     _checkDisposed();
     clearVipsError();
@@ -1330,15 +1543,22 @@ class VipsImageWrapper {
     }
   }
 
-  /// Smart crop the image to the specified size.
+  /// Smart crops the image to the specified size.
+  ///
+  /// 智能裁剪图像到指定大小。
   ///
   /// Uses attention-based cropping to find the most interesting part
   /// of the image.
+  /// 使用基于注意力的裁剪来找到图像中最有趣的部分。
   ///
   /// [width], [height] specify the target size.
+  /// [width]、[height] 指定目标大小。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper smartCrop(int width, int height) {
     _checkDisposed();
     clearVipsError();
@@ -1359,13 +1579,21 @@ class VipsImageWrapper {
     }
   }
 
-  /// Embed the image in a larger canvas.
+  /// Embeds the image in a larger canvas.
+  ///
+  /// 将图像嵌入到更大的画布中。
   ///
   /// [x], [y] specify the position of the image in the new canvas.
+  /// [x]、[y] 指定图像在新画布中的位置。
+  ///
   /// [width], [height] specify the size of the new canvas.
+  /// [width]、[height] 指定新画布的大小。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper embed(int x, int y, int width, int height) {
     _checkDisposed();
     clearVipsError();
@@ -1386,13 +1614,21 @@ class VipsImageWrapper {
     }
   }
 
-  /// Extract an area from the image (alias for crop).
+  /// Extracts an area from the image (alias for crop).
+  ///
+  /// 从图像提取一个区域（crop 的别名）。
   ///
   /// [left], [top] specify the top-left corner.
+  /// [left]、[top] 指定左上角。
+  ///
   /// [width], [height] specify the size of the area.
+  /// [width]、[height] 指定区域的大小。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper extractArea(int left, int top, int width, int height) {
     _checkDisposed();
     clearVipsError();
@@ -1413,12 +1649,18 @@ class VipsImageWrapper {
     }
   }
 
-  /// Convert the image to a different colour space.
+  /// Converts the image to a different colour space.
+  ///
+  /// 将图像转换为不同的色彩空间。
   ///
   /// [space] is the target colour space (see [VipsInterpretation]).
+  /// [space] 是目标色彩空间（参见 [VipsInterpretation]）。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper colourspace(VipsInterpretation space) {
     _checkDisposed();
     clearVipsError();
@@ -1439,13 +1681,21 @@ class VipsImageWrapper {
     }
   }
 
-  /// Apply a linear transformation to the image: out = in * a + b.
+  /// Applies a linear transformation to the image: out = in * a + b.
+  ///
+  /// 对图像应用线性变换：out = in * a + b。
   ///
   /// [a] is the multiplier (e.g., 1.2 for 20% brighter).
+  /// [a] 是乘数（例如 1.2 表示亮度增加 20%）。
+  ///
   /// [b] is the offset (e.g., 10 to add brightness).
+  /// [b] 是偏移量（例如 10 表示增加亮度）。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper linear(double a, double b) {
     _checkDisposed();
     clearVipsError();
@@ -1466,35 +1716,50 @@ class VipsImageWrapper {
     }
   }
 
-  /// Adjust brightness of the image.
+  /// Adjusts brightness of the image.
+  ///
+  /// 调整图像亮度。
   ///
   /// [factor] is the brightness factor:
-  /// - 1.0 = no change
-  /// - > 1.0 = brighter
-  /// - < 1.0 = darker
+  /// [factor] 是亮度因子：
+  ///
+  /// - 1.0 = no change / 无变化
+  /// - > 1.0 = brighter / 更亮
+  /// - < 1.0 = darker / 更暗
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
   VipsImageWrapper brightness(double factor) {
     return linear(factor, 0);
   }
 
-  /// Adjust contrast of the image.
+  /// Adjusts contrast of the image.
+  ///
+  /// 调整图像对比度。
   ///
   /// [factor] is the contrast factor:
-  /// - 1.0 = no change
-  /// - > 1.0 = more contrast
-  /// - < 1.0 = less contrast
+  /// [factor] 是对比度因子：
+  ///
+  /// - 1.0 = no change / 无变化
+  /// - > 1.0 = more contrast / 更高对比度
+  /// - < 1.0 = less contrast / 更低对比度
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
   VipsImageWrapper contrast(double factor) {
     // Contrast adjustment: out = (in - 128) * factor + 128
     return linear(factor, 128 * (1 - factor));
   }
 
-  /// Create a copy of the image.
+  /// Creates a copy of the image.
+  ///
+  /// 创建图像的副本。
   ///
   /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  ///
   /// Throws [VipsException] if the operation fails.
+  /// 如果操作失败，则抛出 [VipsException]。
   VipsImageWrapper copy() {
     _checkDisposed();
     clearVipsError();
@@ -1515,9 +1780,12 @@ class VipsImageWrapper {
     }
   }
 
-  /// Release the image resources.
+  /// Releases the image resources.
+  ///
+  /// 释放图像资源。
   ///
   /// After calling dispose, this object should not be used anymore.
+  /// 调用 dispose 后，此对象不应再被使用。
   void dispose() {
     if (_disposed) return;
     _bindings.g_object_unref(_pointer.cast());
@@ -1537,56 +1805,95 @@ class VipsImageWrapper {
 }
 
 /// Direction for flip operations.
+///
+/// 翻转操作的方向。
 enum VipsDirection {
   /// Flip left-right (horizontal).
+  ///
+  /// 左右翻转（水平）。
   horizontal,
+
   /// Flip top-bottom (vertical).
+  ///
+  /// 上下翻转（垂直）。
   vertical,
 }
 
 /// Colour space / interpretation.
+///
+/// 色彩空间 / 解释。
+///
+/// This enum represents the various colour spaces and interpretations
+/// that libvips supports for image processing.
+/// 此枚举表示 libvips 支持的各种色彩空间和图像处理解释。
 enum VipsInterpretation {
-  /// Error value.
+  /// Error value. / 错误值。
   error(-1),
-  /// Many-band image.
+
+  /// Many-band image. / 多通道图像。
   multiband(0),
-  /// Some kind of single-band image.
+
+  /// Some kind of single-band image. / 某种单通道图像。
   bw(1),
-  /// Histogram or lookup table.
+
+  /// Histogram or lookup table. / 直方图或查找表。
   histogram(10),
-  /// The first three bands are CIE XYZ.
+
+  /// The first three bands are CIE XYZ. / 前三个通道是 CIE XYZ。
   xyz(12),
-  /// Pixels are in CIE Lab space.
+
+  /// Pixels are in CIE Lab space. / 像素在 CIE Lab 空间中。
   lab(13),
-  /// The first four bands are in CMYK space.
+
+  /// The first four bands are in CMYK space. / 前四个通道在 CMYK 空间中。
   cmyk(15),
-  /// Pixels are in CIE LCh space.
+
+  /// Pixels are CIE LCh space. / 像素在 CIE LCh 空间中。
   labq(16),
-  /// Pixels are sRGB.
+
+  /// Pixels are sRGB. / 像素是 sRGB。
   srgb(22),
-  /// Pixels are CIE Yxy.
+
+  /// Pixels are CIE Yxy. / 像素是 CIE Yxy。
   yxy(23),
-  /// Image is in fourier space.
+
+  /// Image is in fourier space. / 图像在傅里叶空间中。
   fourier(24),
-  /// Generic RGB space.
+
+  /// Generic RGB space. / 通用 RGB 空间。
   rgb(25),
-  /// A generic single-channel image.
+
+  /// A generic single-channel image. / 通用单通道图像。
   grey16(27),
-  /// A generic many-band image.
+
+  /// A generic many-band image. / 通用多通道图像。
   matrix(28),
-  /// Pixels are scRGB.
+
+  /// Pixels are scRGB. / 像素是 scRGB。
   scrgb(29),
-  /// Pixels are HSV.
+
+  /// Pixels are HSV. / 像素是 HSV。
   hsv(30),
-  /// Pixels are in CIE LCh space.
+
+  /// Pixels are in CIE LCh space. / 像素在 CIE LCh 空间中。
   lch(31),
-  /// CIE CMC(l:c).
+
+  /// CIE CMC(l:c). / CIE CMC(l:c)。
   cmc(32),
-  /// Pixels are in CIE Labs space.
+
+  /// Pixels are in CIE Labs space. / 像素在 CIE Labs 空间中。
   labs(33),
-  /// Pixels are sRGB with alpha.
+
+  /// Pixels are sRGB with alpha. / 像素是带 alpha 的 sRGB。
   srgba(34);
 
+  /// Creates a [VipsInterpretation] with the given [value].
+  ///
+  /// 使用给定的 [value] 创建 [VipsInterpretation]。
   const VipsInterpretation(this.value);
+
+  /// The integer value of this interpretation.
+  ///
+  /// 此解释的整数值。
   final int value;
 }

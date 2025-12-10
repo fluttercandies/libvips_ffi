@@ -4,7 +4,9 @@ import 'dart:typed_data';
 
 import 'vips_image.dart';
 
-/// Message types for isolate communication
+/// Message types for isolate communication.
+///
+/// isolate 通信的消息类型。
 enum _IsolateMessageType {
   loadFromFile,
   loadFromBuffer,
@@ -33,7 +35,9 @@ enum _IsolateMessageType {
   writeToFile,
 }
 
-/// Request message for isolate
+/// Request message for isolate.
+///
+/// isolate 的请求消息。
 class _IsolateRequest {
   final _IsolateMessageType type;
   final SendPort responsePort;
@@ -46,7 +50,9 @@ class _IsolateRequest {
   });
 }
 
-/// Response message from isolate
+/// Response message from isolate.
+///
+/// 来自 isolate 的响应消息。
 class _IsolateResponse {
   final bool success;
   final dynamic result;
@@ -61,13 +67,37 @@ class _IsolateResponse {
         result = null;
 }
 
-/// Image data that can be passed between isolates
+/// Image data that can be passed between isolates.
+///
+/// 可以在 isolate 之间传递的图像数据。
+///
+/// This class holds the processed image data along with its dimensions,
+/// allowing safe transfer between isolates.
+/// 此类保存处理后的图像数据及其尺寸，允许在 isolate 之间安全传输。
 class VipsImageData {
+  /// The image data in PNG format.
+  ///
+  /// PNG 格式的图像数据。
   final Uint8List data;
+
+  /// The width of the image in pixels.
+  ///
+  /// 图像的宽度（像素）。
   final int width;
+
+  /// The height of the image in pixels.
+  ///
+  /// 图像的高度（像素）。
   final int height;
+
+  /// The number of bands (channels) in the image.
+  ///
+  /// 图像的通道数。
   final int bands;
 
+  /// Creates a [VipsImageData] with the given parameters.
+  ///
+  /// 使用给定的参数创建 [VipsImageData]。
   VipsImageData({
     required this.data,
     required this.width,
@@ -76,13 +106,38 @@ class VipsImageData {
   });
 }
 
-/// Async wrapper for VipsImageWrapper that runs operations in an isolate
+/// Async wrapper for VipsImageWrapper that runs operations in an isolate.
+///
+/// 在 isolate 中运行操作的 VipsImageWrapper 异步封装。
+///
+/// This class provides an async API for image processing operations that
+/// run in a background isolate, keeping the main UI thread responsive.
+/// 此类提供了在后台 isolate 中运行的图像处理操作的异步 API，
+/// 保持主 UI 线程的响应性。
+///
+/// The isolate is automatically initialized on first use and can be
+/// shut down with [shutdown].
+/// isolate 在首次使用时自动初始化，可以通过 [shutdown] 关闭。
+///
+/// ## Example / 示例
+///
+/// ```dart
+/// // Load and resize an image
+/// final imageData = await VipsImageAsync.loadFromFile('input.jpg');
+/// final resized = await VipsImageAsync.resize(imageData.data, 0.5);
+/// print('Resized to ${resized.width}x${resized.height}');
+///
+/// // Don't forget to shutdown when done
+/// VipsImageAsync.shutdown();
+/// ```
 class VipsImageAsync {
   static SendPort? _isolateSendPort;
   static Isolate? _isolate;
   static bool _initialized = false;
 
-  /// Initialize the isolate worker
+  /// Initializes the isolate worker.
+  ///
+  /// 初始化 isolate 工作器。
   static Future<void> _ensureInitialized() async {
     if (_initialized) return;
 
@@ -92,7 +147,12 @@ class VipsImageAsync {
     _initialized = true;
   }
 
-  /// Shutdown the isolate worker
+  /// Shuts down the isolate worker.
+  ///
+  /// 关闭 isolate 工作器。
+  ///
+  /// Call this when you're done using the async API to free resources.
+  /// 当你完成异步 API 的使用时调用此方法以释放资源。
   static void shutdown() {
     _isolate?.kill(priority: Isolate.immediate);
     _isolate = null;
@@ -100,7 +160,9 @@ class VipsImageAsync {
     _initialized = false;
   }
 
-  /// Entry point for the isolate
+  /// Entry point for the isolate.
+  ///
+  /// isolate 的入口点。
   static void _isolateEntry(SendPort sendPort) {
     final receivePort = ReceivePort();
     sendPort.send(receivePort.sendPort);
@@ -115,7 +177,9 @@ class VipsImageAsync {
     });
   }
 
-  /// Handle a request in the isolate
+  /// Handles a request in the isolate.
+  ///
+  /// 在 isolate 中处理请求。
   static void _handleRequest(_IsolateRequest request) {
     try {
       final result = _processRequest(request);
@@ -125,7 +189,9 @@ class VipsImageAsync {
     }
   }
 
-  /// Process a request and return the result
+  /// Processes a request and returns the result.
+  ///
+  /// 处理请求并返回结果。
   static dynamic _processRequest(_IsolateRequest request) {
     final params = request.params;
 
@@ -340,7 +406,9 @@ class VipsImageAsync {
     }
   }
 
-  /// Helper to process an image operation
+  /// Helper to process an image operation.
+  ///
+  /// 处理图像操作的辅助方法。
   static VipsImageData _processImageOperation(
     Uint8List imageData,
     VipsImageWrapper Function(VipsImageWrapper) operation,
@@ -359,7 +427,9 @@ class VipsImageAsync {
     return imageResult;
   }
 
-  /// Send a request to the isolate and wait for response
+  /// Sends a request to the isolate and waits for response.
+  ///
+  /// 向 isolate 发送请求并等待响应。
   static Future<T> _sendRequest<T>(_IsolateMessageType type, Map<String, dynamic> params) async {
     await _ensureInitialized();
 
@@ -381,8 +451,14 @@ class VipsImageAsync {
   }
 
   // ============ Public API ============
+  // ============ 公共 API ============
 
-  /// Load an image from a file asynchronously
+  /// Loads an image from a file asynchronously.
+  ///
+  /// 异步从文件加载图像。
+  ///
+  /// [path] is the path to the image file.
+  /// [path] 是图像文件的路径。
   static Future<VipsImageData> loadFromFile(String path) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.loadFromFile,
@@ -390,7 +466,12 @@ class VipsImageAsync {
     );
   }
 
-  /// Load an image from a buffer asynchronously
+  /// Loads an image from a buffer asynchronously.
+  ///
+  /// 异步从缓冲区加载图像。
+  ///
+  /// [data] is the image data. / [data] 是图像数据。
+  /// [optionString] can specify format options. / [optionString] 可以指定格式选项。
   static Future<VipsImageData> loadFromBuffer(Uint8List data, {String optionString = ''}) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.loadFromBuffer,
@@ -398,7 +479,12 @@ class VipsImageAsync {
     );
   }
 
-  /// Resize an image asynchronously
+  /// Resizes an image asynchronously.
+  ///
+  /// 异步调整图像大小。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [scale] is the resize factor. / [scale] 是调整大小的因子。
   static Future<VipsImageData> resize(Uint8List imageData, double scale) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.resize,
@@ -406,7 +492,12 @@ class VipsImageAsync {
     );
   }
 
-  /// Create a thumbnail asynchronously
+  /// Creates a thumbnail asynchronously.
+  ///
+  /// 异步创建缩略图。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [width] is the target width in pixels. / [width] 是目标宽度（像素）。
   static Future<VipsImageData> thumbnail(Uint8List imageData, int width) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.thumbnail,
@@ -414,7 +505,12 @@ class VipsImageAsync {
     );
   }
 
-  /// Create a thumbnail from file asynchronously
+  /// Creates a thumbnail from file asynchronously.
+  ///
+  /// 异步从文件创建缩略图。
+  ///
+  /// [path] is the path to the image file. / [path] 是图像文件的路径。
+  /// [width] is the target width in pixels. / [width] 是目标宽度（像素）。
   static Future<VipsImageData> thumbnailFromFile(String path, int width) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.thumbnailFromFile,
@@ -422,7 +518,12 @@ class VipsImageAsync {
     );
   }
 
-  /// Create a thumbnail from buffer asynchronously
+  /// Creates a thumbnail from buffer asynchronously.
+  ///
+  /// 异步从缓冲区创建缩略图。
+  ///
+  /// [data] is the image data. / [data] 是图像数据。
+  /// [width] is the target width in pixels. / [width] 是目标宽度（像素）。
   static Future<VipsImageData> thumbnailFromBuffer(Uint8List data, int width) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.thumbnailFromBuffer,
@@ -430,7 +531,12 @@ class VipsImageAsync {
     );
   }
 
-  /// Rotate an image asynchronously
+  /// Rotates an image asynchronously.
+  ///
+  /// 异步旋转图像。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [angle] is the rotation angle in degrees. / [angle] 是旋转角度（度数）。
   static Future<VipsImageData> rotate(Uint8List imageData, double angle) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.rotate,
@@ -438,7 +544,13 @@ class VipsImageAsync {
     );
   }
 
-  /// Crop an image asynchronously
+  /// Crops an image asynchronously.
+  ///
+  /// 异步裁剪图像。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [left], [top] specify the top-left corner. / [left]、[top] 指定左上角。
+  /// [width], [height] specify the crop size. / [width]、[height] 指定裁剪大小。
   static Future<VipsImageData> crop(
     Uint8List imageData,
     int left,
@@ -458,7 +570,12 @@ class VipsImageAsync {
     );
   }
 
-  /// Flip an image asynchronously
+  /// Flips an image asynchronously.
+  ///
+  /// 异步翻转图像。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [direction] is the flip direction. / [direction] 是翻转方向。
   static Future<VipsImageData> flip(Uint8List imageData, VipsDirection direction) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.flip,
@@ -466,7 +583,12 @@ class VipsImageAsync {
     );
   }
 
-  /// Apply Gaussian blur asynchronously
+  /// Applies Gaussian blur asynchronously.
+  ///
+  /// 异步应用高斯模糊。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [sigma] is the blur amount. / [sigma] 是模糊程度。
   static Future<VipsImageData> gaussianBlur(Uint8List imageData, double sigma) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.gaussianBlur,
@@ -474,7 +596,11 @@ class VipsImageAsync {
     );
   }
 
-  /// Sharpen an image asynchronously
+  /// Sharpens an image asynchronously.
+  ///
+  /// 异步锐化图像。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
   static Future<VipsImageData> sharpen(Uint8List imageData) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.sharpen,
@@ -482,7 +608,11 @@ class VipsImageAsync {
     );
   }
 
-  /// Invert an image asynchronously
+  /// Inverts an image asynchronously.
+  ///
+  /// 异步反转图像颜色。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
   static Future<VipsImageData> invert(Uint8List imageData) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.invert,
@@ -490,7 +620,11 @@ class VipsImageAsync {
     );
   }
 
-  /// Flatten an image asynchronously
+  /// Flattens an image asynchronously.
+  ///
+  /// 异步平坦化图像。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
   static Future<VipsImageData> flatten(Uint8List imageData) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.flatten,
@@ -498,7 +632,11 @@ class VipsImageAsync {
     );
   }
 
-  /// Apply gamma correction asynchronously
+  /// Applies gamma correction asynchronously.
+  ///
+  /// 异步应用伽马校正。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
   static Future<VipsImageData> gamma(Uint8List imageData) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.gamma,
@@ -506,7 +644,11 @@ class VipsImageAsync {
     );
   }
 
-  /// Auto-rotate an image asynchronously
+  /// Auto-rotates an image asynchronously based on EXIF orientation.
+  ///
+  /// 根据 EXIF 方向异步自动旋转图像。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
   static Future<VipsImageData> autoRotate(Uint8List imageData) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.autoRotate,
@@ -514,7 +656,12 @@ class VipsImageAsync {
     );
   }
 
-  /// Smart crop an image asynchronously
+  /// Smart crops an image asynchronously.
+  ///
+  /// 异步智能裁剪图像。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [width], [height] specify the target size. / [width]、[height] 指定目标大小。
   static Future<VipsImageData> smartCrop(Uint8List imageData, int width, int height) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.smartCrop,
@@ -522,7 +669,13 @@ class VipsImageAsync {
     );
   }
 
-  /// Embed an image asynchronously
+  /// Embeds an image asynchronously.
+  ///
+  /// 异步嵌入图像。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [x], [y] specify the position. / [x]、[y] 指定位置。
+  /// [width], [height] specify the canvas size. / [width]、[height] 指定画布大小。
   static Future<VipsImageData> embed(
     Uint8List imageData,
     int x,
@@ -542,7 +695,13 @@ class VipsImageAsync {
     );
   }
 
-  /// Extract an area asynchronously
+  /// Extracts an area asynchronously.
+  ///
+  /// 异步提取区域。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [left], [top] specify the top-left corner. / [left]、[top] 指定左上角。
+  /// [width], [height] specify the area size. / [width]、[height] 指定区域大小。
   static Future<VipsImageData> extractArea(
     Uint8List imageData,
     int left,
@@ -562,7 +721,12 @@ class VipsImageAsync {
     );
   }
 
-  /// Convert colour space asynchronously
+  /// Converts colour space asynchronously.
+  ///
+  /// 异步转换色彩空间。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [space] is the target colour space. / [space] 是目标色彩空间。
   static Future<VipsImageData> colourspace(Uint8List imageData, VipsInterpretation space) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.colourspace,
@@ -570,7 +734,13 @@ class VipsImageAsync {
     );
   }
 
-  /// Apply linear transformation asynchronously
+  /// Applies linear transformation asynchronously.
+  ///
+  /// 异步应用线性变换。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [a] is the multiplier. / [a] 是乘数。
+  /// [b] is the offset. / [b] 是偏移量。
   static Future<VipsImageData> linear(Uint8List imageData, double a, double b) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.linear,
@@ -578,7 +748,12 @@ class VipsImageAsync {
     );
   }
 
-  /// Adjust brightness asynchronously
+  /// Adjusts brightness asynchronously.
+  ///
+  /// 异步调整亮度。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [factor] is the brightness factor (1.0 = no change). / [factor] 是亮度因子（1.0 = 无变化）。
   static Future<VipsImageData> brightness(Uint8List imageData, double factor) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.brightness,
@@ -586,7 +761,12 @@ class VipsImageAsync {
     );
   }
 
-  /// Adjust contrast asynchronously
+  /// Adjusts contrast asynchronously.
+  ///
+  /// 异步调整对比度。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [factor] is the contrast factor (1.0 = no change). / [factor] 是对比度因子（1.0 = 无变化）。
   static Future<VipsImageData> contrast(Uint8List imageData, double factor) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.contrast,
@@ -594,7 +774,11 @@ class VipsImageAsync {
     );
   }
 
-  /// Copy an image asynchronously
+  /// Copies an image asynchronously.
+  ///
+  /// 异步复制图像。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
   static Future<VipsImageData> copy(Uint8List imageData) async {
     return _sendRequest<VipsImageData>(
       _IsolateMessageType.copy,
@@ -602,7 +786,12 @@ class VipsImageAsync {
     );
   }
 
-  /// Write to buffer asynchronously
+  /// Writes to buffer asynchronously.
+  ///
+  /// 异步写入缓冲区。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [suffix] determines the format (e.g., '.jpg'). / [suffix] 决定格式（例如 '.jpg'）。
   static Future<Uint8List> writeToBuffer(Uint8List imageData, String suffix) async {
     return _sendRequest<Uint8List>(
       _IsolateMessageType.writeToBuffer,
@@ -610,7 +799,12 @@ class VipsImageAsync {
     );
   }
 
-  /// Write to file asynchronously
+  /// Writes to file asynchronously.
+  ///
+  /// 异步写入文件。
+  ///
+  /// [imageData] is the image data. / [imageData] 是图像数据。
+  /// [path] is the path to write to. / [path] 是要写入的路径。
   static Future<void> writeToFile(Uint8List imageData, String path) async {
     await _sendRequest<void>(
       _IsolateMessageType.writeToFile,

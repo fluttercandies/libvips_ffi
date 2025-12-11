@@ -3,16 +3,16 @@ import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart';
 
 import '../bindings/vips_bindings_generated.dart';
-import '../vips_core.dart';
-import 'vips_image_base.dart';
+import '../vips_image.dart';
+import '../vips_variadic_bindings.dart';
 
-/// Mixin providing image utility operations.
+/// Extension providing image utility operations.
 ///
-/// 提供图像工具操作的 mixin。
+/// 提供图像工具操作的扩展。
 ///
-/// This mixin includes copy operation.
-/// 此 mixin 包含 copy 操作。
-mixin VipsUtilityMixin on VipsImageBase, VipsBindingsAccess {
+/// This extension includes copy operation.
+/// 此扩展包含 copy 操作。
+extension VipsUtilityExtension on VipsImageWrapper {
   /// Creates a copy of the image.
   ///
   /// 创建图像的副本。
@@ -22,13 +22,13 @@ mixin VipsUtilityMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic copy() {
+  VipsImageWrapper copy() {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.copy(pointer, outPtr);
+      final result = variadicBindings.copy(pointer, outPtr);
 
       if (result != 0) {
         throw VipsException(
@@ -36,7 +36,7 @@ mixin VipsUtilityMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'copy');
     } finally {
       calloc.free(outPtr);
     }

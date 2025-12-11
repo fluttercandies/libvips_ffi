@@ -3,18 +3,18 @@ import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart';
 
 import '../bindings/vips_bindings_generated.dart';
-import '../vips_core.dart';
-import 'vips_image_base.dart';
+import '../vips_image.dart';
+import '../vips_variadic_bindings.dart';
 
-/// Mixin providing image filter operations.
+/// Extension providing image filter operations.
 ///
-/// 提供图像滤镜操作的 mixin。
+/// 提供图像滤镜操作的扩展。
 ///
-/// This mixin includes gaussianBlur, sharpen, invert, flatten,
+/// This extension includes gaussianBlur, sharpen, invert, flatten,
 /// gamma, and autoRotate operations.
-/// 此 mixin 包含 gaussianBlur、sharpen、invert、flatten、
+/// 此扩展包含 gaussianBlur、sharpen、invert、flatten、
 /// gamma 和 autoRotate 操作。
-mixin VipsFilterMixin on VipsImageBase, VipsBindingsAccess {
+extension VipsFilterExtension on VipsImageWrapper {
   /// Applies Gaussian blur to the image.
   ///
   /// 对图像应用高斯模糊。
@@ -29,13 +29,13 @@ mixin VipsFilterMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic gaussianBlur(double sigma) {
+  VipsImageWrapper gaussianBlur(double sigma) {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.gaussblur(pointer, outPtr, sigma);
+      final result = variadicBindings.gaussblur(pointer, outPtr, sigma);
 
       if (result != 0) {
         throw VipsException(
@@ -43,7 +43,7 @@ mixin VipsFilterMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'gaussianBlur');
     } finally {
       calloc.free(outPtr);
     }
@@ -58,13 +58,13 @@ mixin VipsFilterMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic sharpen() {
+  VipsImageWrapper sharpen() {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.sharpen(pointer, outPtr);
+      final result = variadicBindings.sharpen(pointer, outPtr);
 
       if (result != 0) {
         throw VipsException(
@@ -72,7 +72,7 @@ mixin VipsFilterMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'sharpen');
     } finally {
       calloc.free(outPtr);
     }
@@ -87,13 +87,13 @@ mixin VipsFilterMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic invert() {
+  VipsImageWrapper invert() {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.invert(pointer, outPtr);
+      final result = variadicBindings.invert(pointer, outPtr);
 
       if (result != 0) {
         throw VipsException(
@@ -101,7 +101,7 @@ mixin VipsFilterMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'invert');
     } finally {
       calloc.free(outPtr);
     }
@@ -120,13 +120,13 @@ mixin VipsFilterMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic flatten() {
+  VipsImageWrapper flatten() {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.flatten(pointer, outPtr);
+      final result = variadicBindings.flatten(pointer, outPtr);
 
       if (result != 0) {
         throw VipsException(
@@ -134,7 +134,7 @@ mixin VipsFilterMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'flatten');
     } finally {
       calloc.free(outPtr);
     }
@@ -149,13 +149,13 @@ mixin VipsFilterMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic gamma() {
+  VipsImageWrapper gamma() {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.gamma(pointer, outPtr);
+      final result = variadicBindings.gamma(pointer, outPtr);
 
       if (result != 0) {
         throw VipsException(
@@ -163,7 +163,7 @@ mixin VipsFilterMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'gamma');
     } finally {
       calloc.free(outPtr);
     }
@@ -178,13 +178,13 @@ mixin VipsFilterMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic autoRotate() {
+  VipsImageWrapper autoRotate() {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.autorot(pointer, outPtr);
+      final result = variadicBindings.autorot(pointer, outPtr);
 
       if (result != 0) {
         throw VipsException(
@@ -192,7 +192,7 @@ mixin VipsFilterMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'autoRotate');
     } finally {
       calloc.free(outPtr);
     }

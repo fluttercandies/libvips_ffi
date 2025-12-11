@@ -4,15 +4,16 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 
 import '../vips_core.dart';
-import 'vips_image_base.dart';
+import '../vips_image.dart';
+import '../vips_variadic_bindings.dart';
 
-/// Mixin providing image I/O operations.
+/// Extension providing image I/O operations.
 ///
-/// 提供图像 I/O 操作的 mixin。
+/// 提供图像 I/O 操作的扩展。
 ///
-/// This mixin includes writeToFile and writeToBuffer operations.
-/// 此 mixin 包含 writeToFile 和 writeToBuffer 操作。
-mixin VipsIOMixin on VipsImageBase, VipsBindingsAccess {
+/// This extension includes writeToFile and writeToBuffer operations.
+/// 此扩展包含 writeToFile 和 writeToBuffer 操作。
+extension VipsIOExtension on VipsImageWrapper {
   /// Writes the image to a file.
   ///
   /// 将图像写入文件。
@@ -31,7 +32,7 @@ mixin VipsIOMixin on VipsImageBase, VipsBindingsAccess {
 
     final filenamePtr = filename.toNativeUtf8();
     try {
-      final result = bindings.imageWriteToFile(pointer, filenamePtr.cast());
+      final result = variadicBindings.imageWriteToFile(pointer, filenamePtr.cast());
 
       if (result != 0) {
         throw VipsException(
@@ -64,7 +65,7 @@ mixin VipsIOMixin on VipsImageBase, VipsBindingsAccess {
     final sizePtr = calloc<ffi.Size>();
 
     try {
-      final result = bindings.imageWriteToBuffer(
+      final result = variadicBindings.imageWriteToBuffer(
         pointer,
         suffixPtr.cast(),
         bufPtr,
@@ -84,7 +85,7 @@ mixin VipsIOMixin on VipsImageBase, VipsBindingsAccess {
       final data = Uint8List.fromList(dataPtr.asTypedList(size));
 
       // Free the buffer allocated by vips
-      stdBindings.g_free(bufPtr.value);
+      vipsBindings.g_free(bufPtr.value);
 
       return data;
     } finally {

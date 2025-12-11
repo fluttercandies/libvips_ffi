@@ -3,19 +3,18 @@ import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart';
 
 import '../bindings/vips_bindings_generated.dart' hide VipsDirection;
-import '../vips_core.dart';
-import '../vips_enums.dart';
-import 'vips_image_base.dart';
+import '../vips_image.dart';
+import '../vips_variadic_bindings.dart';
 
-/// Mixin providing image transformation operations.
+/// Extension providing image transformation operations.
 ///
-/// 提供图像变换操作的 mixin。
+/// 提供图像变换操作的扩展。
 ///
-/// This mixin includes resize, rotate, crop, thumbnail, flip,
+/// This extension includes resize, rotate, crop, thumbnail, flip,
 /// embed, extractArea, and smartCrop operations.
-/// 此 mixin 包含 resize、rotate、crop、thumbnail、flip、
+/// 此扩展包含 resize、rotate、crop、thumbnail、flip、
 /// embed、extractArea 和 smartCrop 操作。
-mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
+extension VipsTransformExtension on VipsImageWrapper {
   /// Resizes the image by a scale factor.
   ///
   /// 按比例因子调整图像大小。
@@ -28,13 +27,13 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic resize(double scale) {
+  VipsImageWrapper resize(double scale) {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.resize(pointer, outPtr, scale);
+      final result = variadicBindings.resize(pointer, outPtr, scale);
 
       if (result != 0) {
         throw VipsException(
@@ -42,7 +41,7 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'resize');
     } finally {
       calloc.free(outPtr);
     }
@@ -60,13 +59,13 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic rotate(double angle) {
+  VipsImageWrapper rotate(double angle) {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.rotate(pointer, outPtr, angle);
+      final result = variadicBindings.rotate(pointer, outPtr, angle);
 
       if (result != 0) {
         throw VipsException(
@@ -74,7 +73,7 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'rotate');
     } finally {
       calloc.free(outPtr);
     }
@@ -95,13 +94,14 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic crop(int left, int top, int width, int height) {
+  VipsImageWrapper crop(int left, int top, int width, int height) {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.crop(pointer, outPtr, left, top, width, height);
+      final result =
+          variadicBindings.crop(pointer, outPtr, left, top, width, height);
 
       if (result != 0) {
         throw VipsException(
@@ -109,7 +109,7 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'crop');
     } finally {
       calloc.free(outPtr);
     }
@@ -133,13 +133,13 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic thumbnail(int targetWidth) {
+  VipsImageWrapper thumbnail(int targetWidth) {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.thumbnailImage(pointer, outPtr, targetWidth);
+      final result = variadicBindings.thumbnailImage(pointer, outPtr, targetWidth);
 
       if (result != 0) {
         throw VipsException(
@@ -147,7 +147,7 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'thumbnail');
     } finally {
       calloc.free(outPtr);
     }
@@ -168,13 +168,13 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic flip(VipsDirection direction) {
+  VipsImageWrapper flip(VipsDirection direction) {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.flip(pointer, outPtr, direction.index);
+      final result = variadicBindings.flip(pointer, outPtr, direction.index);
 
       if (result != 0) {
         throw VipsException(
@@ -182,7 +182,7 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'flip');
     } finally {
       calloc.free(outPtr);
     }
@@ -203,13 +203,14 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic embed(int x, int y, int width, int height) {
+  VipsImageWrapper embed(int x, int y, int width, int height) {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.embed(pointer, outPtr, x, y, width, height);
+      final result =
+          variadicBindings.embed(pointer, outPtr, x, y, width, height);
 
       if (result != 0) {
         throw VipsException(
@@ -217,7 +218,7 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'embed');
     } finally {
       calloc.free(outPtr);
     }
@@ -238,14 +239,14 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic extractArea(int left, int top, int width, int height) {
+  VipsImageWrapper extractArea(int left, int top, int width, int height) {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
       final result =
-          bindings.extractArea(pointer, outPtr, left, top, width, height);
+          variadicBindings.extractArea(pointer, outPtr, left, top, width, height);
 
       if (result != 0) {
         throw VipsException(
@@ -253,7 +254,7 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'extractArea');
     } finally {
       calloc.free(outPtr);
     }
@@ -275,13 +276,13 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic smartCrop(int width, int height) {
+  VipsImageWrapper smartCrop(int width, int height) {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.smartcrop(pointer, outPtr, width, height);
+      final result = variadicBindings.smartcrop(pointer, outPtr, width, height);
 
       if (result != 0) {
         throw VipsException(
@@ -289,7 +290,7 @@ mixin VipsTransformMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'smartCrop');
     } finally {
       calloc.free(outPtr);
     }

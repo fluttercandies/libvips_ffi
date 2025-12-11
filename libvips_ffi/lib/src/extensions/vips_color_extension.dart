@@ -3,17 +3,16 @@ import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart';
 
 import '../bindings/vips_bindings_generated.dart' hide VipsInterpretation;
-import '../vips_core.dart';
-import '../vips_enums.dart';
-import 'vips_image_base.dart';
+import '../vips_image.dart';
+import '../vips_variadic_bindings.dart';
 
-/// Mixin providing image color operations.
+/// Extension providing image color operations.
 ///
-/// 提供图像颜色操作的 mixin。
+/// 提供图像颜色操作的扩展。
 ///
-/// This mixin includes colourspace, linear, brightness, and contrast operations.
-/// 此 mixin 包含 colourspace、linear、brightness 和 contrast 操作。
-mixin VipsColorMixin on VipsImageBase, VipsBindingsAccess {
+/// This extension includes colourspace, linear, brightness, and contrast operations.
+/// 此扩展包含 colourspace、linear、brightness 和 contrast 操作。
+extension VipsColorExtension on VipsImageWrapper {
   /// Converts the image to a different colour space.
   ///
   /// 将图像转换为不同的色彩空间。
@@ -26,13 +25,13 @@ mixin VipsColorMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic colourspace(VipsInterpretation space) {
+  VipsImageWrapper colourspace(VipsInterpretation space) {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.colourspace(pointer, outPtr, space.value);
+      final result = variadicBindings.colourspace(pointer, outPtr, space.value);
 
       if (result != 0) {
         throw VipsException(
@@ -40,7 +39,7 @@ mixin VipsColorMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'colourspace');
     } finally {
       calloc.free(outPtr);
     }
@@ -61,13 +60,13 @@ mixin VipsColorMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Throws [VipsException] if the operation fails.
   /// 如果操作失败，则抛出 [VipsException]。
-  dynamic linear(double a, double b) {
+  VipsImageWrapper linear(double a, double b) {
     checkDisposed();
     clearVipsError();
 
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = bindings.linear1(pointer, outPtr, a, b);
+      final result = variadicBindings.linear1(pointer, outPtr, a, b);
 
       if (result != 0) {
         throw VipsException(
@@ -75,7 +74,7 @@ mixin VipsColorMixin on VipsImageBase, VipsBindingsAccess {
         );
       }
 
-      return createFromPointer(outPtr.value);
+      return VipsImageWrapper.fromPointer(outPtr.value, label: 'linear');
     } finally {
       calloc.free(outPtr);
     }
@@ -94,7 +93,7 @@ mixin VipsColorMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Returns a new image. Remember to dispose it when done.
   /// 返回新图像。完成后记得调用 dispose。
-  dynamic brightness(double factor) {
+  VipsImageWrapper brightness(double factor) {
     return linear(factor, 0);
   }
 
@@ -111,7 +110,7 @@ mixin VipsColorMixin on VipsImageBase, VipsBindingsAccess {
   ///
   /// Returns a new image. Remember to dispose it when done.
   /// 返回新图像。完成后记得调用 dispose。
-  dynamic contrast(double factor) {
+  VipsImageWrapper contrast(double factor) {
     // Contrast adjustment: out = (in - 128) * factor + 128
     return linear(factor, 128 * (1 - factor));
   }

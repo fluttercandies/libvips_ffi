@@ -62,19 +62,15 @@ library libvips_ffi;
 
 // Export core image processing API.
 // 导出核心图像处理 API。
-export 'src/vips_image.dart'
-    show
-        VipsImageWrapper,
-        VipsException,
-        VipsDirection,
-        VipsInterpretation,
-        VipsPointerManager,
-        initVips,
-        shutdownVips,
-        getVipsError,
-        clearVipsError,
-        vipsVersion,
-        vipsVersionString;
+export 'src/vips_image.dart';
+
+// Export extensions for image operations.
+// 导出图像操作的扩展。
+export 'src/extensions/vips_transform_extension.dart';
+export 'src/extensions/vips_filter_extension.dart';
+export 'src/extensions/vips_color_extension.dart';
+export 'src/extensions/vips_io_extension.dart';
+export 'src/extensions/vips_utility_extension.dart';
 
 // Export async API for running operations in isolate.
 // 导出在 isolate 中运行操作的异步 API。

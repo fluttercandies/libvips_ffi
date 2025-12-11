@@ -4,12 +4,6 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 
 import 'bindings/vips_bindings_generated.dart' hide VipsDirection, VipsInterpretation;
-import 'images/vips_color_mixin.dart';
-import 'images/vips_filter_mixin.dart';
-import 'images/vips_image_base.dart';
-import 'images/vips_io_mixin.dart';
-import 'images/vips_transform_mixin.dart';
-import 'images/vips_utility_mixin.dart';
 import 'vips_core.dart';
 import 'vips_pointer_manager.dart';
 import 'vips_variadic_bindings.dart';
@@ -27,6 +21,14 @@ export 'vips_core.dart'
         vipsVersionString;
 export 'vips_enums.dart' show VipsDirection, VipsInterpretation;
 export 'vips_pointer_manager.dart' show VipsPointerManager;
+
+// Export extensions for convenience
+// 为方便起见导出扩展
+export 'extensions/vips_transform_extension.dart';
+export 'extensions/vips_filter_extension.dart';
+export 'extensions/vips_color_extension.dart';
+export 'extensions/vips_io_extension.dart';
+export 'extensions/vips_utility_extension.dart';
 
 /// High-level wrapper for VipsImage.
 ///
@@ -49,14 +51,7 @@ export 'vips_pointer_manager.dart' show VipsPointerManager;
 ///   image.dispose();
 /// }
 /// ```
-class VipsImageWrapper extends VipsImageBase
-    with
-        VipsBindingsAccess,
-        VipsIOMixin,
-        VipsTransformMixin,
-        VipsFilterMixin,
-        VipsColorMixin,
-        VipsUtilityMixin {
+class VipsImageWrapper {
   final ffi.Pointer<VipsImage> _pointer;
   bool _disposed = false;
 
@@ -74,6 +69,29 @@ class VipsImageWrapper extends VipsImageBase
     VipsPointerManager.instance.register(_pointer, label);
   }
 
+  /// Creates a VipsImageWrapper from a raw pointer.
+  ///
+  /// 从原始指针创建 VipsImageWrapper。
+  ///
+  /// This is used internally by extension methods to create new instances.
+  /// 这是扩展方法内部用于创建新实例的方法。
+  ///
+  /// [pointer] is the VipsImage pointer.
+  /// [pointer] 是 VipsImage 指针。
+  ///
+  /// [bufferPtr] is an optional buffer pointer that must be kept alive.
+  /// [bufferPtr] 是可选的缓冲区指针，必须保持活动状态。
+  ///
+  /// [label] is an optional label for debugging.
+  /// [label] 是可选的调试标签。
+  factory VipsImageWrapper.fromPointer(
+    ffi.Pointer<VipsImage> pointer, {
+    ffi.Pointer<ffi.Uint8>? bufferPtr,
+    String? label,
+  }) {
+    return VipsImageWrapper._(pointer, bufferPtr, label ?? 'fromPointer');
+  }
+
   /// Whether this image has been disposed.
   ///
   /// 此图像是否已被释放。
@@ -84,25 +102,24 @@ class VipsImageWrapper extends VipsImageBase
   /// 底层指针是否为空。
   bool get isNull => _pointer == ffi.nullptr;
 
-  @override
+  /// Gets the underlying pointer.
+  ///
+  /// 获取底层指针。
+  ///
+  /// Throws [StateError] if the image has been disposed.
+  /// 如果图像已被释放，则抛出 [StateError]。
   ffi.Pointer<VipsImage> get pointer {
     checkDisposed();
     return _pointer;
   }
 
-  @override
+  /// Checks if the image has been disposed and throws if so.
+  ///
+  /// 检查图像是否已被释放，如果是则抛出异常。
   void checkDisposed() {
     if (_disposed) {
       throw StateError('VipsImage has been disposed');
     }
-  }
-
-  @override
-  VipsImageWrapper createFromPointer(
-    ffi.Pointer<VipsImage> pointer, [
-    ffi.Pointer<ffi.Uint8>? bufferPtr,
-  ]) {
-    return VipsImageWrapper._(pointer, bufferPtr, 'createFromPointer');
   }
 
   /// Loads an image from a file.

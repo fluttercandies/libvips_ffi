@@ -44,12 +44,12 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Native libraries (platform specific)
-*.so
-*.dylib
-*.dll
-*.a
-*.lib
+# Native libraries (platform specific) - only ignore in root
+# Pre-compiled libraries in packages/ should be committed
+/*.so
+/*.dll
+/*.a
+/*.lib
 
 # Output directories
 output/

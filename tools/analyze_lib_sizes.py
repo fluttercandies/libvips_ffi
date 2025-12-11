@@ -21,11 +21,12 @@ from typing import Dict, List, Tuple
 
 # Project root
 SCRIPT_DIR = Path(__file__).parent
-PROJECT_ROOT = SCRIPT_DIR.parent / "libvips_ffi"
+PROJECT_ROOT = SCRIPT_DIR.parent
+FLUTTER_PACKAGE = PROJECT_ROOT / "packages" / "libvips_ffi"
 
 # Paths
-ANDROID_JNILIB = PROJECT_ROOT / "android" / "src" / "main" / "jniLibs"
-IOS_XCFRAMEWORK = PROJECT_ROOT / "ios" / "Frameworks" / "libvips.xcframework"
+ANDROID_JNILIB = FLUTTER_PACKAGE / "android" / "src" / "main" / "jniLibs"
+IOS_XCFRAMEWORK = FLUTTER_PACKAGE / "ios" / "Frameworks" / "libvips.xcframework"
 
 
 def format_size(size_bytes: int) -> str:

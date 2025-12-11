@@ -2,12 +2,15 @@ import 'dart:ffi' as ffi;
 
 import 'bindings/vips_bindings_generated.dart';
 
-// Custom function types for variadic functions that need NULL termination.
-// 需要 NULL 终止的可变参数函数的自定义函数类型。
+// Custom function types for variadic functions using VarArgs (Dart 3.0+).
+// 使用 VarArgs 的可变参数函数自定义类型（需要 Dart 3.0+）。
+//
+// VarArgs<(Pointer<Void>,)> is used to pass NULL terminator explicitly.
+// 使用 VarArgs<(Pointer<Void>,)> 显式传递 NULL 终止符。
 
 typedef VipsImageNewFromFileNative = ffi.Pointer<VipsImage> Function(
   ffi.Pointer<ffi.Char> name,
-  ffi.Pointer<ffi.Void> terminator, // NULL terminator
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>, // NULL terminator
 );
 typedef VipsImageNewFromFileDart = ffi.Pointer<VipsImage> Function(
   ffi.Pointer<ffi.Char> name,
@@ -17,7 +20,7 @@ typedef VipsImageNewFromFileDart = ffi.Pointer<VipsImage> Function(
 typedef VipsImageWriteToFileNative = ffi.Int Function(
   ffi.Pointer<VipsImage> image,
   ffi.Pointer<ffi.Char> name,
-  ffi.Pointer<ffi.Void> terminator, // NULL terminator
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>, // NULL terminator
 );
 typedef VipsImageWriteToFileDart = int Function(
   ffi.Pointer<VipsImage> image,
@@ -30,7 +33,7 @@ typedef VipsImageWriteToBufferNative = ffi.Int Function(
   ffi.Pointer<ffi.Char> suffix,
   ffi.Pointer<ffi.Pointer<ffi.Void>> buf,
   ffi.Pointer<ffi.Size> size,
-  ffi.Pointer<ffi.Void> terminator, // NULL terminator
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>, // NULL terminator
 );
 typedef VipsImageWriteToBufferDart = int Function(
   ffi.Pointer<VipsImage> image,
@@ -44,7 +47,7 @@ typedef VipsImageNewFromBufferNative = ffi.Pointer<VipsImage> Function(
   ffi.Pointer<ffi.Void> buf,
   ffi.Size len,
   ffi.Pointer<ffi.Char> optionString,
-  ffi.Pointer<ffi.Void> terminator, // NULL terminator
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>, // NULL terminator
 );
 typedef VipsImageNewFromBufferDart = ffi.Pointer<VipsImage> Function(
   ffi.Pointer<ffi.Void> buf,
@@ -57,7 +60,7 @@ typedef VipsResizeNative = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
   ffi.Double scale,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsResizeDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -70,7 +73,7 @@ typedef VipsRotateNative = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
   ffi.Double angle,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsRotateDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -86,7 +89,7 @@ typedef VipsCropNative = ffi.Int Function(
   ffi.Int top,
   ffi.Int width,
   ffi.Int height,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsCropDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -102,7 +105,7 @@ typedef VipsThumbnailImageNative = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
   ffi.Int width,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsThumbnailImageDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -115,7 +118,7 @@ typedef VipsThumbnailNative = ffi.Int Function(
   ffi.Pointer<ffi.Char> filename,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
   ffi.Int width,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsThumbnailDart = int Function(
   ffi.Pointer<ffi.Char> filename,
@@ -129,7 +132,7 @@ typedef VipsThumbnailBufferNative = ffi.Int Function(
   ffi.Size len,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
   ffi.Int width,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsThumbnailBufferDart = int Function(
   ffi.Pointer<ffi.Void> buf,
@@ -143,7 +146,7 @@ typedef VipsFlipNative = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
   ffi.Int direction,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsFlipDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -156,7 +159,7 @@ typedef VipsGaussblurNative = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
   ffi.Double sigma,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsGaussblurDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -168,7 +171,7 @@ typedef VipsGaussblurDart = int Function(
 typedef VipsSharpenNative = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsSharpenDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -179,7 +182,7 @@ typedef VipsSharpenDart = int Function(
 typedef VipsInvertNative = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsInvertDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -190,7 +193,7 @@ typedef VipsInvertDart = int Function(
 typedef VipsFlattenNative = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsFlattenDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -201,7 +204,7 @@ typedef VipsFlattenDart = int Function(
 typedef VipsGammaNative = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsGammaDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -212,7 +215,7 @@ typedef VipsGammaDart = int Function(
 typedef VipsAutorotNative = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsAutorotDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -225,7 +228,7 @@ typedef VipsSmartcropNative = ffi.Int Function(
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
   ffi.Int width,
   ffi.Int height,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsSmartcropDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -241,7 +244,7 @@ typedef VipsGravityNative = ffi.Int Function(
   ffi.Int direction,
   ffi.Int width,
   ffi.Int height,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsGravityDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -259,7 +262,7 @@ typedef VipsEmbedNative = ffi.Int Function(
   ffi.Int y,
   ffi.Int width,
   ffi.Int height,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsEmbedDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -278,7 +281,7 @@ typedef VipsExtractAreaNative = ffi.Int Function(
   ffi.Int top,
   ffi.Int width,
   ffi.Int height,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsExtractAreaDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -294,7 +297,7 @@ typedef VipsColourspaceNative = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
   ffi.Int space,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsColourspaceDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -307,7 +310,7 @@ typedef VipsCastNative = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
   ffi.Int format,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsCastDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -319,7 +322,7 @@ typedef VipsCastDart = int Function(
 typedef VipsCopyNative = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsCopyDart = int Function(
   ffi.Pointer<VipsImage> in1,
@@ -332,7 +335,7 @@ typedef VipsLinear1Native = ffi.Int Function(
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
   ffi.Double a,
   ffi.Double b,
-  ffi.Pointer<ffi.Void> terminator,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
 );
 typedef VipsLinear1Dart = int Function(
   ffi.Pointer<VipsImage> in1,

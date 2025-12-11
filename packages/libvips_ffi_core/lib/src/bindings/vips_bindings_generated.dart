@@ -69,26 +69,6 @@ class VipsBindings {
       _lookup<ffi.NativeFunction<gpointer Function(gsize)>>('g_malloc0');
   late final _g_malloc0 = _g_malloc0Ptr.asFunction<gpointer Function(int)>();
 
-  void g_object_get_property(
-    ffi.Pointer<GObject> object,
-    ffi.Pointer<gchar> property_name,
-    ffi.Pointer<GValue> value,
-  ) {
-    return _g_object_get_property(
-      object,
-      property_name,
-      value,
-    );
-  }
-
-  late final _g_object_get_propertyPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<GObject>, ffi.Pointer<gchar>,
-              ffi.Pointer<GValue>)>>('g_object_get_property');
-  late final _g_object_get_property = _g_object_get_propertyPtr.asFunction<
-      void Function(
-          ffi.Pointer<GObject>, ffi.Pointer<gchar>, ffi.Pointer<GValue>)>();
-
   gpointer g_object_ref(
     gpointer object,
   ) {
@@ -101,26 +81,6 @@ class VipsBindings {
       _lookup<ffi.NativeFunction<gpointer Function(gpointer)>>('g_object_ref');
   late final _g_object_ref =
       _g_object_refPtr.asFunction<gpointer Function(gpointer)>();
-
-  void g_object_set_property(
-    ffi.Pointer<GObject> object,
-    ffi.Pointer<gchar> property_name,
-    ffi.Pointer<GValue> value,
-  ) {
-    return _g_object_set_property(
-      object,
-      property_name,
-      value,
-    );
-  }
-
-  late final _g_object_set_propertyPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<GObject>, ffi.Pointer<gchar>,
-              ffi.Pointer<GValue>)>>('g_object_set_property');
-  late final _g_object_set_property = _g_object_set_propertyPtr.asFunction<
-      void Function(
-          ffi.Pointer<GObject>, ffi.Pointer<gchar>, ffi.Pointer<GValue>)>();
 
   void g_object_unref(
     gpointer object,
@@ -135,159 +95,6 @@ class VipsBindings {
           'g_object_unref');
   late final _g_object_unref =
       _g_object_unrefPtr.asFunction<void Function(gpointer)>();
-
-  double g_value_get_double(
-    ffi.Pointer<GValue> value,
-  ) {
-    return _g_value_get_double(
-      value,
-    );
-  }
-
-  late final _g_value_get_doublePtr =
-      _lookup<ffi.NativeFunction<gdouble Function(ffi.Pointer<GValue>)>>(
-          'g_value_get_double');
-  late final _g_value_get_double =
-      _g_value_get_doublePtr.asFunction<double Function(ffi.Pointer<GValue>)>();
-
-  int g_value_get_int(
-    ffi.Pointer<GValue> value,
-  ) {
-    return _g_value_get_int(
-      value,
-    );
-  }
-
-  late final _g_value_get_intPtr =
-      _lookup<ffi.NativeFunction<gint Function(ffi.Pointer<GValue>)>>(
-          'g_value_get_int');
-  late final _g_value_get_int =
-      _g_value_get_intPtr.asFunction<int Function(ffi.Pointer<GValue>)>();
-
-  gpointer g_value_get_object(
-    ffi.Pointer<GValue> value,
-  ) {
-    return _g_value_get_object(
-      value,
-    );
-  }
-
-  late final _g_value_get_objectPtr =
-      _lookup<ffi.NativeFunction<gpointer Function(ffi.Pointer<GValue>)>>(
-          'g_value_get_object');
-  late final _g_value_get_object = _g_value_get_objectPtr
-      .asFunction<gpointer Function(ffi.Pointer<GValue>)>();
-
-  ffi.Pointer<gchar> g_value_get_string(
-    ffi.Pointer<GValue> value,
-  ) {
-    return _g_value_get_string(
-      value,
-    );
-  }
-
-  late final _g_value_get_stringPtr = _lookup<
-          ffi.NativeFunction<ffi.Pointer<gchar> Function(ffi.Pointer<GValue>)>>(
-      'g_value_get_string');
-  late final _g_value_get_string = _g_value_get_stringPtr
-      .asFunction<ffi.Pointer<gchar> Function(ffi.Pointer<GValue>)>();
-
-  /// --- prototypes ---
-  ffi.Pointer<GValue> g_value_init(
-    ffi.Pointer<GValue> value,
-    int g_type,
-  ) {
-    return _g_value_init(
-      value,
-      g_type,
-    );
-  }
-
-  late final _g_value_initPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<GValue> Function(
-              ffi.Pointer<GValue>, GType)>>('g_value_init');
-  late final _g_value_init = _g_value_initPtr
-      .asFunction<ffi.Pointer<GValue> Function(ffi.Pointer<GValue>, int)>();
-
-  void g_value_set_double(
-    ffi.Pointer<GValue> value,
-    double v_double,
-  ) {
-    return _g_value_set_double(
-      value,
-      v_double,
-    );
-  }
-
-  late final _g_value_set_doublePtr = _lookup<
-          ffi.NativeFunction<ffi.Void Function(ffi.Pointer<GValue>, gdouble)>>(
-      'g_value_set_double');
-  late final _g_value_set_double = _g_value_set_doublePtr
-      .asFunction<void Function(ffi.Pointer<GValue>, double)>();
-
-  void g_value_set_int(
-    ffi.Pointer<GValue> value,
-    int v_int,
-  ) {
-    return _g_value_set_int(
-      value,
-      v_int,
-    );
-  }
-
-  late final _g_value_set_intPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<GValue>, gint)>>(
-          'g_value_set_int');
-  late final _g_value_set_int =
-      _g_value_set_intPtr.asFunction<void Function(ffi.Pointer<GValue>, int)>();
-
-  void g_value_set_object(
-    ffi.Pointer<GValue> value,
-    gpointer v_object,
-  ) {
-    return _g_value_set_object(
-      value,
-      v_object,
-    );
-  }
-
-  late final _g_value_set_objectPtr = _lookup<
-          ffi.NativeFunction<ffi.Void Function(ffi.Pointer<GValue>, gpointer)>>(
-      'g_value_set_object');
-  late final _g_value_set_object = _g_value_set_objectPtr
-      .asFunction<void Function(ffi.Pointer<GValue>, gpointer)>();
-
-  void g_value_set_string(
-    ffi.Pointer<GValue> value,
-    ffi.Pointer<gchar> v_string,
-  ) {
-    return _g_value_set_string(
-      value,
-      v_string,
-    );
-  }
-
-  late final _g_value_set_stringPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<GValue>, ffi.Pointer<gchar>)>>('g_value_set_string');
-  late final _g_value_set_string = _g_value_set_stringPtr
-      .asFunction<void Function(ffi.Pointer<GValue>, ffi.Pointer<gchar>)>();
-
-  void g_value_unset(
-    ffi.Pointer<GValue> value,
-  ) {
-    return _g_value_unset(
-      value,
-    );
-  }
-
-  late final _g_value_unsetPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<GValue>)>>(
-          'g_value_unset');
-  late final _g_value_unset =
-      _g_value_unsetPtr.asFunction<void Function(ffi.Pointer<GValue>)>();
 
   int vips_CMC2LCh(
     ffi.Pointer<VipsImage> in$,
@@ -1592,15 +1399,6 @@ class VipsBindings {
       int Function(
           ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Pointer<VipsImage>>)>();
 
-  int vips_access_get_type() {
-    return _vips_access_get_type();
-  }
-
-  late final _vips_access_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_access_get_type');
-  late final _vips_access_get_type =
-      _vips_access_get_typePtr.asFunction<int Function()>();
-
   int vips_acos(
     ffi.Pointer<VipsImage> in$,
     ffi.Pointer<ffi.Pointer<VipsImage>> out,
@@ -1720,15 +1518,6 @@ class VipsBindings {
       int Function(ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Pointer<VipsImage>>,
           double, double, double, double)>();
 
-  int vips_align_get_type() {
-    return _vips_align_get_type();
-  }
-
-  late final _vips_align_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_align_get_type');
-  late final _vips_align_get_type =
-      _vips_align_get_typePtr.asFunction<int Function()>();
-
   ffi.Pointer<ffi.Pointer<VipsImage>> vips_allocate_input_array(
     ffi.Pointer<VipsImage> out,
   ) {
@@ -1840,24 +1629,6 @@ class VipsBindings {
       int Function(ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Pointer<VipsImage>>,
           double)>();
 
-  int vips_angle45_get_type() {
-    return _vips_angle45_get_type();
-  }
-
-  late final _vips_angle45_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_angle45_get_type');
-  late final _vips_angle45_get_type =
-      _vips_angle45_get_typePtr.asFunction<int Function()>();
-
-  int vips_angle_get_type() {
-    return _vips_angle_get_type();
-  }
-
-  late final _vips_angle_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_angle_get_type');
-  late final _vips_angle_get_type =
-      _vips_angle_get_typePtr.asFunction<int Function()>();
-
   ffi.Pointer<VipsArea> vips_area_copy(
     ffi.Pointer<VipsArea> area,
   ) {
@@ -1921,15 +1692,6 @@ class VipsBindings {
           ffi.Pointer<ffi.Int>,
           ffi.Pointer<GType>,
           ffi.Pointer<ffi.Size>)>();
-
-  int vips_area_get_type() {
-    return _vips_area_get_type();
-  }
-
-  late final _vips_area_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_area_get_type');
-  late final _vips_area_get_type =
-      _vips_area_get_typePtr.asFunction<int Function()>();
 
   ffi.Pointer<VipsArea> vips_area_new(
     VipsCallbackFn free_fn,
@@ -2039,17 +1801,6 @@ class VipsBindings {
       _vips_argument_class_needsstringPtr
           .asFunction<int Function(ffi.Pointer<VipsArgumentClass>)>();
 
-  /// enumerations from "object.h"
-  int vips_argument_flags_get_type() {
-    return _vips_argument_flags_get_type();
-  }
-
-  late final _vips_argument_flags_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_argument_flags_get_type');
-  late final _vips_argument_flags_get_type =
-      _vips_argument_flags_get_typePtr.asFunction<int Function()>();
-
   int vips_argument_get_id() {
     return _vips_argument_get_id();
   }
@@ -2101,16 +1852,6 @@ class VipsBindings {
   late final _vips_array_double_get = _vips_array_double_getPtr.asFunction<
       ffi.Pointer<ffi.Double> Function(
           ffi.Pointer<VipsArrayDouble>, ffi.Pointer<ffi.Int>)>();
-
-  int vips_array_double_get_type() {
-    return _vips_array_double_get_type();
-  }
-
-  late final _vips_array_double_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_array_double_get_type');
-  late final _vips_array_double_get_type =
-      _vips_array_double_get_typePtr.asFunction<int Function()>();
 
   ffi.Pointer<VipsArrayDouble> vips_array_double_new(
     ffi.Pointer<ffi.Double> array,
@@ -2190,18 +1931,6 @@ class VipsBindings {
       ffi.Pointer<ffi.Pointer<VipsImage>> Function(
           ffi.Pointer<VipsArrayImage>, ffi.Pointer<ffi.Int>)>();
 
-  /// See image.h for vips_array_image_new() etc., they need to be declared after
-  /// VipsImage.
-  int vips_array_image_get_type() {
-    return _vips_array_image_get_type();
-  }
-
-  late final _vips_array_image_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_array_image_get_type');
-  late final _vips_array_image_get_type =
-      _vips_array_image_get_typePtr.asFunction<int Function()>();
-
   /// Defined in type.c but declared here, since they use VipsImage.
   ffi.Pointer<VipsArrayImage> vips_array_image_new(
     ffi.Pointer<ffi.Pointer<VipsImage>> array,
@@ -2271,15 +2000,6 @@ class VipsBindings {
   late final _vips_array_int_get = _vips_array_int_getPtr.asFunction<
       ffi.Pointer<ffi.Int> Function(
           ffi.Pointer<VipsArrayInt>, ffi.Pointer<ffi.Int>)>();
-
-  int vips_array_int_get_type() {
-    return _vips_array_int_get_type();
-  }
-
-  late final _vips_array_int_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_array_int_get_type');
-  late final _vips_array_int_get_type =
-      _vips_array_int_get_typePtr.asFunction<int Function()>();
 
   ffi.Pointer<VipsArrayInt> vips_array_int_new(
     ffi.Pointer<ffi.Int> array,
@@ -2519,16 +2239,6 @@ class VipsBindings {
               ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Double>)>>('vips_avg');
   late final _vips_avg = _vips_avgPtr.asFunction<
       int Function(ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Double>)>();
-
-  int vips_band_format_get_type() {
-    return _vips_band_format_get_type();
-  }
-
-  late final _vips_band_format_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_band_format_get_type');
-  late final _vips_band_format_get_type =
-      _vips_band_format_get_typePtr.asFunction<int Function()>();
 
   Dartgint vips_band_format_is8bit(
     VipsBandFormat format,
@@ -2856,15 +2566,6 @@ class VipsBindings {
   late final _vips_black = _vips_blackPtr.asFunction<
       int Function(ffi.Pointer<ffi.Pointer<VipsImage>>, int, int)>();
 
-  int vips_blend_mode_get_type() {
-    return _vips_blend_mode_get_type();
-  }
-
-  late final _vips_blend_mode_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_blend_mode_get_type');
-  late final _vips_blend_mode_get_type =
-      _vips_blend_mode_get_typePtr.asFunction<int Function()>();
-
   ffi.Pointer<VipsBlob> vips_blob_copy(
     ffi.Pointer<ffi.Void> data,
     int length,
@@ -2899,15 +2600,6 @@ class VipsBindings {
   late final _vips_blob_get = _vips_blob_getPtr.asFunction<
       ffi.Pointer<ffi.Void> Function(
           ffi.Pointer<VipsBlob>, ffi.Pointer<ffi.Size>)>();
-
-  int vips_blob_get_type() {
-    return _vips_blob_get_type();
-  }
-
-  late final _vips_blob_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_blob_get_type');
-  late final _vips_blob_get_type =
-      _vips_blob_get_typePtr.asFunction<int Function()>();
 
   ffi.Pointer<VipsBlob> vips_blob_new(
     VipsCallbackFn free_fn,
@@ -4763,15 +4455,6 @@ class VipsBindings {
       ffi.Pointer<ffi.Void> Function(
           int, VipsClassMapFn, ffi.Pointer<ffi.Void>)>();
 
-  int vips_coding_get_type() {
-    return _vips_coding_get_type();
-  }
-
-  late final _vips_coding_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_coding_get_type');
-  late final _vips_coding_get_type =
-      _vips_coding_get_typePtr.asFunction<int Function()>();
-
   double vips_col_C2Ccmc(
     double C,
   ) {
@@ -5365,27 +5048,6 @@ class VipsBindings {
   late final _vips_colourspace_issupported = _vips_colourspace_issupportedPtr
       .asFunction<int Function(ffi.Pointer<VipsImage>)>();
 
-  /// enumerations from "convolution.h"
-  int vips_combine_get_type() {
-    return _vips_combine_get_type();
-  }
-
-  late final _vips_combine_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_combine_get_type');
-  late final _vips_combine_get_type =
-      _vips_combine_get_typePtr.asFunction<int Function()>();
-
-  /// enumerations from "draw.h"
-  int vips_combine_mode_get_type() {
-    return _vips_combine_mode_get_type();
-  }
-
-  late final _vips_combine_mode_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_combine_mode_get_type');
-  late final _vips_combine_mode_get_type =
-      _vips_combine_mode_get_typePtr.asFunction<int Function()>();
-
   int vips_compass(
     ffi.Pointer<VipsImage> in$,
     ffi.Pointer<ffi.Pointer<VipsImage>> out,
@@ -5407,16 +5069,6 @@ class VipsBindings {
   late final _vips_compass = _vips_compassPtr.asFunction<
       int Function(ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Pointer<VipsImage>>,
           ffi.Pointer<VipsImage>)>();
-
-  int vips_compass_direction_get_type() {
-    return _vips_compass_direction_get_type();
-  }
-
-  late final _vips_compass_direction_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_compass_direction_get_type');
-  late final _vips_compass_direction_get_type =
-      _vips_compass_direction_get_typePtr.asFunction<int Function()>();
 
   int vips_complex(
     ffi.Pointer<VipsImage> in$,
@@ -5615,15 +5267,6 @@ class VipsBindings {
   late final _vips_connection_filename =
       _vips_connection_filenamePtr.asFunction<
           ffi.Pointer<ffi.Char> Function(ffi.Pointer<VipsConnection>)>();
-
-  int vips_connection_get_type() {
-    return _vips_connection_get_type();
-  }
-
-  late final _vips_connection_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_connection_get_type');
-  late final _vips_connection_get_type =
-      _vips_connection_get_typePtr.asFunction<int Function()>();
 
   ffi.Pointer<ffi.Char> vips_connection_nick(
     ffi.Pointer<VipsConnection> connection,
@@ -6295,17 +5938,6 @@ class VipsBindings {
   late final _vips_dbuf_writef = _vips_dbuf_writefPtr
       .asFunction<int Function(ffi.Pointer<VipsDbuf>, ffi.Pointer<ffi.Char>)>();
 
-  /// enumerations from "image.h"
-  int vips_demand_style_get_type() {
-    return _vips_demand_style_get_type();
-  }
-
-  late final _vips_demand_style_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_demand_style_get_type');
-  late final _vips_demand_style_get_type =
-      _vips_demand_style_get_typePtr.asFunction<int Function()>();
-
   int vips_deviate(
     ffi.Pointer<VipsImage> in$,
     ffi.Pointer<ffi.Double> out,
@@ -6322,15 +5954,6 @@ class VipsBindings {
               ffi.Pointer<ffi.Double>)>>('vips_deviate');
   late final _vips_deviate = _vips_deviatePtr.asFunction<
       int Function(ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Double>)>();
-
-  int vips_direction_get_type() {
-    return _vips_direction_get_type();
-  }
-
-  late final _vips_direction_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_direction_get_type');
-  late final _vips_direction_get_type =
-      _vips_direction_get_typePtr.asFunction<int Function()>();
 
   int vips_divide(
     ffi.Pointer<VipsImage> left,
@@ -7129,16 +6752,6 @@ class VipsBindings {
       int Function(
           ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Pointer<VipsImage>>)>();
 
-  /// enumerations from "conversion.h"
-  int vips_extend_get_type() {
-    return _vips_extend_get_type();
-  }
-
-  late final _vips_extend_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_extend_get_type');
-  late final _vips_extend_get_type =
-      _vips_extend_get_typePtr.asFunction<int Function()>();
-
   int vips_extract_area(
     ffi.Pointer<VipsImage> in$,
     ffi.Pointer<ffi.Pointer<VipsImage>> out,
@@ -7210,15 +6823,6 @@ class VipsBindings {
               ffi.Int)>>('vips_eye');
   late final _vips_eye = _vips_eyePtr.asFunction<
       int Function(ffi.Pointer<ffi.Pointer<VipsImage>>, int, int)>();
-
-  int vips_fail_on_get_type() {
-    return _vips_fail_on_get_type();
-  }
-
-  late final _vips_fail_on_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_fail_on_get_type');
-  late final _vips_fail_on_get_type =
-      _vips_fail_on_get_typePtr.asFunction<int Function()>();
 
   int vips_falsecolour(
     ffi.Pointer<VipsImage> in$,
@@ -7497,36 +7101,6 @@ class VipsBindings {
       int Function(
           ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Pointer<VipsImage>>)>();
 
-  int vips_foreign_dz_container_get_type() {
-    return _vips_foreign_dz_container_get_type();
-  }
-
-  late final _vips_foreign_dz_container_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_dz_container_get_type');
-  late final _vips_foreign_dz_container_get_type =
-      _vips_foreign_dz_container_get_typePtr.asFunction<int Function()>();
-
-  int vips_foreign_dz_depth_get_type() {
-    return _vips_foreign_dz_depth_get_type();
-  }
-
-  late final _vips_foreign_dz_depth_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_dz_depth_get_type');
-  late final _vips_foreign_dz_depth_get_type =
-      _vips_foreign_dz_depth_get_typePtr.asFunction<int Function()>();
-
-  int vips_foreign_dz_layout_get_type() {
-    return _vips_foreign_dz_layout_get_type();
-  }
-
-  late final _vips_foreign_dz_layout_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_dz_layout_get_type');
-  late final _vips_foreign_dz_layout_get_type =
-      _vips_foreign_dz_layout_get_typePtr.asFunction<int Function()>();
-
   ffi.Pointer<ffi.Char> vips_foreign_find_load(
     ffi.Pointer<ffi.Char> filename,
   ) {
@@ -7636,17 +7210,6 @@ class VipsBindings {
   late final _vips_foreign_flags = _vips_foreign_flagsPtr
       .asFunction<int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
 
-  /// enumerations from "foreign.h"
-  int vips_foreign_flags_get_type() {
-    return _vips_foreign_flags_get_type();
-  }
-
-  late final _vips_foreign_flags_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_flags_get_type');
-  late final _vips_foreign_flags_get_type =
-      _vips_foreign_flags_get_typePtr.asFunction<int Function()>();
-
   ffi.Pointer<ffi.Pointer<gchar>> vips_foreign_get_suffixes() {
     return _vips_foreign_get_suffixes();
   }
@@ -7656,36 +7219,6 @@ class VipsBindings {
           'vips_foreign_get_suffixes');
   late final _vips_foreign_get_suffixes = _vips_foreign_get_suffixesPtr
       .asFunction<ffi.Pointer<ffi.Pointer<gchar>> Function()>();
-
-  /// Don't put spaces around void here, it breaks gtk-doc.
-  int vips_foreign_get_type() {
-    return _vips_foreign_get_type();
-  }
-
-  late final _vips_foreign_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_foreign_get_type');
-  late final _vips_foreign_get_type =
-      _vips_foreign_get_typePtr.asFunction<int Function()>();
-
-  int vips_foreign_heif_compression_get_type() {
-    return _vips_foreign_heif_compression_get_type();
-  }
-
-  late final _vips_foreign_heif_compression_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_heif_compression_get_type');
-  late final _vips_foreign_heif_compression_get_type =
-      _vips_foreign_heif_compression_get_typePtr.asFunction<int Function()>();
-
-  int vips_foreign_heif_encoder_get_type() {
-    return _vips_foreign_heif_encoder_get_type();
-  }
-
-  late final _vips_foreign_heif_encoder_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_heif_encoder_get_type');
-  late final _vips_foreign_heif_encoder_get_type =
-      _vips_foreign_heif_encoder_get_typePtr.asFunction<int Function()>();
 
   int vips_foreign_is_a(
     ffi.Pointer<ffi.Char> loader,
@@ -7742,38 +7275,6 @@ class VipsBindings {
       _vips_foreign_is_a_sourcePtr.asFunction<
           int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<VipsSource>)>();
 
-  /// enumerations from "almostdeprecated.h"
-  int vips_foreign_jpeg_subsample_get_type() {
-    return _vips_foreign_jpeg_subsample_get_type();
-  }
-
-  late final _vips_foreign_jpeg_subsample_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_jpeg_subsample_get_type');
-  late final _vips_foreign_jpeg_subsample_get_type =
-      _vips_foreign_jpeg_subsample_get_typePtr.asFunction<int Function()>();
-
-  int vips_foreign_keep_get_type() {
-    return _vips_foreign_keep_get_type();
-  }
-
-  late final _vips_foreign_keep_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_keep_get_type');
-  late final _vips_foreign_keep_get_type =
-      _vips_foreign_keep_get_typePtr.asFunction<int Function()>();
-
-  /// Don't put spaces around void here, it breaks gtk-doc.
-  int vips_foreign_load_get_type() {
-    return _vips_foreign_load_get_type();
-  }
-
-  late final _vips_foreign_load_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_load_get_type');
-  late final _vips_foreign_load_get_type =
-      _vips_foreign_load_get_typePtr.asFunction<int Function()>();
-
   void vips_foreign_load_invalidate(
     ffi.Pointer<VipsImage> image,
   ) {
@@ -7814,87 +7315,6 @@ class VipsBindings {
   late final _vips_foreign_map = _vips_foreign_mapPtr.asFunction<
       ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Char>, VipsSListMap2Fn,
           ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>();
-
-  int vips_foreign_png_filter_get_type() {
-    return _vips_foreign_png_filter_get_type();
-  }
-
-  late final _vips_foreign_png_filter_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_png_filter_get_type');
-  late final _vips_foreign_png_filter_get_type =
-      _vips_foreign_png_filter_get_typePtr.asFunction<int Function()>();
-
-  int vips_foreign_ppm_format_get_type() {
-    return _vips_foreign_ppm_format_get_type();
-  }
-
-  late final _vips_foreign_ppm_format_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_ppm_format_get_type');
-  late final _vips_foreign_ppm_format_get_type =
-      _vips_foreign_ppm_format_get_typePtr.asFunction<int Function()>();
-
-  /// Don't put spaces around void here, it breaks gtk-doc.
-  int vips_foreign_save_get_type() {
-    return _vips_foreign_save_get_type();
-  }
-
-  late final _vips_foreign_save_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_save_get_type');
-  late final _vips_foreign_save_get_type =
-      _vips_foreign_save_get_typePtr.asFunction<int Function()>();
-
-  int vips_foreign_subsample_get_type() {
-    return _vips_foreign_subsample_get_type();
-  }
-
-  late final _vips_foreign_subsample_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_subsample_get_type');
-  late final _vips_foreign_subsample_get_type =
-      _vips_foreign_subsample_get_typePtr.asFunction<int Function()>();
-
-  int vips_foreign_tiff_compression_get_type() {
-    return _vips_foreign_tiff_compression_get_type();
-  }
-
-  late final _vips_foreign_tiff_compression_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_tiff_compression_get_type');
-  late final _vips_foreign_tiff_compression_get_type =
-      _vips_foreign_tiff_compression_get_typePtr.asFunction<int Function()>();
-
-  int vips_foreign_tiff_predictor_get_type() {
-    return _vips_foreign_tiff_predictor_get_type();
-  }
-
-  late final _vips_foreign_tiff_predictor_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_tiff_predictor_get_type');
-  late final _vips_foreign_tiff_predictor_get_type =
-      _vips_foreign_tiff_predictor_get_typePtr.asFunction<int Function()>();
-
-  int vips_foreign_tiff_resunit_get_type() {
-    return _vips_foreign_tiff_resunit_get_type();
-  }
-
-  late final _vips_foreign_tiff_resunit_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_tiff_resunit_get_type');
-  late final _vips_foreign_tiff_resunit_get_type =
-      _vips_foreign_tiff_resunit_get_typePtr.asFunction<int Function()>();
-
-  int vips_foreign_webp_preset_get_type() {
-    return _vips_foreign_webp_preset_get_type();
-  }
-
-  late final _vips_foreign_webp_preset_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_foreign_webp_preset_get_type');
-  late final _vips_foreign_webp_preset_get_type =
-      _vips_foreign_webp_preset_get_typePtr.asFunction<int Function()>();
 
   ffi.Pointer<VipsFormatClass> vips_format_for_file(
     ffi.Pointer<ffi.Char> filename,
@@ -7942,15 +7362,6 @@ class VipsBindings {
               ffi.Pointer<ffi.Char>)>>('vips_format_get_flags');
   late final _vips_format_get_flags = _vips_format_get_flagsPtr.asFunction<
       int Function(ffi.Pointer<VipsFormatClass>, ffi.Pointer<ffi.Char>)>();
-
-  int vips_format_get_type() {
-    return _vips_format_get_type();
-  }
-
-  late final _vips_format_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_format_get_type');
-  late final _vips_format_get_type =
-      _vips_format_get_typePtr.asFunction<int Function()>();
 
   /// Map over and find formats. This uses type introspection to loop over
   /// subclasses of VipsFormat.
@@ -9662,16 +9073,6 @@ class VipsBindings {
       int Function(ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Char>,
           ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
 
-  /// Don't put spaces around void here, it breaks gtk-doc.
-  int vips_image_get_type() {
-    return _vips_image_get_type();
-  }
-
-  late final _vips_image_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_image_get_type');
-  late final _vips_image_get_type =
-      _vips_image_get_typePtr.asFunction<int Function()>();
-
   int vips_image_get_typeof(
     ffi.Pointer<VipsImage> image,
     ffi.Pointer<ffi.Char> name,
@@ -10719,15 +10120,6 @@ class VipsBindings {
       void Function(ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Char>,
           ffi.Pointer<ffi.Char>)>();
 
-  int vips_image_type_get_type() {
-    return _vips_image_type_get_type();
-  }
-
-  late final _vips_image_type_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_image_type_get_type');
-  late final _vips_image_type_get_type =
-      _vips_image_type_get_typePtr.asFunction<int Function()>();
-
   int vips_image_wio_input(
     ffi.Pointer<VipsImage> image,
   ) {
@@ -10918,26 +10310,6 @@ class VipsBindings {
       int Function(ffi.Pointer<VipsImage>, ffi.Pointer<VipsImage>,
           ffi.Pointer<ffi.Pointer<VipsImage>>, int, int)>();
 
-  /// enumerations from "colour.h"
-  int vips_intent_get_type() {
-    return _vips_intent_get_type();
-  }
-
-  late final _vips_intent_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_intent_get_type');
-  late final _vips_intent_get_type =
-      _vips_intent_get_typePtr.asFunction<int Function()>();
-
-  int vips_interesting_get_type() {
-    return _vips_interesting_get_type();
-  }
-
-  late final _vips_interesting_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_interesting_get_type');
-  late final _vips_interesting_get_type =
-      _vips_interesting_get_typePtr.asFunction<int Function()>();
-
   void vips_interpolate(
     ffi.Pointer<VipsInterpolate> interpolate,
     ffi.Pointer<ffi.Void> out,
@@ -10992,17 +10364,6 @@ class VipsBindings {
   late final _vips_interpolate_get_method =
       _vips_interpolate_get_methodPtr.asFunction<
           VipsInterpolateMethod Function(ffi.Pointer<VipsInterpolate>)>();
-
-  /// Don't put spaces around void here, it breaks gtk-doc.
-  int vips_interpolate_get_type() {
-    return _vips_interpolate_get_type();
-  }
-
-  late final _vips_interpolate_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_interpolate_get_type');
-  late final _vips_interpolate_get_type =
-      _vips_interpolate_get_typePtr.asFunction<int Function()>();
 
   int vips_interpolate_get_window_offset(
     ffi.Pointer<VipsInterpolate> interpolate,
@@ -11062,16 +10423,6 @@ class VipsBindings {
               ffi.Pointer<ffi.Char>)>>('vips_interpolate_new');
   late final _vips_interpolate_new = _vips_interpolate_newPtr.asFunction<
       ffi.Pointer<VipsInterpolate> Function(ffi.Pointer<ffi.Char>)>();
-
-  int vips_interpretation_get_type() {
-    return _vips_interpretation_get_type();
-  }
-
-  late final _vips_interpretation_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_interpretation_get_type');
-  late final _vips_interpretation_get_type =
-      _vips_interpretation_get_typePtr.asFunction<int Function()>();
 
   double vips_interpretation_max_alpha(
     VipsInterpretation interpretation,
@@ -11577,16 +10928,6 @@ class VipsBindings {
               ffi.Pointer<VipsTarget>)>>('vips_jxlsave_target');
   late final _vips_jxlsave_target = _vips_jxlsave_targetPtr.asFunction<
       int Function(ffi.Pointer<VipsImage>, ffi.Pointer<VipsTarget>)>();
-
-  /// enumerations from "resample.h"
-  int vips_kernel_get_type() {
-    return _vips_kernel_get_type();
-  }
-
-  late final _vips_kernel_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_kernel_get_type');
-  late final _vips_kernel_get_type =
-      _vips_kernel_get_typePtr.asFunction<int Function()>();
 
   int vips_labelregions(
     ffi.Pointer<VipsImage> in$,
@@ -13523,16 +12864,6 @@ class VipsBindings {
           void Function(ffi.Pointer<GObject>, int, ffi.Pointer<GValue>,
               ffi.Pointer<GParamSpec>)>();
 
-  /// Don't put spaces around void here, it breaks gtk-doc.
-  int vips_object_get_type() {
-    return _vips_object_get_type();
-  }
-
-  late final _vips_object_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_object_get_type');
-  late final _vips_object_get_type =
-      _vips_object_get_typePtr.asFunction<int Function()>();
-
   ffi.Pointer<ffi.Pointer<VipsObject>> vips_object_local_array(
     ffi.Pointer<VipsObject> parent,
     int n,
@@ -14017,16 +13348,6 @@ class VipsBindings {
   late final _vips_operation_block_set = _vips_operation_block_setPtr
       .asFunction<void Function(ffi.Pointer<ffi.Char>, int)>();
 
-  int vips_operation_boolean_get_type() {
-    return _vips_operation_boolean_get_type();
-  }
-
-  late final _vips_operation_boolean_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_operation_boolean_get_type');
-  late final _vips_operation_boolean_get_type =
-      _vips_operation_boolean_get_typePtr.asFunction<int Function()>();
-
   int vips_operation_call_valist(
     ffi.Pointer<VipsOperation> operation,
     va_list ap,
@@ -14060,47 +13381,6 @@ class VipsBindings {
       _vips_operation_class_print_usagePtr
           .asFunction<void Function(ffi.Pointer<VipsOperationClass>)>();
 
-  int vips_operation_complex2_get_type() {
-    return _vips_operation_complex2_get_type();
-  }
-
-  late final _vips_operation_complex2_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_operation_complex2_get_type');
-  late final _vips_operation_complex2_get_type =
-      _vips_operation_complex2_get_typePtr.asFunction<int Function()>();
-
-  int vips_operation_complex_get_type() {
-    return _vips_operation_complex_get_type();
-  }
-
-  late final _vips_operation_complex_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_operation_complex_get_type');
-  late final _vips_operation_complex_get_type =
-      _vips_operation_complex_get_typePtr.asFunction<int Function()>();
-
-  int vips_operation_complexget_get_type() {
-    return _vips_operation_complexget_get_type();
-  }
-
-  late final _vips_operation_complexget_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_operation_complexget_get_type');
-  late final _vips_operation_complexget_get_type =
-      _vips_operation_complexget_get_typePtr.asFunction<int Function()>();
-
-  /// enumerations from "operation.h"
-  int vips_operation_flags_get_type() {
-    return _vips_operation_flags_get_type();
-  }
-
-  late final _vips_operation_flags_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_operation_flags_get_type');
-  late final _vips_operation_flags_get_type =
-      _vips_operation_flags_get_typePtr.asFunction<int Function()>();
-
   VipsOperationFlags vips_operation_get_flags(
     ffi.Pointer<VipsOperation> operation,
   ) {
@@ -14116,16 +13396,6 @@ class VipsBindings {
   late final _vips_operation_get_flags = _vips_operation_get_flagsPtr
       .asFunction<int Function(ffi.Pointer<VipsOperation>)>();
 
-  /// Don't put spaces around void here, it breaks gtk-doc.
-  int vips_operation_get_type() {
-    return _vips_operation_get_type();
-  }
-
-  late final _vips_operation_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_operation_get_type');
-  late final _vips_operation_get_type =
-      _vips_operation_get_typePtr.asFunction<int Function()>();
-
   void vips_operation_invalidate(
     ffi.Pointer<VipsOperation> operation,
   ) {
@@ -14139,38 +13409,6 @@ class VipsBindings {
       'vips_operation_invalidate');
   late final _vips_operation_invalidate = _vips_operation_invalidatePtr
       .asFunction<void Function(ffi.Pointer<VipsOperation>)>();
-
-  int vips_operation_math2_get_type() {
-    return _vips_operation_math2_get_type();
-  }
-
-  late final _vips_operation_math2_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_operation_math2_get_type');
-  late final _vips_operation_math2_get_type =
-      _vips_operation_math2_get_typePtr.asFunction<int Function()>();
-
-  /// enumerations from "arithmetic.h"
-  int vips_operation_math_get_type() {
-    return _vips_operation_math_get_type();
-  }
-
-  late final _vips_operation_math_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_operation_math_get_type');
-  late final _vips_operation_math_get_type =
-      _vips_operation_math_get_typePtr.asFunction<int Function()>();
-
-  /// enumerations from "morphology.h"
-  int vips_operation_morphology_get_type() {
-    return _vips_operation_morphology_get_type();
-  }
-
-  late final _vips_operation_morphology_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_operation_morphology_get_type');
-  late final _vips_operation_morphology_get_type =
-      _vips_operation_morphology_get_typePtr.asFunction<int Function()>();
 
   ffi.Pointer<VipsOperation> vips_operation_new(
     ffi.Pointer<ffi.Char> name,
@@ -14186,26 +13424,6 @@ class VipsBindings {
               ffi.Pointer<ffi.Char>)>>('vips_operation_new');
   late final _vips_operation_new = _vips_operation_newPtr
       .asFunction<ffi.Pointer<VipsOperation> Function(ffi.Pointer<ffi.Char>)>();
-
-  int vips_operation_relational_get_type() {
-    return _vips_operation_relational_get_type();
-  }
-
-  late final _vips_operation_relational_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_operation_relational_get_type');
-  late final _vips_operation_relational_get_type =
-      _vips_operation_relational_get_typePtr.asFunction<int Function()>();
-
-  int vips_operation_round_get_type() {
-    return _vips_operation_round_get_type();
-  }
-
-  late final _vips_operation_round_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_operation_round_get_type');
-  late final _vips_operation_round_get_type =
-      _vips_operation_round_get_typePtr.asFunction<int Function()>();
 
   int vips_orimage(
     ffi.Pointer<VipsImage> left,
@@ -14304,15 +13522,6 @@ class VipsBindings {
               ffi.Pointer<ffi.Char>)>>('vips_path_mode7');
   late final _vips_path_mode7 = _vips_path_mode7Ptr
       .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>();
-
-  int vips_pcs_get_type() {
-    return _vips_pcs_get_type();
-  }
-
-  late final _vips_pcs_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_pcs_get_type');
-  late final _vips_pcs_get_type =
-      _vips_pcs_get_typePtr.asFunction<int Function()>();
 
   int vips_pdfload(
     ffi.Pointer<ffi.Char> filename,
@@ -14708,16 +13917,6 @@ class VipsBindings {
               ffi.Pointer<VipsTarget>)>>('vips_ppmsave_target');
   late final _vips_ppmsave_target = _vips_ppmsave_targetPtr.asFunction<
       int Function(ffi.Pointer<VipsImage>, ffi.Pointer<VipsTarget>)>();
-
-  /// enumerations from "basic.h"
-  int vips_precision_get_type() {
-    return _vips_precision_get_type();
-  }
-
-  late final _vips_precision_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_precision_get_type');
-  late final _vips_precision_get_type =
-      _vips_precision_get_typePtr.asFunction<int Function()>();
 
   int vips_premultiply(
     ffi.Pointer<VipsImage> in$,
@@ -15464,15 +14663,6 @@ class VipsBindings {
       ffi.Pointer<ffi.Char> Function(
           ffi.Pointer<VipsRefString>, ffi.Pointer<ffi.Size>)>();
 
-  int vips_ref_string_get_type() {
-    return _vips_ref_string_get_type();
-  }
-
-  late final _vips_ref_string_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_ref_string_get_type');
-  late final _vips_ref_string_get_type =
-      _vips_ref_string_get_typePtr.asFunction<int Function()>();
-
   ffi.Pointer<VipsRefString> vips_ref_string_new(
     ffi.Pointer<ffi.Char> str,
   ) {
@@ -15622,16 +14812,6 @@ class VipsBindings {
   late final _vips_region_fill = _vips_region_fillPtr.asFunction<
       int Function(ffi.Pointer<_VipsRegion>, ffi.Pointer<VipsRect>,
           VipsRegionFillFn, ffi.Pointer<ffi.Void>)>();
-
-  /// Don't put spaces around void here, it breaks gtk-doc.
-  int vips_region_get_type() {
-    return _vips_region_get_type();
-  }
-
-  late final _vips_region_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_region_get_type');
-  late final _vips_region_get_type =
-      _vips_region_get_typePtr.asFunction<int Function()>();
 
   int vips_region_height(
     ffi.Pointer<VipsRegion> region,
@@ -15858,17 +15038,6 @@ class VipsBindings {
   late final _vips_region_shrink = _vips_region_shrinkPtr.asFunction<
       int Function(ffi.Pointer<VipsRegion>, ffi.Pointer<VipsRegion>,
           ffi.Pointer<VipsRect>)>();
-
-  /// enumerations from "region.h"
-  int vips_region_shrink_get_type() {
-    return _vips_region_shrink_get_type();
-  }
-
-  late final _vips_region_shrink_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_region_shrink_get_type');
-  late final _vips_region_shrink_get_type =
-      _vips_region_shrink_get_typePtr.asFunction<int Function()>();
 
   int vips_region_shrink_method(
     ffi.Pointer<VipsRegion> from,
@@ -16454,25 +15623,6 @@ class VipsBindings {
       int Function(
           ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Pointer<VipsImage>>)>();
 
-  int vips_save_string_get_type() {
-    return _vips_save_string_get_type();
-  }
-
-  late final _vips_save_string_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_save_string_get_type');
-  late final _vips_save_string_get_type =
-      _vips_save_string_get_typePtr.asFunction<int Function()>();
-
-  int vips_saveable_get_type() {
-    return _vips_saveable_get_type();
-  }
-
-  late final _vips_saveable_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_saveable_get_type');
-  late final _vips_saveable_get_type =
-      _vips_saveable_get_typePtr.asFunction<int Function()>();
-
   ffi.Pointer<ffi.Char> vips_sbuf_get_line(
     ffi.Pointer<VipsSbuf> sbuf,
   ) {
@@ -16517,15 +15667,6 @@ class VipsBindings {
               ffi.Pointer<VipsSbuf>)>>('vips_sbuf_get_non_whitespace');
   late final _vips_sbuf_get_non_whitespace = _vips_sbuf_get_non_whitespacePtr
       .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<VipsSbuf>)>();
-
-  int vips_sbuf_get_type() {
-    return _vips_sbuf_get_type();
-  }
-
-  late final _vips_sbuf_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_sbuf_get_type');
-  late final _vips_sbuf_get_type =
-      _vips_sbuf_get_typePtr.asFunction<int Function()>();
 
   int vips_sbuf_getc(
     ffi.Pointer<VipsSbuf> sbuf,
@@ -16724,15 +15865,6 @@ class VipsBindings {
               ffi.Int, ffi.UnsignedInt)>>('vips_sdf');
   late final _vips_sdf = _vips_sdfPtr.asFunction<
       int Function(ffi.Pointer<ffi.Pointer<VipsImage>>, int, int, int)>();
-
-  int vips_sdf_shape_get_type() {
-    return _vips_sdf_shape_get_type();
-  }
-
-  late final _vips_sdf_shape_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_sdf_shape_get_type');
-  late final _vips_sdf_shape_get_type =
-      _vips_sdf_shape_get_typePtr.asFunction<int Function()>();
 
   void vips_semaphore_destroy(
     ffi.Pointer<VipsSemaphore> s,
@@ -17203,15 +16335,6 @@ class VipsBindings {
           ffi.Pointer<ffi.Void>,
           ffi.Pointer<ffi.Void>)>();
 
-  int vips_size_get_type() {
-    return _vips_size_get_type();
-  }
-
-  late final _vips_size_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_size_get_type');
-  late final _vips_size_get_type =
-      _vips_size_get_typePtr.asFunction<int Function()>();
-
   int vips_slist_equal(
     ffi.Pointer<GSList> l1,
     ffi.Pointer<GSList> l2,
@@ -17425,16 +16548,6 @@ class VipsBindings {
       int Function(
           ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Pointer<VipsImage>>)>();
 
-  int vips_source_custom_get_type() {
-    return _vips_source_custom_get_type();
-  }
-
-  late final _vips_source_custom_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_source_custom_get_type');
-  late final _vips_source_custom_get_type =
-      _vips_source_custom_get_typePtr.asFunction<int Function()>();
-
   ffi.Pointer<VipsSourceCustom> vips_source_custom_new() {
     return _vips_source_custom_new();
   }
@@ -17475,15 +16588,6 @@ class VipsBindings {
       _vips_source_g_input_stream_newPtr.asFunction<
           ffi.Pointer<VipsSourceGInputStream> Function(
               ffi.Pointer<GInputStream>)>();
-
-  int vips_source_get_type() {
-    return _vips_source_get_type();
-  }
-
-  late final _vips_source_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_source_get_type');
-  late final _vips_source_get_type =
-      _vips_source_get_typePtr.asFunction<int Function()>();
 
   int vips_source_is_file(
     ffi.Pointer<VipsSource> source,
@@ -18180,16 +17284,6 @@ class VipsBindings {
       int Function(
           ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Pointer<VipsImage>>)>();
 
-  int vips_target_custom_get_type() {
-    return _vips_target_custom_get_type();
-  }
-
-  late final _vips_target_custom_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_target_custom_get_type');
-  late final _vips_target_custom_get_type =
-      _vips_target_custom_get_typePtr.asFunction<int Function()>();
-
   ffi.Pointer<VipsTargetCustom> vips_target_custom_new() {
     return _vips_target_custom_new();
   }
@@ -18213,15 +17307,6 @@ class VipsBindings {
           'vips_target_end');
   late final _vips_target_end =
       _vips_target_endPtr.asFunction<int Function(ffi.Pointer<VipsTarget>)>();
-
-  int vips_target_get_type() {
-    return _vips_target_get_type();
-  }
-
-  late final _vips_target_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_target_get_type');
-  late final _vips_target_get_type =
-      _vips_target_get_typePtr.asFunction<int Function()>();
 
   ffi.Pointer<VipsTarget> vips_target_new_temp(
     ffi.Pointer<VipsTarget> target,
@@ -18453,25 +17538,6 @@ class VipsBindings {
       int Function(
           ffi.Pointer<ffi.Pointer<VipsImage>>, ffi.Pointer<ffi.Char>)>();
 
-  /// enumerations from "create.h"
-  int vips_text_wrap_get_type() {
-    return _vips_text_wrap_get_type();
-  }
-
-  late final _vips_text_wrap_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_text_wrap_get_type');
-  late final _vips_text_wrap_get_type =
-      _vips_text_wrap_get_typePtr.asFunction<int Function()>();
-
-  int vips_thing_get_type() {
-    return _vips_thing_get_type();
-  }
-
-  late final _vips_thing_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_thing_get_type');
-  late final _vips_thing_get_type =
-      _vips_thing_get_typePtr.asFunction<int Function()>();
-
   ffi.Pointer<VipsThing> vips_thing_new(
     int i,
   ) {
@@ -18522,17 +17588,6 @@ class VipsBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function()>>('vips_thread_shutdown');
   late final _vips_thread_shutdown =
       _vips_thread_shutdownPtr.asFunction<void Function()>();
-
-  /// Don't put spaces around void here, it breaks gtk-doc.
-  int vips_thread_state_get_type() {
-    return _vips_thread_state_get_type();
-  }
-
-  late final _vips_thread_state_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>(
-          'vips_thread_state_get_type');
-  late final _vips_thread_state_get_type =
-      _vips_thread_state_get_typePtr.asFunction<int Function()>();
 
   ffi.Pointer<VipsThreadState> vips_thread_state_new(
     ffi.Pointer<VipsImage> im,
@@ -18878,16 +17933,6 @@ class VipsBindings {
   late final _vips_tilecache = _vips_tilecachePtr.asFunction<
       int Function(
           ffi.Pointer<VipsImage>, ffi.Pointer<ffi.Pointer<VipsImage>>)>();
-
-  /// enumerations from "util.h"
-  int vips_token_get_type() {
-    return _vips_token_get_type();
-  }
-
-  late final _vips_token_get_typePtr =
-      _lookup<ffi.NativeFunction<GType Function()>>('vips_token_get_type');
-  late final _vips_token_get_type =
-      _vips_token_get_typePtr.asFunction<int Function()>();
 
   int vips_tonelut(
     ffi.Pointer<ffi.Pointer<VipsImage>> out,

@@ -9,8 +9,7 @@ environment:
   flutter: '>=3.10.0'
 
 dependencies:
-  libvips_ffi_core:
-    path: ../libvips_ffi_core
+  libvips_ffi_core: ^0.1.0
 
 flutter:
   plugin:

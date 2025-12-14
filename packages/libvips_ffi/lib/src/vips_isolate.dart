@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:libvips_ffi_core/libvips_ffi_core.dart';
 
-import 'mobile_loader.dart';
+import 'platform_loader.dart';
 
 /// Message types for isolate communication.
 ///

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:libvips_ffi_core/libvips_ffi_core.dart';
 
-import 'mobile_loader.dart';
+import 'platform_loader.dart';
 
 /// Parameters for compute operations.
 ///

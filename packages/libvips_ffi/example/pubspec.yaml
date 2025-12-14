@@ -32,9 +32,7 @@ dependencies:
     sdk: flutter
 
   libvips_ffi:
-    path: ../
   libvips_flutter_example_base:
-    path: ../../libvips_flutter_example_base
 
   cupertino_icons: ^1.0.8
   path_provider: ^2.1.0

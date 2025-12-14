@@ -6,4 +6,4 @@ dependency_overrides:
   libvips_ffi_core:
     path: ../../libvips_ffi_core
   libvips_flutter_example_base:
-    path: ..\\..\\libvips_flutter_example_base
+    path: ..\\..\\..\\examples\\libvips_flutter_example_base

@@ -10,10 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  libvips_ffi_windows:
-    path: ../../packages/libvips_ffi_windows
+  libvips_ffi_windows: ^0.1.0
   libvips_flutter_example_base:
-    path: ../../packages/libvips_flutter_example_base
 
 dev_dependencies:
   flutter_test:

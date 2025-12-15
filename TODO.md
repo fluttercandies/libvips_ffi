@@ -18,9 +18,8 @@
 - [x] macOS：对齐 libvips 版本元信息（podspec 描述 8.17.0 vs pubspec 8.16.0）
   - 已完成：podspec 描述已更新，移除具体版本号
 
-- [ ] Windows：README 仍标注 placeholder（但 `windows/dll` 已包含 DLL）
-  - 证据：`packages/libvips_ffi_windows/README.md:24-26`
-  - 证据：`packages/libvips_ffi_windows/windows/dll/`（存在且包含 `libvips-42.dll` 等）
+- [x] Windows：README 仍标注 placeholder（但 `windows/dll` 已包含 DLL）
+  - 已完成：README 已更新，移除 placeholder 说明
 
 - [x] macOS：README 仍标注 placeholder（但 `macos/Libraries` 已包含 dylib）
   - 已完成：README 已更新，移除 placeholder 说明
@@ -43,8 +42,8 @@
 
 ## 文档/示例一致性
 
-- [ ] `libvips_ffi_core` README：示例使用不匹配的 init API（`initVipsCore`）
-  - 证据：`packages/libvips_ffi_core/README.md:26`
+- [x] `libvips_ffi_core` README：示例使用不匹配的 init API（`initVipsCore`）
+  - 已完成：README 已更新为使用 `initVipsSystem()` 和 `initVipsWithLibrary()`
 
 - [ ] docs：桌面重构计划仍有待定事项
   - 证据：`docs/DESKTOP_REFACTOR_PLAN.md:578-582`

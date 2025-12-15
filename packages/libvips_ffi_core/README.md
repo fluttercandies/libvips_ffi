@@ -19,11 +19,15 @@ Pure Dart FFI bindings for [libvips](https://www.libvips.org/) image processing 
 ## Usage
 
 ```dart
+import 'dart:ffi';
 import 'package:libvips_ffi_core/libvips_ffi_core.dart';
 
 void main() {
-  // Initialize with a pre-loaded library
-  initVipsCore(DynamicLibrary.open('libvips.dylib'));
+  // Initialize with system library
+  initVipsSystem();
+  
+  // Or initialize with a pre-loaded library
+  // initVipsWithLibrary(DynamicLibrary.open('libvips.dylib'));
   
   // Load and process image
   final image = VipsImageWrapper.fromFile('input.jpg');

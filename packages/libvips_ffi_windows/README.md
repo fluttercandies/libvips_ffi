@@ -21,9 +21,9 @@ void main() {
 }
 ```
 
-## Note
+## Pre-compiled Libraries
 
-This package contains placeholder structure. Pre-compiled binaries need to be added before publishing.
+This package includes pre-compiled libvips binaries for Windows x64.
 
 ## Related Packages
 

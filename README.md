@@ -13,36 +13,60 @@ Flutter/Dart FFI bindings for [libvips](https://www.libvips.org/) - a fast, mult
 - Smart crop and gravity
 - High performance with multi-threading support
 
+## Package Architecture
+
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│                        Your Application                          │
+├─────────────────────────────────────────────────────────────────┤
+│  Flutter Mobile    │  Flutter Desktop   │  Pure Dart Desktop    │
+│  (Android/iOS)     │  (macOS/Win/Linux) │  (CLI/Server)         │
+├────────────────────┼────────────────────┼───────────────────────┤
+│  libvips_ffi       │  libvips_ffi       │  libvips_ffi_core     │
+│  (includes native) │  + platform pkg    │  + loader choice      │
+└────────────────────┴────────────────────┴───────────────────────┘
+                              │
+              ┌───────────────┼───────────────┐
+              ▼               ▼               ▼
+      libvips_ffi_macos  libvips_ffi_windows  libvips_ffi_linux
+      (pre-compiled)     (pre-compiled)       (pre-compiled)
+                              │
+                              ▼
+                      libvips_ffi_core (Pure Dart FFI)
+```
+
 ## Packages
 
 This project uses [melos](https://melos.invertase.dev/) for multi-package management.
 
 ### Core Package
 
-| Package | Version | Description |
-|---------|---------|-------------|
-| [libvips_ffi_core](packages/libvips_ffi_core/) | 0.1.0 | Pure Dart FFI bindings (no Flutter dependency) |
+| Package | Description |
+|---------|-------------|
+| [libvips_ffi_core](packages/libvips_ffi_core/) | Pure Dart FFI bindings (no Flutter dependency) |
 
 ### Platform Packages
 
-| Package | Version | Description |
-|---------|---------|-------------|
-| [libvips_ffi](packages/libvips_ffi/) | 0.0.1+8.16.0 | Flutter mobile (Android/iOS) |
-| [libvips_ffi_macos](packages/libvips_ffi_macos/) | 0.1.0+8.16.0 | Pre-compiled for macOS |
-| [libvips_ffi_windows](packages/libvips_ffi_windows/) | 0.1.0+8.16.0 | Pre-compiled for Windows |
-| [libvips_ffi_linux](packages/libvips_ffi_linux/) | 0.1.0+8.16.0 | Pre-compiled for Linux |
-| [libvips_ffi_desktop](packages/libvips_ffi_desktop/) | 0.1.0 | Desktop meta package |
+| Package | Description |
+|---------|-------------|
+| [libvips_ffi](packages/libvips_ffi/) | Flutter mobile (Android/iOS) with bundled native libraries |
+| [libvips_ffi_macos](packages/libvips_ffi_macos/) | Pre-compiled libvips for macOS (arm64 + x86_64) |
+| [libvips_ffi_windows](packages/libvips_ffi_windows/) | Pre-compiled libvips for Windows (x64) |
+| [libvips_ffi_linux](packages/libvips_ffi_linux/) | Pre-compiled libvips for Linux (x64) |
+| [libvips_ffi_desktop](packages/libvips_ffi_desktop/) | Desktop meta package (auto-selects platform) |
 
 ### Utility Packages
 
-| Package | Version | Description |
-|---------|---------|-------------|
-| [libvips_ffi_system](packages/libvips_ffi_system/) | 0.1.0 | System package manager loader (Homebrew, apt, etc.) |
-| [libvips_ffi_loader](packages/libvips_ffi_loader/) | 0.1.0 | Dynamic library downloader |
+| Package | Description |
+|---------|-------------|
+| [libvips_ffi_system](packages/libvips_ffi_system/) | Load from system package manager (Homebrew, apt, etc.) |
+| [libvips_ffi_loader](packages/libvips_ffi_loader/) | Dynamic library downloader with callback support |
 
-## Usage
+## Quick Start by Platform
 
-### Flutter Mobile
+### Flutter Mobile (Android/iOS) - Recommended
+
+Pre-compiled native libraries are bundled automatically.
 
 ```yaml
 dependencies:
@@ -52,33 +76,66 @@ dependencies:
 ```dart
 import 'package:libvips_ffi/libvips_ffi.dart';
 
-void main() async {
-  await initVips();
+void main() {
+  initVips();
   
+  // Sync API (simple operations)
   final image = VipsImageWrapper.fromFile('input.jpg');
   final resized = image.resize(0.5);
   resized.writeToFile('output.jpg');
-  
   resized.dispose();
   image.dispose();
+  
+  // Async API (recommended for Flutter UI)
+  final result = await VipsCompute.resizeFile('input.jpg', 0.5);
+  // result.data contains processed image bytes
+  
   shutdownVips();
 }
 ```
 
-### Desktop with System Library
+### Flutter Desktop (macOS/Windows/Linux) - Recommended
+
+Use `libvips_ffi` with platform-specific packages for bundled libraries.
+
+```yaml
+dependencies:
+  libvips_ffi: ^0.0.1
+  libvips_ffi_macos: ^0.1.0   # macOS
+  # libvips_ffi_windows: ^0.1.0  # Windows
+  # libvips_ffi_linux: ^0.1.0    # Linux
+```
+
+```dart
+import 'package:libvips_ffi/libvips_ffi.dart';
+
+void main() {
+  initVips();  // Auto-detects platform and loads bundled library
+  
+  // Same API as mobile
+  final result = await VipsCompute.resizeFile('input.jpg', 0.5);
+  
+  shutdownVips();
+}
+```
+
+### Pure Dart Desktop (CLI/Server)
+
+For non-Flutter Dart applications.
+
+#### Option 1: Use system-installed libvips
 
 ```yaml
 dependencies:
   libvips_ffi_core: ^0.1.0
-  libvips_ffi_system: ^0.1.0
 ```
 
 ```dart
 import 'package:libvips_ffi_core/libvips_ffi_core.dart';
-import 'package:libvips_ffi_system/libvips_ffi_system.dart';
 
-void main() async {
-  await initVipsSystemAsync();
+void main() {
+  // Requires: brew install vips (macOS) or apt install libvips-dev (Linux)
+  initVipsSystem();
   
   final image = VipsImageWrapper.fromFile('input.jpg');
   final resized = image.resize(0.5);
@@ -90,7 +147,7 @@ void main() async {
 }
 ```
 
-### Desktop with Pre-compiled Library
+#### Option 2: Use pre-compiled libraries
 
 ```yaml
 dependencies:
@@ -101,12 +158,36 @@ dependencies:
 import 'package:libvips_ffi_desktop/libvips_ffi_desktop.dart';
 
 void main() {
-  initVipsDesktop();
-  
-  // Use libvips...
-  
+  initVipsDesktop();  // Auto-selects platform
+  // ...
   shutdownVips();
 }
+```
+
+## Choosing the Right Package
+
+| Scenario | Recommended Package(s) |
+|----------|------------------------|
+| Flutter mobile app | `libvips_ffi` |
+| Flutter desktop app | `libvips_ffi` + `libvips_ffi_<platform>` |
+| Dart CLI tool (system libvips) | `libvips_ffi_core` |
+| Dart CLI tool (bundled libvips) | `libvips_ffi_desktop` |
+| Custom library loading | `libvips_ffi_core` + `libvips_ffi_loader` |
+
+## Sync vs Async API
+
+| API | Use Case | Blocks UI? |
+|-----|----------|------------|
+| `VipsImageWrapper` (sync) | Simple scripts, CLI tools | Yes |
+| `VipsCompute` (async) | Flutter apps, UI-heavy apps | No (runs in isolate) |
+
+```dart
+// Sync - blocks until complete
+final image = VipsImageWrapper.fromFile('input.jpg');
+final resized = image.resize(0.5);
+
+// Async - runs in background isolate
+final result = await VipsCompute.resizeFile('input.jpg', 0.5);
 ```
 
 ## Version Numbering

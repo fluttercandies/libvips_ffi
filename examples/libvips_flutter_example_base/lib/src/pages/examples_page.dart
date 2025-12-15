@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
@@ -22,6 +23,15 @@ class _ExamplesPageState extends State<ExamplesPage> {
   Uint8List? _processedImageData;
   bool _isProcessing = false;
   int _selectedExampleIndex = 0;
+  
+  // Metadata and timing
+  Duration? _processingTime;
+  int? _originalWidth;
+  int? _originalHeight;
+  int? _originalFileSize;
+  int? _processedWidth;
+  int? _processedHeight;
+  int? _processedFileSize;
 
   final ImagePicker _picker = ImagePicker();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -331,9 +341,26 @@ final result = await VipsCompute.processFile(
     }
     
     if (imagePath != null) {
+      // Get original file info
+      final file = File(imagePath);
+      final fileSize = await file.length();
+      
+      // Decode image to get dimensions
+      final bytes = await file.readAsBytes();
+      final codec = await ui.instantiateImageCodec(bytes);
+      final frame = await codec.getNextFrame();
+      final decoded = frame.image;
+      
       setState(() {
         _selectedImagePath = imagePath;
         _processedImageData = null;
+        _processingTime = null;
+        _originalWidth = decoded.width;
+        _originalHeight = decoded.height;
+        _originalFileSize = fileSize;
+        _processedWidth = null;
+        _processedHeight = null;
+        _processedFileSize = null;
       });
     }
   }
@@ -344,16 +371,24 @@ final result = await VipsCompute.processFile(
     setState(() {
       _isProcessing = true;
       _processedImageData = null;
+      _processingTime = null;
     });
 
     try {
       final example = _examples[_selectedExampleIndex];
+      final stopwatch = Stopwatch()..start();
       final result = await VipsCompute.processFile(
         _selectedImagePath!,
         example.operation,
       );
+      stopwatch.stop();
+      
       setState(() {
         _processedImageData = result.data;
+        _processingTime = stopwatch.elapsed;
+        _processedWidth = result.width;
+        _processedHeight = result.height;
+        _processedFileSize = result.data.length;
       });
     } catch (e) {
       if (mounted) {
@@ -571,19 +606,34 @@ final result = await VipsCompute.processFile(
     final isNarrow = MediaQuery.of(context).size.width <= 400;
 
     final originalWidget = _selectedImagePath != null
-        ? _buildImageCard('Original', Colors.blue, Image.file(
-            File(_selectedImagePath!),
-            height: isNarrow ? 150 : 200,
-            fit: BoxFit.contain,
-          ))
+        ? _buildImageCard(
+            'Original',
+            Colors.blue,
+            Image.file(
+              File(_selectedImagePath!),
+              height: isNarrow ? 150 : 200,
+              fit: BoxFit.contain,
+            ),
+            width: _originalWidth,
+            height_: _originalHeight,
+            fileSize: _originalFileSize,
+          )
         : null;
 
     final processedWidget = _processedImageData != null
-        ? _buildImageCard('Processed', Colors.green, Image.memory(
-            _processedImageData!,
-            height: isNarrow ? 150 : 200,
-            fit: BoxFit.contain,
-          ))
+        ? _buildImageCard(
+            'Processed',
+            Colors.green,
+            Image.memory(
+              _processedImageData!,
+              height: isNarrow ? 150 : 200,
+              fit: BoxFit.contain,
+            ),
+            width: _processedWidth,
+            height_: _processedHeight,
+            fileSize: _processedFileSize,
+            processingTime: _processingTime,
+          )
         : null;
 
     // Stack vertically on very narrow screens
@@ -617,11 +667,19 @@ final result = await VipsCompute.processFile(
     );
   }
 
-  Widget _buildImageCard(String label, Color color, Widget image) {
+  Widget _buildImageCard(
+    String label,
+    Color color,
+    Widget image, {
+    int? width,
+    int? height_,
+    int? fileSize,
+    Duration? processingTime,
+  }) {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 4),
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           decoration: BoxDecoration(
             color: color.withOpacity(0.2),
             borderRadius: BorderRadius.circular(4),
@@ -638,8 +696,67 @@ final result = await VipsCompute.processFile(
           borderRadius: BorderRadius.circular(8),
           child: image,
         ),
+        const SizedBox(height: 8),
+        // Metadata display
+        if (width != null || height_ != null || fileSize != null || processingTime != null)
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (width != null && height_ != null)
+                  _buildMetadataRow('Size', '${width}x$height_ px'),
+                if (fileSize != null)
+                  _buildMetadataRow('File', _formatFileSize(fileSize)),
+                if (processingTime != null)
+                  _buildMetadataRow('Time', _formatDuration(processingTime)),
+              ],
+            ),
+          ),
       ],
     );
+  }
+  
+  Widget _buildMetadataRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '$label: ',
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.grey.shade600,
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  String _formatFileSize(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
+  }
+  
+  String _formatDuration(Duration duration) {
+    if (duration.inMilliseconds < 1000) {
+      return '${duration.inMilliseconds} ms';
+    }
+    return '${(duration.inMilliseconds / 1000).toStringAsFixed(2)} s';
   }
 
   Widget _buildCodeSection(

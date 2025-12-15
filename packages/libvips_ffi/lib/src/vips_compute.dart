@@ -18,6 +18,64 @@ class _ComputeParams {
   });
 }
 
+/// Data for a single image in a collage.
+///
+/// 拼接中单个图像的数据。
+class CollageItemData {
+  /// The image data in any supported format.
+  ///
+  /// 任何支持格式的图像数据。
+  final Uint8List imageData;
+
+  /// The x position on the canvas.
+  ///
+  /// 在画布上的 x 位置。
+  final int x;
+
+  /// The y position on the canvas.
+  ///
+  /// 在画布上的 y 位置。
+  final int y;
+
+  /// The target width for the image.
+  ///
+  /// 图像的目标宽度。
+  final int width;
+
+  /// The target height for the image.
+  ///
+  /// 图像的目标高度。
+  final int height;
+
+  /// Creates a [CollageItemData] with the given parameters.
+  ///
+  /// 使用给定的参数创建 [CollageItemData]。
+  CollageItemData({
+    required this.imageData,
+    required this.x,
+    required this.y,
+    required this.width,
+    required this.height,
+  });
+}
+
+/// Parameters for collage creation.
+///
+/// 创建拼接的参数。
+class _CollageParams {
+  final List<CollageItemData> items;
+  final int canvasWidth;
+  final int canvasHeight;
+  final int backgroundColor;
+
+  _CollageParams({
+    required this.items,
+    required this.canvasWidth,
+    required this.canvasHeight,
+    required this.backgroundColor,
+  });
+}
+
 /// Result from compute operations.
 ///
 /// 计算操作的结果。
@@ -335,6 +393,35 @@ class VipsCompute {
   static Future<VipsComputeResult> autoRotateData(Uint8List data) {
     return compute(_autoRotateData, _ComputeParams(imageData: data, args: {}));
   }
+
+  /// Creates a collage from multiple images.
+  ///
+  /// 从多张图像创建拼接。
+  ///
+  /// [items] is the list of images with their positions and sizes.
+  /// [items] 是包含位置和大小的图像列表。
+  ///
+  /// [canvasWidth] is the width of the output canvas.
+  /// [canvasWidth] 是输出画布的宽度。
+  ///
+  /// [canvasHeight] is the height of the output canvas.
+  /// [canvasHeight] 是输出画布的高度。
+  ///
+  /// [backgroundColor] is the background color as RGB hex (e.g., 0xFFFFFF for white).
+  /// [backgroundColor] 是背景颜色的 RGB 十六进制值（例如 0xFFFFFF 表示白色）。
+  static Future<VipsComputeResult> createCollage(
+    List<CollageItemData> items,
+    int canvasWidth,
+    int canvasHeight, {
+    int backgroundColor = 0xFFFFFF,
+  }) {
+    return compute(_createCollage, _CollageParams(
+      items: items,
+      canvasWidth: canvasWidth,
+      canvasHeight: canvasHeight,
+      backgroundColor: backgroundColor,
+    ));
+  }
 }
 
 // ============ Isolate entry points ============
@@ -503,3 +590,105 @@ VipsComputeResult _autoRotateFile(_ComputeParams p) =>
 
 VipsComputeResult _autoRotateData(_ComputeParams p) =>
     _processFromData(p.imageData!, (img) => img.autoRotate());
+
+/// Creates a collage from multiple images.
+///
+/// 从多张图像创建拼接。
+VipsComputeResult _createCollage(_CollageParams p) {
+  initVips();
+  
+  // Extract RGB from background color
+  final r = (p.backgroundColor >> 16) & 0xFF;
+  final g = (p.backgroundColor >> 8) & 0xFF;
+  final b = p.backgroundColor & 0xFF;
+  
+  // Create canvas with solid color background (3-band RGB)
+  var canvas = VipsImageWrapper.solidColor(p.canvasWidth, p.canvasHeight, r: r, g: g, b: b);
+  
+  // Debug: print canvas info
+  // ignore: avoid_print
+  print('[_createCollage] Canvas created: ${canvas.width}x${canvas.height}, bands=${canvas.bands}');
+  
+  // Keep track of all images to dispose after writing
+  // This is important because libvips uses lazy loading
+  final imagesToDispose = <VipsImageWrapper>[canvas];
+  
+  // Insert each image onto the canvas
+  for (int i = 0; i < p.items.length; i++) {
+    final item = p.items[i];
+    // Load the image
+    var img = VipsImageWrapper.fromBuffer(item.imageData);
+    imagesToDispose.add(img);
+    
+    // ignore: avoid_print
+    print('[_createCollage] Image $i loaded: ${img.width}x${img.height}, bands=${img.bands}');
+    
+    // Convert to 3-band sRGB if needed
+    // First, convert to sRGB color space to handle CMYK and other formats
+    if (img.bands >= 3) {
+      try {
+        final srgb = img.colourspace(VipsInterpretation.srgb);
+        imagesToDispose.add(srgb);
+        // ignore: avoid_print
+        print('[_createCollage] Image $i converted to sRGB: ${srgb.bands} bands');
+        
+        // If still has alpha (4 bands), flatten it
+        if (srgb.bands == 4) {
+          final flattened = srgb.flatten();
+          imagesToDispose.add(flattened);
+          img = flattened;
+          // ignore: avoid_print
+          print('[_createCollage] Image $i flattened to ${img.bands} bands');
+        } else {
+          img = srgb;
+        }
+      } catch (e) {
+        // ignore: avoid_print
+        print('[_createCollage] Image $i colourspace conversion failed: $e');
+      }
+    }
+    
+    // Calculate scale to fit target dimensions
+    final scaleX = item.width / img.width;
+    final scaleY = item.height / img.height;
+    final scale = scaleX < scaleY ? scaleX : scaleY;
+    
+    // Resize if needed
+    VipsImageWrapper resized;
+    if ((scale - 1.0).abs() > 0.01) {
+      resized = img.resize(scale);
+      imagesToDispose.add(resized);
+      // ignore: avoid_print
+      print('[_createCollage] Image $i resized: ${resized.width}x${resized.height} (scale=$scale)');
+    } else {
+      resized = img;
+    }
+    
+    // ignore: avoid_print
+    print('[_createCollage] Inserting image $i at (${item.x}, ${item.y})');
+    
+    // Insert into canvas
+    final newCanvas = canvas.insert(resized, item.x, item.y);
+    imagesToDispose.add(newCanvas);
+    canvas = newCanvas;
+    
+    // ignore: avoid_print
+    print('[_createCollage] Canvas after insert: ${canvas.width}x${canvas.height}');
+  }
+  
+  // Write result to buffer BEFORE disposing any images
+  final data = canvas.writeToBuffer('.png');
+  final output = VipsComputeResult(
+    data: data,
+    width: canvas.width,
+    height: canvas.height,
+    bands: canvas.bands,
+  );
+  
+  // Now dispose all images
+  for (final img in imagesToDispose) {
+    img.dispose();
+  }
+  
+  return output;
+}

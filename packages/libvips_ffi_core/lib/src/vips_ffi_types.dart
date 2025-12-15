@@ -330,6 +330,24 @@ typedef VipsCopyDart = int Function(
   ffi.Pointer<ffi.Void> terminator,
 );
 
+// vips_linear - linear transformation with arrays
+typedef VipsLinearNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in1,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Pointer<ffi.Double> a,
+  ffi.Pointer<ffi.Double> b,
+  ffi.Int n,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsLinearDart = int Function(
+  ffi.Pointer<VipsImage> in1,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Pointer<ffi.Double> a,
+  ffi.Pointer<ffi.Double> b,
+  int n,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
 typedef VipsLinear1Native = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
@@ -342,5 +360,53 @@ typedef VipsLinear1Dart = int Function(
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
   double a,
   double b,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+// vips_black - create a black image
+typedef VipsBlackNative = ffi.Int Function(
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Int width,
+  ffi.Int height,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsBlackDart = int Function(
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  int width,
+  int height,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+// vips_insert - insert sub into main at position x, y
+typedef VipsInsertNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> main,
+  ffi.Pointer<VipsImage> sub,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Int x,
+  ffi.Int y,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsInsertDart = int Function(
+  ffi.Pointer<VipsImage> main,
+  ffi.Pointer<VipsImage> sub,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  int x,
+  int y,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+// vips_bandjoin_const - join constant bands to an image
+typedef VipsBandjoinConstNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Pointer<ffi.Double> c,
+  ffi.Int n,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsBandjoinConstDart = int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Pointer<ffi.Double> c,
+  int n,
   ffi.Pointer<ffi.Void> terminator,
 );

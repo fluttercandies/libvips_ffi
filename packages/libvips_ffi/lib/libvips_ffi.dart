@@ -70,7 +70,7 @@ export 'src/platform_loader.dart' show PlatformVipsLoader, initVips;
 
 // Export compute-based async API (simpler, uses Flutter's compute).
 // 导出基于 compute 的异步 API（更简单，使用 Flutter 的 compute）。
-export 'src/vips_compute.dart' show VipsCompute, VipsComputeResult;
+export 'src/vips_compute.dart' show VipsCompute, VipsComputeResult, CollageItemData;
 
 // Export isolate-based async API for batch processing.
 // 导出基于 isolate 的异步 API，用于批量处理。

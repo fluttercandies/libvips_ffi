@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:libvips_ffi/libvips_ffi.dart';
 
+import 'pages/collage_page.dart';
 import 'pages/developer_tools_page.dart';
 import 'pages/examples_page.dart';
 
@@ -112,6 +113,19 @@ class _HomePageState extends State<HomePage> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const ExamplesPage()),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            _buildNavButton(
+              context,
+              title: 'Collage / 图片拼接',
+              subtitle: 'Combine multiple images with drag and drop',
+              icon: Icons.grid_view,
+              color: Colors.purple,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CollagePage()),
               ),
             ),
             const SizedBox(height: 12),

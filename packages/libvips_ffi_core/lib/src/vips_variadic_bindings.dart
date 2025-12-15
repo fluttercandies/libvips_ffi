@@ -339,6 +339,62 @@ class VipsVariadicBindings {
   ) {
     return _vipsCopy(in1, out, ffi.nullptr);
   }
+
+  // ============ Create Functions ============
+  // ============ 创建函数 ============
+
+  late final _vipsBlack = _lib
+      .lookup<ffi.NativeFunction<VipsBlackNative>>('vips_black')
+      .asFunction<VipsBlackDart>();
+
+  int black(
+    ffi.Pointer<ffi.Pointer<VipsImage>> out,
+    int width,
+    int height,
+  ) {
+    return _vipsBlack(out, width, height, ffi.nullptr);
+  }
+
+  late final _vipsInsert = _lib
+      .lookup<ffi.NativeFunction<VipsInsertNative>>('vips_insert')
+      .asFunction<VipsInsertDart>();
+
+  int insert(
+    ffi.Pointer<VipsImage> main,
+    ffi.Pointer<VipsImage> sub,
+    ffi.Pointer<ffi.Pointer<VipsImage>> out,
+    int x,
+    int y,
+  ) {
+    return _vipsInsert(main, sub, out, x, y, ffi.nullptr);
+  }
+
+  late final _vipsBandjoinConst = _lib
+      .lookup<ffi.NativeFunction<VipsBandjoinConstNative>>('vips_bandjoin_const')
+      .asFunction<VipsBandjoinConstDart>();
+
+  int bandjoinConst(
+    ffi.Pointer<VipsImage> in$,
+    ffi.Pointer<ffi.Pointer<VipsImage>> out,
+    ffi.Pointer<ffi.Double> c,
+    int n,
+  ) {
+    return _vipsBandjoinConst(in$, out, c, n, ffi.nullptr);
+  }
+
+  late final _vipsLinear = _lib
+      .lookup<ffi.NativeFunction<VipsLinearNative>>('vips_linear')
+      .asFunction<VipsLinearDart>();
+
+  int linear(
+    ffi.Pointer<VipsImage> in1,
+    ffi.Pointer<ffi.Pointer<VipsImage>> out,
+    ffi.Pointer<ffi.Double> a,
+    ffi.Pointer<ffi.Double> b,
+    int n,
+  ) {
+    return _vipsLinear(in1, out, a, b, n, ffi.nullptr);
+  }
 }
 
 /// Global variadic bindings instance (lazy initialized).

@@ -336,6 +336,197 @@ class VipsImageWrapper {
     }
   }
 
+  // ============ Composition Methods ============
+  // ============ 合成方法 ============
+
+  /// Creates a black (empty) image with the specified dimensions.
+  ///
+  /// 创建指定尺寸的黑色（空白）图像。
+  ///
+  /// [width] is the image width in pixels.
+  /// [width] 是图像宽度（像素）。
+  ///
+  /// [height] is the image height in pixels.
+  /// [height] 是图像高度（像素）。
+  ///
+  /// Returns a new [VipsImageWrapper] with 1 band. Remember to dispose it when done.
+  /// 返回新的 1 通道 [VipsImageWrapper]。完成后记得调用 dispose。
+  static VipsImageWrapper black(int width, int height) {
+    clearVipsError();
+
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+
+    try {
+      final result = variadicBindings.black(outPtr, width, height);
+
+      if (result != 0) {
+        throw VipsException(
+          'Failed to create black image. ${getVipsError() ?? "Unknown error"}',
+        );
+      }
+
+      return VipsImageWrapper._(outPtr.value, null, 'black');
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Creates an image filled with a solid color (3-band RGB).
+  ///
+  /// 创建填充纯色的图像（3 通道 RGB）。
+  ///
+  /// [width] is the image width in pixels.
+  /// [width] 是图像宽度（像素）。
+  ///
+  /// [height] is the image height in pixels.
+  /// [height] 是图像高度（像素）。
+  ///
+  /// [r], [g], [b] are the RGB color values (0-255).
+  /// [r]、[g]、[b] 是 RGB 颜色值（0-255）。
+  ///
+  /// Returns a new [VipsImageWrapper] with 3 bands. Remember to dispose it when done.
+  /// 返回新的 3 通道 [VipsImageWrapper]。完成后记得调用 dispose。
+  static VipsImageWrapper solidColor(
+    int width,
+    int height, {
+    int r = 255,
+    int g = 255,
+    int b = 255,
+  }) {
+    // Create a 1-band black image first
+    var canvas = black(width, height);
+    
+    // Set R channel value using linear (variadic function): out = in * 1 + r
+    final outPtr1 = calloc<ffi.Pointer<VipsImage>>();
+    final aPtr = calloc<ffi.Double>(1);
+    final bPtr = calloc<ffi.Double>(1);
+    try {
+      aPtr[0] = 1.0;
+      bPtr[0] = r.toDouble();
+      
+      final result1 = variadicBindings.linear(
+        canvas._pointer,
+        outPtr1,
+        aPtr,
+        bPtr,
+        1,
+      );
+      
+      if (result1 == 0) {
+        canvas.dispose();
+        canvas = VipsImageWrapper._(outPtr1.value, null, 'solidColor_r');
+      } else {
+        throw VipsException(
+          'Failed to set R channel. ${getVipsError() ?? "Unknown error"}',
+        );
+      }
+    } finally {
+      calloc.free(outPtr1);
+      calloc.free(aPtr);
+      calloc.free(bPtr);
+    }
+    
+    // Add G band
+    final outPtr2 = calloc<ffi.Pointer<VipsImage>>();
+    final gPtr = calloc<ffi.Double>(1);
+    try {
+      gPtr[0] = g.toDouble();
+      
+      final result2 = variadicBindings.bandjoinConst(
+        canvas._pointer,
+        outPtr2,
+        gPtr,
+        1,
+      );
+      
+      if (result2 == 0) {
+        canvas.dispose();
+        canvas = VipsImageWrapper._(outPtr2.value, null, 'solidColor_rg');
+      } else {
+        throw VipsException(
+          'Failed to add G band. ${getVipsError() ?? "Unknown error"}',
+        );
+      }
+    } finally {
+      calloc.free(outPtr2);
+      calloc.free(gPtr);
+    }
+    
+    // Add B band
+    final outPtr3 = calloc<ffi.Pointer<VipsImage>>();
+    final bBandPtr = calloc<ffi.Double>(1);
+    try {
+      bBandPtr[0] = b.toDouble();
+      
+      final result3 = variadicBindings.bandjoinConst(
+        canvas._pointer,
+        outPtr3,
+        bBandPtr,
+        1,
+      );
+      
+      if (result3 == 0) {
+        canvas.dispose();
+        canvas = VipsImageWrapper._(outPtr3.value, null, 'solidColor_rgb');
+      } else {
+        throw VipsException(
+          'Failed to add B band. ${getVipsError() ?? "Unknown error"}',
+        );
+      }
+    } finally {
+      calloc.free(outPtr3);
+      calloc.free(bBandPtr);
+    }
+    
+    return canvas;
+  }
+
+  /// Inserts another image into this image at the specified position.
+  ///
+  /// 在指定位置将另一张图像插入到此图像中。
+  ///
+  /// [sub] is the image to insert.
+  /// [sub] 是要插入的图像。
+  ///
+  /// [x] is the x position to insert at.
+  /// [x] 是插入的 x 位置。
+  ///
+  /// [y] is the y position to insert at.
+  /// [y] 是插入的 y 位置。
+  ///
+  /// [expand] if true, expands the output to hold all of both images.
+  /// [expand] 如果为 true，则扩展输出以容纳两张图像。
+  ///
+  /// Returns a new [VipsImageWrapper]. Remember to dispose it when done.
+  /// 返回新的 [VipsImageWrapper]。完成后记得调用 dispose。
+  VipsImageWrapper insert(VipsImageWrapper sub, int x, int y, {bool expand = false}) {
+    checkDisposed();
+    sub.checkDisposed();
+    clearVipsError();
+
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+
+    try {
+      final result = variadicBindings.insert(
+        _pointer,
+        sub._pointer,
+        outPtr,
+        x,
+        y,
+      );
+
+      if (result != 0) {
+        throw VipsException(
+          'Failed to insert image. ${getVipsError() ?? "Unknown error"}',
+        );
+      }
+
+      return VipsImageWrapper._(outPtr.value, null, 'insert');
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
   /// Releases the image resources.
   ///
   /// 释放图像资源。

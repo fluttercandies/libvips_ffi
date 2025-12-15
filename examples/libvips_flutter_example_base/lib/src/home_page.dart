@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Flutter Vips Example'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
 
-            const Spacer(),
+            const SizedBox(height: 24),
 
             // Info
             Card(

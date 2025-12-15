@@ -11,23 +11,19 @@
 - [ ] Linux：补齐 Flutter Linux 插件目录/打包配置（当前不存在 `linux/` 目录）
   - 证据：`packages/libvips_ffi_linux/`（目录结构中无 `linux/`）
 
-- [ ] macOS：补齐 x86_64 预编译库或调整宣称/loader（当前只有 arm64）
-  - 证据：`packages/libvips_ffi_macos/README.md:8`（声称 x64+arm64）
-  - 证据：`packages/libvips_ffi_macos/macos/Libraries/` 仅有 `arm64/`（目录结构）
-  - 证据：`packages/libvips_ffi_macos/lib/src/macos_loader.dart:29-40`（按 `arch` 拼路径）
-  - 证据：`packages/libvips_ffi_macos/macos/libvips_ffi_macos.podspec:18`（`vendored_libraries = 'Libraries/arm64/*.dylib'`）
+- [x] macOS：补齐 x86_64 预编译库或调整宣称/loader（当前只有 arm64）
+  - 已完成：`packages/libvips_ffi_macos/macos/Libraries/` 现包含 `arm64/` 和 `x86_64/`
+  - podspec 已更新为动态检测架构
 
-- [ ] macOS：对齐 libvips 版本元信息（podspec 描述 8.17.0 vs pubspec 8.16.0）
-  - 证据：`packages/libvips_ffi_macos/macos/libvips_ffi_macos.podspec:6`（"Pre-compiled libvips 8.17.0"）
-  - 证据：`packages/libvips_ffi_macos/pubspec.yaml`（`version: 0.1.0+8.16.0`）
+- [x] macOS：对齐 libvips 版本元信息（podspec 描述 8.17.0 vs pubspec 8.16.0）
+  - 已完成：podspec 描述已更新，移除具体版本号
 
 - [ ] Windows：README 仍标注 placeholder（但 `windows/dll` 已包含 DLL）
   - 证据：`packages/libvips_ffi_windows/README.md:24-26`
   - 证据：`packages/libvips_ffi_windows/windows/dll/`（存在且包含 `libvips-42.dll` 等）
 
-- [ ] macOS：README 仍标注 placeholder（但 `macos/Libraries` 已包含 dylib）
-  - 证据：`packages/libvips_ffi_macos/README.md:25-27`
-  - 证据：`packages/libvips_ffi_macos/macos/Libraries/arm64/`（目录存在）
+- [x] macOS：README 仍标注 placeholder（但 `macos/Libraries` 已包含 dylib）
+  - 已完成：README 已更新，移除 placeholder 说明
 
 ## 系统包管理器加载（libvips_ffi_system）
 

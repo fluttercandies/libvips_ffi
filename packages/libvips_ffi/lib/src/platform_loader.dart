@@ -59,8 +59,43 @@ void initVips({
 VipsLibraryLoader _getDefaultLoader() {
   if (Platform.isAndroid || Platform.isIOS) {
     return PlatformVipsLoader();
+  } else if (Platform.isMacOS) {
+    // Try bundled library first, then fall back to system
+    return _MacosBundledLoader();
   } else {
     return SystemVipsLoader();
+  }
+}
+
+/// macOS bundled library loader
+/// 
+/// Tries to load libvips from the app bundle's Frameworks directory.
+/// Falls back to SystemVipsLoader if not found.
+class _MacosBundledLoader implements VipsLibraryLoader {
+  @override
+  DynamicLibrary load() {
+    // Get the executable path and derive Frameworks directory
+    final executable = Platform.resolvedExecutable;
+    final execDir = File(executable).parent.path;
+    final frameworksDir = '$execDir/../Frameworks';
+    final libPath = '$frameworksDir/libvips.42.dylib';
+    
+    if (File(libPath).existsSync()) {
+      return DynamicLibrary.open(libPath);
+    }
+    
+    // Fall back to system library
+    return SystemVipsLoader().load();
+  }
+
+  @override
+  bool isAvailable() {
+    try {
+      load();
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 }
 

@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:file_selector/file_selector.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -288,10 +290,49 @@ final result = await VipsCompute.processFile(
   ];
 
   Future<void> _pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
+    String? imagePath;
+    
+    // ignore: avoid_print
+    print('[ExamplesPage] _pickImage called');
+    // ignore: avoid_print
+    print('[ExamplesPage] Platform: macOS=${Platform.isMacOS}, Windows=${Platform.isWindows}, Linux=${Platform.isLinux}');
+    
+    try {
+      // Use file_selector for desktop platforms (macOS, Windows, Linux)
+      if (!kIsWeb && (Platform.isMacOS || Platform.isWindows || Platform.isLinux)) {
+        // ignore: avoid_print
+        print('[ExamplesPage] Using file_selector');
+        const typeGroup = XTypeGroup(
+          label: 'images',
+          extensions: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'tiff', 'bmp'],
+        );
+        final file = await openFile(acceptedTypeGroups: [typeGroup]);
+        // ignore: avoid_print
+        print('[ExamplesPage] file_selector result: ${file?.path}');
+        imagePath = file?.path;
+      } else {
+        // Use image_picker for mobile platforms
+        // ignore: avoid_print
+        print('[ExamplesPage] Using image_picker');
+        final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+        imagePath = image?.path;
+      }
+    } catch (e, stack) {
+      // ignore: avoid_print
+      print('[ExamplesPage] Error picking image: $e');
+      // ignore: avoid_print
+      print('[ExamplesPage] Stack: $stack');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error picking image: $e')),
+        );
+      }
+      return;
+    }
+    
+    if (imagePath != null) {
       setState(() {
-        _selectedImagePath = image.path;
+        _selectedImagePath = imagePath;
         _processedImageData = null;
       });
     }

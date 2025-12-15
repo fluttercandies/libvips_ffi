@@ -3,56 +3,58 @@ import 'dart:io';
 
 import 'package:libvips_ffi_core/libvips_ffi_core.dart';
 
-/// 获取当前 CPU 架构
-String _getCpuArchitecture() {
-  // 使用 uname -m 获取 CPU 架构
-  try {
-    final result = Process.runSync('uname', ['-m']);
-    if (result.exitCode == 0) {
-      final arch = (result.stdout as String).trim();
-      // arm64 或 x86_64
-      return arch;
-    }
-  } catch (_) {}
-  
-  // 默认返回 arm64 (Apple Silicon)
-  return 'arm64';
-}
-
 /// macOS 库加载器
 ///
 /// 加载预编译的 macOS libvips 库。
 /// 自动检测 CPU 架构 (arm64/x86_64) 并加载对应的库。
 /// 当预编译库不可用时，会回退到系统库。
 class MacosVipsLoader implements VipsLibraryLoader {
-  /// 获取当前架构的预编译库路径
+  /// 获取预编译库路径
   static List<String> _getBundledLibraryPaths() {
-    final arch = _getCpuArchitecture();
-    return [
-      // Flutter macOS app bundle - 架构特定
-      '@executable_path/../Frameworks/$arch/libvips.42.dylib',
-      // Flutter macOS app bundle - 通用
-      '@executable_path/../Frameworks/libvips.42.dylib',
-      // Relative to executable - 架构特定
-      'Libraries/$arch/libvips.42.dylib',
-      // Relative to package - 架构特定
-      'packages/libvips_ffi_macos/macos/Libraries/$arch/libvips.42.dylib',
-    ];
+    final paths = <String>[];
+    
+    // Get the executable path and derive Frameworks directory
+    final executable = Platform.resolvedExecutable;
+    final execDir = File(executable).parent.path;
+    final frameworksDir = '$execDir/../Frameworks';
+    
+    // Primary path: Frameworks directory in app bundle
+    paths.add('$frameworksDir/libvips.42.dylib');
+    
+    // Fallback: try @rpath (works for some configurations)
+    paths.add('@rpath/libvips.42.dylib');
+    
+    return paths;
   }
 
   @override
   DynamicLibrary load() {
     // 首先尝试加载预编译库
     final paths = _getBundledLibraryPaths();
+    final errors = <String>[];
+    
     for (final path in paths) {
       try {
-        return DynamicLibrary.open(path);
-      } catch (_) {
-        // 继续尝试下一个路径
+        final lib = DynamicLibrary.open(path);
+        // ignore: avoid_print
+        print('[MacosVipsLoader] Loaded libvips from: $path');
+        return lib;
+      } catch (e) {
+        errors.add('$path: $e');
       }
     }
 
+    // 打印所有尝试的路径和错误
+    // ignore: avoid_print
+    print('[MacosVipsLoader] Failed to load bundled library:');
+    for (final error in errors) {
+      // ignore: avoid_print
+      print('  - $error');
+    }
+
     // 回退到系统库
+    // ignore: avoid_print
+    print('[MacosVipsLoader] Falling back to system library...');
     return SystemVipsLoader().load();
   }
 
@@ -68,7 +70,15 @@ class MacosVipsLoader implements VipsLibraryLoader {
   }
   
   /// 获取当前检测到的 CPU 架构
-  static String get currentArchitecture => _getCpuArchitecture();
+  static String get currentArchitecture {
+    try {
+      final result = Process.runSync('uname', ['-m']);
+      if (result.exitCode == 0) {
+        return (result.stdout as String).trim();
+      }
+    } catch (_) {}
+    return 'arm64';
+  }
 }
 
 /// 初始化 libvips (macOS)

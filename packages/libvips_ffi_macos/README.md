@@ -22,9 +22,14 @@ void main() {
 }
 ```
 
-## Note
+## Pre-compiled Libraries
 
-This package contains placeholder structure. Pre-compiled binaries need to be added before publishing.
+This package includes pre-compiled libvips binaries for:
+
+- **arm64** (Apple Silicon)
+- **x86_64** (Intel)
+
+The appropriate architecture is automatically selected at build time.
 
 ## Related Packages
 

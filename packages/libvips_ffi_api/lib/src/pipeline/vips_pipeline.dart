@@ -1,6 +1,10 @@
+import 'dart:ffi' as ffi;
 import 'dart:typed_data';
 
+import 'package:ffi/ffi.dart';
+
 import '../image/vips_img.dart';
+import '../vips_api_init.dart';
 
 /// Chainable image processing pipeline.
 ///
@@ -72,6 +76,22 @@ class VipsPipeline {
   /// Write to file.
   void toFile(String path) {
     _image.writeToFile(path);
+    dispose();
+  }
+
+  /// Save as DeepZoom pyramid.
+  /// Creates a directory or zip file with tiled images at various resolutions.
+  void toDeepZoom(String name) {
+    clearVipsError();
+    final namePtr = name.toNativeUtf8().cast<ffi.Char>();
+    try {
+      final result = ioBindings.dzsave(_image.pointer, namePtr);
+      if (result != 0) {
+        throw VipsApiException('Failed dzsave. ${getVipsError() ?? "Unknown error"}');
+      }
+    } finally {
+      calloc.free(namePtr);
+    }
     dispose();
   }
 

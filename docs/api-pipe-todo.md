@@ -172,12 +172,17 @@
 | remainder | vips_remainder | ❌ | 需要另一图像参数 |
 | round | vips_round | ❌ | |
 | sign | vips_sign | ✅ | |
+| clamp | vips_clamp | ✅ | 限制像素值范围 |
+| houghCircle | vips_hough_circle | ✅ | 圆形霍夫变换 |
+| houghLine | vips_hough_line | ✅ | 线性霍夫变换 |
 | stats | vips_stats | ❌ | 返回值类型不同 |
 | sum | vips_sum | ❌ | 需要多图像参数 |
 | math | vips_math | ❌ | |
 | math2 | vips_math2 | ❌ | 需要另一图像参数 |
 | measure | vips_measure | ❌ | |
 | findTrim | vips_find_trim | ❌ | 返回值类型不同 |
+| profile | vips_profile | ❌ | 返回两个图像 |
+| project | vips_project | ❌ | 返回两个图像 |
 
 ## Complex (复数) - complex_ext.dart
 

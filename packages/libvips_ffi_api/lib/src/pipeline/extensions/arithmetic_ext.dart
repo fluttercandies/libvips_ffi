@@ -323,4 +323,54 @@ extension VipsArithmeticExtension on VipsPipeline {
   /// Adjust contrast using linear transformation.
   /// [factor]: 1.0 = no change, >1 = more contrast, <1 = less contrast
   VipsPipeline adjustContrast(double factor) => linear1(factor, 128 * (1 - factor));
+
+  /// Clamp pixel values to a range (default 0-1).
+  VipsPipeline clamp() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = arithmeticBindings.clamp(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed clamp. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Find the circular Hough transform.
+  /// Detects circles in an edge-detected image.
+  VipsPipeline houghCircle() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = arithmeticBindings.houghCircle(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed houghCircle. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Find the line Hough transform.
+  /// Detects lines in an edge-detected image.
+  VipsPipeline houghLine() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = arithmeticBindings.houghLine(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed houghLine. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
 }

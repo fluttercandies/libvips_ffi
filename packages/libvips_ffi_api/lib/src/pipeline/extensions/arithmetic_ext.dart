@@ -298,4 +298,29 @@ extension VipsArithmeticExtension on VipsPipeline {
       calloc.free(outPtr);
     }
   }
+
+  /// Linear transformation: out = in * a + b
+  /// Applies same scale and offset to all bands.
+  VipsPipeline linear1(double a, double b) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = apiBindings.linear1(image.pointer, outPtr, a, b);
+      if (result != 0) {
+        throw VipsApiException('Failed linear1. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Adjust brightness using linear transformation.
+  /// [factor]: 1.0 = no change, >1 = brighter, <1 = darker
+  VipsPipeline adjustBrightness(double factor) => linear1(1.0, (factor - 1.0) * 128);
+
+  /// Adjust contrast using linear transformation.
+  /// [factor]: 1.0 = no change, >1 = more contrast, <1 = less contrast
+  VipsPipeline adjustContrast(double factor) => linear1(factor, 128 * (1 - factor));
 }

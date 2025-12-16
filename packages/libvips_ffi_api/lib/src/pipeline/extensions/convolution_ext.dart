@@ -214,4 +214,52 @@ extension VipsConvolutionExtension on VipsPipeline {
       calloc.free(outPtr);
     }
   }
+
+  /// Separable convolution.
+  VipsPipeline convsep(VipsImg mask) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = convolutionBindings.convsep(image.pointer, outPtr, mask.pointer);
+      if (result != 0) {
+        throw VipsApiException('Failed convsep. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Approximate separable convolution.
+  VipsPipeline convasep(VipsImg mask) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = convolutionBindings.convasep(image.pointer, outPtr, mask.pointer);
+      if (result != 0) {
+        throw VipsApiException('Failed convasep. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Approximate convolution.
+  VipsPipeline conva(VipsImg mask) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = convolutionBindings.conva(image.pointer, outPtr, mask.pointer);
+      if (result != 0) {
+        throw VipsApiException('Failed conva. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
 }

@@ -231,6 +231,103 @@ class VipsImg {
     }
   }
 
+  /// Get pixel values at a point.
+  /// Returns a list of values, one per band.
+  List<double> getpoint(int x, int y) {
+    _checkDisposed();
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<ffi.Double>>();
+    final nPtr = calloc<ffi.Int>();
+    try {
+      final result = arithmeticBindings.getpoint(_pointer, outPtr, nPtr, x, y);
+      if (result != 0) {
+        throw VipsApiException('Failed getpoint. ${getVipsError() ?? "Unknown error"}');
+      }
+      final n = nPtr.value;
+      final values = <double>[];
+      for (int i = 0; i < n; i++) {
+        values.add(outPtr.value[i]);
+      }
+      vipsBindings.g_free(outPtr.value.cast());
+      return values;
+    } finally {
+      calloc.free(outPtr);
+      calloc.free(nPtr);
+    }
+  }
+
+  /// Get image statistics as a new VipsImg.
+  /// Returns a matrix with statistics per band.
+  VipsImg stats() {
+    _checkDisposed();
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = arithmeticBindings.stats(_pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed stats. ${getVipsError() ?? "Unknown error"}');
+      }
+      return VipsImg.fromPointer(outPtr.value);
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Find the bounding box of non-background pixels.
+  /// Returns (left, top, width, height).
+  (int, int, int, int) findTrim() {
+    _checkDisposed();
+    clearVipsError();
+    final leftPtr = calloc<ffi.Int>();
+    final topPtr = calloc<ffi.Int>();
+    final widthPtr = calloc<ffi.Int>();
+    final heightPtr = calloc<ffi.Int>();
+    try {
+      final result = arithmeticBindings.findTrim(_pointer, leftPtr, topPtr, widthPtr, heightPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed findTrim. ${getVipsError() ?? "Unknown error"}');
+      }
+      return (leftPtr.value, topPtr.value, widthPtr.value, heightPtr.value);
+    } finally {
+      calloc.free(leftPtr);
+      calloc.free(topPtr);
+      calloc.free(widthPtr);
+      calloc.free(heightPtr);
+    }
+  }
+
+  /// Get histogram entropy.
+  double histEntropy() {
+    _checkDisposed();
+    clearVipsError();
+    final outPtr = calloc<ffi.Double>();
+    try {
+      final result = colourBindings.histEntropy(_pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed histEntropy. ${getVipsError() ?? "Unknown error"}');
+      }
+      return outPtr.value;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Check if histogram is monotonic.
+  bool histIsmonotonic() {
+    _checkDisposed();
+    clearVipsError();
+    final outPtr = calloc<ffi.Int>();
+    try {
+      final result = colourBindings.histIsmonotonic(_pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed histIsmonotonic. ${getVipsError() ?? "Unknown error"}');
+      }
+      return outPtr.value != 0;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
   /// Dispose the image and free native resources.
   void dispose() {
     if (_disposed) return;

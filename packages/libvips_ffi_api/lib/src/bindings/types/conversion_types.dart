@@ -39,6 +39,19 @@ typedef VipsBandjoinDart = int Function(
   ffi.Pointer<ffi.Void> terminator,
 );
 
+typedef VipsArrayjoinNative = ffi.Int Function(
+  ffi.Pointer<ffi.Pointer<VipsImage>> in$,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Int n,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsArrayjoinDart = int Function(
+  ffi.Pointer<ffi.Pointer<VipsImage>> in$,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  int n,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
 typedef VipsBandjoin2Native = ffi.Int Function(
   ffi.Pointer<VipsImage> in1,
   ffi.Pointer<VipsImage> in2,

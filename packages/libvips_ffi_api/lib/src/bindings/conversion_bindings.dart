@@ -14,6 +14,7 @@ class VipsConversionBindings {
   late final _bandfold = _lib.lookup<ffi.NativeFunction<VipsBandfoldNative>>('vips_bandfold').asFunction<VipsBandfoldDart>();
   late final _bandjoin = _lib.lookup<ffi.NativeFunction<VipsBandjoinNative>>('vips_bandjoin').asFunction<VipsBandjoinDart>();
   late final _bandjoin2 = _lib.lookup<ffi.NativeFunction<VipsBandjoin2Native>>('vips_bandjoin2').asFunction<VipsBandjoin2Dart>();
+  late final _arrayjoin = _lib.lookup<ffi.NativeFunction<VipsArrayjoinNative>>('vips_arrayjoin').asFunction<VipsArrayjoinDart>();
   late final _bandmean = _lib.lookup<ffi.NativeFunction<VipsBandmeanNative>>('vips_bandmean').asFunction<VipsBandmeanDart>();
   late final _bandunfold = _lib.lookup<ffi.NativeFunction<VipsBandunfoldNative>>('vips_bandunfold').asFunction<VipsBandunfoldDart>();
   late final _byteswap = _lib.lookup<ffi.NativeFunction<VipsByteswapNative>>('vips_byteswap').asFunction<VipsByteswapDart>();
@@ -35,6 +36,7 @@ class VipsConversionBindings {
   int bandfold(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Pointer<VipsImage>> out) => _bandfold(in$, out, ffi.nullptr);
   int bandjoin(ffi.Pointer<ffi.Pointer<VipsImage>> in$, ffi.Pointer<ffi.Pointer<VipsImage>> out, int n) => _bandjoin(in$, out, n, ffi.nullptr);
   int bandjoin2(ffi.Pointer<VipsImage> in1, ffi.Pointer<VipsImage> in2, ffi.Pointer<ffi.Pointer<VipsImage>> out) => _bandjoin2(in1, in2, out, ffi.nullptr);
+  int arrayjoin(ffi.Pointer<ffi.Pointer<VipsImage>> in$, ffi.Pointer<ffi.Pointer<VipsImage>> out, int n) => _arrayjoin(in$, out, n, ffi.nullptr);
   int bandmean(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Pointer<VipsImage>> out) => _bandmean(in$, out, ffi.nullptr);
   int bandunfold(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Pointer<VipsImage>> out) => _bandunfold(in$, out, ffi.nullptr);
   int byteswap(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Pointer<VipsImage>> out) => _byteswap(in$, out, ffi.nullptr);

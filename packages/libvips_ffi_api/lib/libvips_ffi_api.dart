@@ -72,6 +72,7 @@ export 'src/pipeline/extensions/frequency_ext.dart';
 export 'src/pipeline/extensions/histogram_ext.dart';
 export 'src/pipeline/extensions/draw_ext.dart';
 export 'src/pipeline/extensions/boolean_ext.dart';
+export 'src/pipeline/extensions/multi_image_ext.dart';
 
 // Types
 export 'src/types/enums.dart';

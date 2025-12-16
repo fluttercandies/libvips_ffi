@@ -154,4 +154,21 @@ extension VipsRelationalExtension on VipsPipeline {
       calloc.free(outPtr);
     }
   }
+
+  /// Conditional selection: if this > 128 then in1 else in2.
+  /// Current image is used as condition mask.
+  VipsPipeline ifthenelse(VipsImg in1, VipsImg in2) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = relationalBindings.ifthenelse(image.pointer, in1.pointer, in2.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed ifthenelse. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
 }

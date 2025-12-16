@@ -129,6 +129,22 @@ extension VipsResampleExtension on VipsPipeline {
     }
   }
 
+  /// Map image coordinates through index image.
+  VipsPipeline mapim(VipsImg index) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = resampleBindings.mapim(image.pointer, outPtr, index.pointer);
+      if (result != 0) {
+        throw VipsApiException('Failed mapim. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
   /// Similarity transform (scale and rotate).
   VipsPipeline similarity() {
     clearVipsError();

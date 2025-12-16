@@ -73,7 +73,7 @@ extension VipsMorphologyExtension on VipsPipeline {
     }
   }
 
-  /// Label regions.
+  /// Label connected regions.
   VipsPipeline labelregions() {
     clearVipsError();
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
@@ -81,6 +81,42 @@ extension VipsMorphologyExtension on VipsPipeline {
       final result = morphologyBindings.labelregions(image.pointer, outPtr);
       if (result != 0) {
         throw VipsApiException('Failed labelregions. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Erode image with structuring element.
+  /// [mask]: Structuring element (VipsImg)
+  VipsPipeline erode(VipsImg mask) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      // VIPS_OPERATION_MORPHOLOGY_ERODE = 0
+      final result = morphologyBindings.morph(image.pointer, outPtr, mask.pointer, 0);
+      if (result != 0) {
+        throw VipsApiException('Failed erode. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Dilate image with structuring element.
+  /// [mask]: Structuring element (VipsImg)
+  VipsPipeline dilate(VipsImg mask) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      // VIPS_OPERATION_MORPHOLOGY_DILATE = 1
+      final result = morphologyBindings.morph(image.pointer, outPtr, mask.pointer, 1);
+      if (result != 0) {
+        throw VipsApiException('Failed dilate. ${getVipsError() ?? "Unknown error"}');
       }
       replaceImage(VipsImg.fromPointer(outPtr.value));
       return this;

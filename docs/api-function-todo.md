@@ -354,20 +354,20 @@
 | vips_image_new_from_buffer | | ✅ | vips_bindings (api) |
 | vips_image_write_to_file | | ✅ | vips_bindings (api) |
 | vips_image_write_to_buffer | | ✅ | vips_bindings (api) |
-| jp2kload | vips_jp2kload() | ❌ | |
-| jp2ksave | vips_jp2ksave() | ❌ | |
-| jxlload | vips_jxlload() | ❌ | |
-| jxlsave | vips_jxlsave() | ❌ | |
-| magickload | vips_magickload() | ❌ | |
-| magicksave | vips_magicksave() | ❌ | |
-| niftiload | vips_niftiload() | ❌ | |
-| niftisave | vips_niftisave() | ❌ | |
-| openexrload | vips_openexrload() | ❌ | |
-| openslideload | vips_openslideload() | ❌ | |
-| radload | vips_radload() | ❌ | |
-| radsave | vips_radsave() | ❌ | |
-| rawload | vips_rawload() | ❌ | |
-| rawsave | vips_rawsave() | ❌ | |
+| jp2kload | vips_jp2kload() | ✅ | io_bindings |
+| jp2ksave | vips_jp2ksave() | ✅ | io_bindings |
+| jxlload | vips_jxlload() | ✅ | io_bindings |
+| jxlsave | vips_jxlsave() | ✅ | io_bindings |
+| magickload | vips_magickload() | ✅ | io_bindings |
+| magicksave | vips_magicksave() | ✅ | io_bindings |
+| niftiload | vips_niftiload() | ✅ | io_bindings |
+| niftisave | vips_niftisave() | ✅ | io_bindings |
+| openexrload | vips_openexrload() | ✅ | io_bindings |
+| openslideload | vips_openslideload() | ✅ | io_bindings |
+| radload | vips_radload() | ✅ | io_bindings |
+| radsave | vips_radsave() | ✅ | io_bindings |
+| rawload | vips_rawload() | ✅ | io_bindings |
+| rawsave | vips_rawsave() | ✅ | io_bindings |
 
 ## Composite (合成操作)
 
@@ -409,11 +409,11 @@
 | Morphology | 6 | 0 | **100%** |
 | Mosaicing | 6 | 0 | **100%** |
 | Resample | 16 | 0 | **100%** |
-| I/O | 32 | 14 | 70% |
+| I/O | 46 | 0 | **100%** |
 | Composite | 2 | 0 | **100%** |
 | Complex | 10 | 0 | **100%** |
 
-**总计**: ~292 已实现 / ~306 总函数 = **~95%**
+**总计**: ~306 已实现 / ~306 总函数 = **100%**
 
 ---
 
@@ -425,7 +425,7 @@
 4. ✅ ~实现 Convolution 类别的卷积函数~ 已完成
 5. ✅ ~实现 Resample 类别的剩余函数~ 已完成
 6. ✅ ~实现 Complex 类别~ 已完成
-7. ❌ 实现 I/O 类别的剩余格式 (14个)
+7. ✅ ~实现 I/O 类别的剩余格式~ 已完成
 8. ✅ ~实现 Mosaicing 类别~ 已完成
 9. ✅ ~实现 Relational 类别的剩余函数~ 已完成
 10. ✅ ~实现 Conversion rot90/rot180/rot270~ 已完成

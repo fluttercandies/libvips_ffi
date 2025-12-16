@@ -346,3 +346,171 @@ typedef VipsSvgloadBufferDart = int Function(
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
   ffi.Pointer<ffi.Void> terminator,
 );
+
+// ============ JPEG 2000 ============
+typedef VipsJp2kloadNative = ffi.Int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsJp2kloadDart = int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef VipsJp2ksaveNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Char> filename,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsJp2ksaveDart = int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+// ============ JPEG XL ============
+typedef VipsJxlloadNative = ffi.Int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsJxlloadDart = int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef VipsJxlsaveNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Char> filename,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsJxlsaveDart = int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+// ============ ImageMagick ============
+typedef VipsMagickloadNative = ffi.Int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsMagickloadDart = int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef VipsMagicksaveNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Char> filename,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsMagicksaveDart = int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+// ============ NIfTI ============
+typedef VipsNiftiloadNative = ffi.Int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsNiftiloadDart = int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef VipsNiftisaveNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Char> filename,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsNiftisaveDart = int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+// ============ OpenEXR ============
+typedef VipsOpenexrloadNative = ffi.Int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsOpenexrloadDart = int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+// ============ OpenSlide ============
+typedef VipsOpenslideloadNative = ffi.Int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsOpenslideloadDart = int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+// ============ Radiance HDR ============
+typedef VipsRadloadNative = ffi.Int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsRadloadDart = int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef VipsRadsaveNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Char> filename,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsRadsaveDart = int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+// ============ Raw ============
+typedef VipsRawloadNative = ffi.Int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Int width,
+  ffi.Int height,
+  ffi.Int bands,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsRawloadDart = int Function(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  int width,
+  int height,
+  int bands,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef VipsRawsaveNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Char> filename,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsRawsaveDart = int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Void> terminator,
+);

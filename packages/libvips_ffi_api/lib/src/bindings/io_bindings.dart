@@ -212,4 +212,56 @@ class VipsIoBindings {
 
   int svgloadBuffer(ffi.Pointer<ffi.Void> buf, int len, ffi.Pointer<ffi.Pointer<VipsImage>> out) =>
       _svgloadBuffer(buf, len, out, ffi.nullptr);
+
+  // ============ JPEG 2000 ============
+  late final _jp2kload = _lib.lookup<ffi.NativeFunction<VipsJp2kloadNative>>('vips_jp2kload').asFunction<VipsJp2kloadDart>();
+  late final _jp2ksave = _lib.lookup<ffi.NativeFunction<VipsJp2ksaveNative>>('vips_jp2ksave').asFunction<VipsJp2ksaveDart>();
+
+  int jp2kload(ffi.Pointer<ffi.Char> filename, ffi.Pointer<ffi.Pointer<VipsImage>> out) => _jp2kload(filename, out, ffi.nullptr);
+  int jp2ksave(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Char> filename) => _jp2ksave(in$, filename, ffi.nullptr);
+
+  // ============ JPEG XL ============
+  late final _jxlload = _lib.lookup<ffi.NativeFunction<VipsJxlloadNative>>('vips_jxlload').asFunction<VipsJxlloadDart>();
+  late final _jxlsave = _lib.lookup<ffi.NativeFunction<VipsJxlsaveNative>>('vips_jxlsave').asFunction<VipsJxlsaveDart>();
+
+  int jxlload(ffi.Pointer<ffi.Char> filename, ffi.Pointer<ffi.Pointer<VipsImage>> out) => _jxlload(filename, out, ffi.nullptr);
+  int jxlsave(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Char> filename) => _jxlsave(in$, filename, ffi.nullptr);
+
+  // ============ ImageMagick ============
+  late final _magickload = _lib.lookup<ffi.NativeFunction<VipsMagickloadNative>>('vips_magickload').asFunction<VipsMagickloadDart>();
+  late final _magicksave = _lib.lookup<ffi.NativeFunction<VipsMagicksaveNative>>('vips_magicksave').asFunction<VipsMagicksaveDart>();
+
+  int magickload(ffi.Pointer<ffi.Char> filename, ffi.Pointer<ffi.Pointer<VipsImage>> out) => _magickload(filename, out, ffi.nullptr);
+  int magicksave(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Char> filename) => _magicksave(in$, filename, ffi.nullptr);
+
+  // ============ NIfTI ============
+  late final _niftiload = _lib.lookup<ffi.NativeFunction<VipsNiftiloadNative>>('vips_niftiload').asFunction<VipsNiftiloadDart>();
+  late final _niftisave = _lib.lookup<ffi.NativeFunction<VipsNiftisaveNative>>('vips_niftisave').asFunction<VipsNiftisaveDart>();
+
+  int niftiload(ffi.Pointer<ffi.Char> filename, ffi.Pointer<ffi.Pointer<VipsImage>> out) => _niftiload(filename, out, ffi.nullptr);
+  int niftisave(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Char> filename) => _niftisave(in$, filename, ffi.nullptr);
+
+  // ============ OpenEXR ============
+  late final _openexrload = _lib.lookup<ffi.NativeFunction<VipsOpenexrloadNative>>('vips_openexrload').asFunction<VipsOpenexrloadDart>();
+
+  int openexrload(ffi.Pointer<ffi.Char> filename, ffi.Pointer<ffi.Pointer<VipsImage>> out) => _openexrload(filename, out, ffi.nullptr);
+
+  // ============ OpenSlide ============
+  late final _openslideload = _lib.lookup<ffi.NativeFunction<VipsOpenslideloadNative>>('vips_openslideload').asFunction<VipsOpenslideloadDart>();
+
+  int openslideload(ffi.Pointer<ffi.Char> filename, ffi.Pointer<ffi.Pointer<VipsImage>> out) => _openslideload(filename, out, ffi.nullptr);
+
+  // ============ Radiance HDR ============
+  late final _radload = _lib.lookup<ffi.NativeFunction<VipsRadloadNative>>('vips_radload').asFunction<VipsRadloadDart>();
+  late final _radsave = _lib.lookup<ffi.NativeFunction<VipsRadsaveNative>>('vips_radsave').asFunction<VipsRadsaveDart>();
+
+  int radload(ffi.Pointer<ffi.Char> filename, ffi.Pointer<ffi.Pointer<VipsImage>> out) => _radload(filename, out, ffi.nullptr);
+  int radsave(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Char> filename) => _radsave(in$, filename, ffi.nullptr);
+
+  // ============ Raw ============
+  late final _rawload = _lib.lookup<ffi.NativeFunction<VipsRawloadNative>>('vips_rawload').asFunction<VipsRawloadDart>();
+  late final _rawsave = _lib.lookup<ffi.NativeFunction<VipsRawsaveNative>>('vips_rawsave').asFunction<VipsRawsaveDart>();
+
+  int rawload(ffi.Pointer<ffi.Char> filename, ffi.Pointer<ffi.Pointer<VipsImage>> out, int width, int height, int bands) => _rawload(filename, out, width, height, bands, ffi.nullptr);
+  int rawsave(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Char> filename) => _rawsave(in$, filename, ffi.nullptr);
 }

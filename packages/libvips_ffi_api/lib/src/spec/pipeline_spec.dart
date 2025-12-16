@@ -6,6 +6,11 @@ import '../pipeline/extensions/geometry_ext.dart';
 import '../pipeline/extensions/convolution_ext.dart';
 import '../pipeline/extensions/colour_ext.dart';
 import '../pipeline/extensions/conversion_ext.dart';
+import '../pipeline/extensions/arithmetic_ext.dart';
+import '../pipeline/extensions/complex_ext.dart';
+import '../pipeline/extensions/frequency_ext.dart';
+import '../pipeline/extensions/histogram_ext.dart';
+import '../pipeline/extensions/morphology_ext.dart';
 import '../types/enums.dart';
 import 'operation_spec.dart';
 
@@ -282,6 +287,54 @@ class PipelineSpec {
       AutoRotateSpec() => pipeline.autoRotate(),
       ExtractBandSpec(:final band) => pipeline.extractBand(band),
       AddAlphaSpec(:final alpha) => pipeline.addAlpha(alpha),
+      // Arithmetic
+      CeilSpec() => pipeline.ceil(),
+      FloorSpec() => pipeline.floor(),
+      AbsSpec() => pipeline.abs(),
+      SignSpec() => pipeline.sign(),
+      // Complex
+      PolarSpec() => pipeline.polar(),
+      RectSpec() => pipeline.rect(),
+      ConjSpec() => pipeline.conj(),
+      RealSpec() => pipeline.real(),
+      ImagSpec() => pipeline.imag(),
+      // Frequency
+      FwfftSpec() => pipeline.fwfft(),
+      InvfftSpec() => pipeline.invfft(),
+      SpectrumSpec() => pipeline.spectrum(),
+      // Histogram
+      HistCumSpec() => pipeline.histCum(),
+      HistNormSpec() => pipeline.histNorm(),
+      HistEqualSpec() => pipeline.histEqual(),
+      HistFindSpec() => pipeline.histFind(),
+      HistPlotSpec() => pipeline.histPlot(),
+      // Morphology
+      RankSpec(:final width, :final height, :final index) =>
+        pipeline.rank(width, height, index),
+      MedianSpec(:final size) => pipeline.median(size),
+      FillNearestSpec() => pipeline.fillNearest(),
+      LabelregionsSpec() => pipeline.labelregions(),
+      // Rotation
+      Rot90Spec() => pipeline.rot90(),
+      Rot180Spec() => pipeline.rot180(),
+      Rot270Spec() => pipeline.rot270(),
+      Rot45Spec() => pipeline.rot45(),
+      // Conversion
+      BandfoldSpec() => pipeline.bandfold(),
+      BandunfoldSpec() => pipeline.bandunfold(),
+      ByteswapSpec() => pipeline.byteswap(),
+      ScaleSpec() => pipeline.scale(),
+      SequentialSpec() => pipeline.sequential(),
+      WrapSpec() => pipeline.wrap(),
+      MsbSpec() => pipeline.msb(),
+      CopySpec() => pipeline.copy(),
+      PremultiplySpec() => pipeline.premultiply(),
+      UnpremultiplySpec() => pipeline.unpremultiply(),
+      BandmeanSpec() => pipeline.bandmean(),
+      ReplicateSpec(:final across, :final down) =>
+        pipeline.replicate(across, down),
+      SubsampleSpec(:final xfac, :final yfac) =>
+        pipeline.subsample(xfac, yfac),
     };
   }
 }

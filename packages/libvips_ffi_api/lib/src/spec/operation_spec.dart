@@ -154,3 +154,177 @@ class AddAlphaSpec extends OperationSpec {
   final double alpha;
   const AddAlphaSpec([this.alpha = 255.0]);
 }
+
+// ======= Arithmetic Operations =======
+
+class CeilSpec extends OperationSpec {
+  const CeilSpec();
+}
+
+class FloorSpec extends OperationSpec {
+  const FloorSpec();
+}
+
+class AbsSpec extends OperationSpec {
+  const AbsSpec();
+}
+
+class SignSpec extends OperationSpec {
+  const SignSpec();
+}
+
+// ======= Complex Operations =======
+
+class PolarSpec extends OperationSpec {
+  const PolarSpec();
+}
+
+class RectSpec extends OperationSpec {
+  const RectSpec();
+}
+
+class ConjSpec extends OperationSpec {
+  const ConjSpec();
+}
+
+class RealSpec extends OperationSpec {
+  const RealSpec();
+}
+
+class ImagSpec extends OperationSpec {
+  const ImagSpec();
+}
+
+// ======= Frequency Operations =======
+
+class FwfftSpec extends OperationSpec {
+  const FwfftSpec();
+}
+
+class InvfftSpec extends OperationSpec {
+  const InvfftSpec();
+}
+
+class SpectrumSpec extends OperationSpec {
+  const SpectrumSpec();
+}
+
+// ======= Histogram Operations =======
+
+class HistCumSpec extends OperationSpec {
+  const HistCumSpec();
+}
+
+class HistNormSpec extends OperationSpec {
+  const HistNormSpec();
+}
+
+class HistEqualSpec extends OperationSpec {
+  const HistEqualSpec();
+}
+
+class HistFindSpec extends OperationSpec {
+  const HistFindSpec();
+}
+
+class HistPlotSpec extends OperationSpec {
+  const HistPlotSpec();
+}
+
+// ======= Morphology Operations =======
+
+class RankSpec extends OperationSpec {
+  final int width;
+  final int height;
+  final int index;
+  const RankSpec(this.width, this.height, this.index);
+}
+
+class MedianSpec extends OperationSpec {
+  final int size;
+  const MedianSpec([this.size = 3]);
+}
+
+class FillNearestSpec extends OperationSpec {
+  const FillNearestSpec();
+}
+
+class LabelregionsSpec extends OperationSpec {
+  const LabelregionsSpec();
+}
+
+// ======= Rotation Operations =======
+
+class Rot90Spec extends OperationSpec {
+  const Rot90Spec();
+}
+
+class Rot180Spec extends OperationSpec {
+  const Rot180Spec();
+}
+
+class Rot270Spec extends OperationSpec {
+  const Rot270Spec();
+}
+
+class Rot45Spec extends OperationSpec {
+  const Rot45Spec();
+}
+
+// ======= Additional Conversion Operations =======
+
+class BandfoldSpec extends OperationSpec {
+  const BandfoldSpec();
+}
+
+class BandunfoldSpec extends OperationSpec {
+  const BandunfoldSpec();
+}
+
+class ByteswapSpec extends OperationSpec {
+  const ByteswapSpec();
+}
+
+class ScaleSpec extends OperationSpec {
+  const ScaleSpec();
+}
+
+class SequentialSpec extends OperationSpec {
+  const SequentialSpec();
+}
+
+class WrapSpec extends OperationSpec {
+  const WrapSpec();
+}
+
+class MsbSpec extends OperationSpec {
+  const MsbSpec();
+}
+
+class CopySpec extends OperationSpec {
+  const CopySpec();
+}
+
+class PremultiplySpec extends OperationSpec {
+  const PremultiplySpec();
+}
+
+class UnpremultiplySpec extends OperationSpec {
+  const UnpremultiplySpec();
+}
+
+class BandmeanSpec extends OperationSpec {
+  const BandmeanSpec();
+}
+
+class ReplicateSpec extends OperationSpec {
+  final int across;
+  final int down;
+  const ReplicateSpec(this.across, this.down);
+}
+
+class SubsampleSpec extends OperationSpec {
+  final int xfac;
+  final int yfac;
+  const SubsampleSpec(this.xfac, this.yfac);
+}

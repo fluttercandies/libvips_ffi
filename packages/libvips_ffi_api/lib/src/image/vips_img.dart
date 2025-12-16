@@ -165,6 +165,72 @@ class VipsImg {
     return VipsImg._(ref.cast());
   }
 
+  // ======= Statistics Methods =======
+
+  /// Get average pixel value.
+  double avg() {
+    _checkDisposed();
+    clearVipsError();
+    final outPtr = calloc<ffi.Double>();
+    try {
+      final result = arithmeticBindings.avg(_pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed avg. ${getVipsError() ?? "Unknown error"}');
+      }
+      return outPtr.value;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Get standard deviation.
+  double deviate() {
+    _checkDisposed();
+    clearVipsError();
+    final outPtr = calloc<ffi.Double>();
+    try {
+      final result = arithmeticBindings.deviate(_pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed deviate. ${getVipsError() ?? "Unknown error"}');
+      }
+      return outPtr.value;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Get maximum pixel value.
+  double max() {
+    _checkDisposed();
+    clearVipsError();
+    final outPtr = calloc<ffi.Double>();
+    try {
+      final result = arithmeticBindings.max(_pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed max. ${getVipsError() ?? "Unknown error"}');
+      }
+      return outPtr.value;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Get minimum pixel value.
+  double min() {
+    _checkDisposed();
+    clearVipsError();
+    final outPtr = calloc<ffi.Double>();
+    try {
+      final result = arithmeticBindings.min(_pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed min. ${getVipsError() ?? "Unknown error"}');
+      }
+      return outPtr.value;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
   /// Dispose the image and free native resources.
   void dispose() {
     if (_disposed) return;

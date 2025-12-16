@@ -51,7 +51,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     shutdownVips();
-    VipsImageAsync.shutdown();
     super.dispose();
   }
 

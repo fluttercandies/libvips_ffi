@@ -10,9 +10,6 @@
 ///
 /// ## Getting Started / 入门
 ///
-/// First, initialize the library:
-/// 首先，初始化库：
-///
 /// ```dart
 /// import 'package:libvips_ffi/libvips_ffi.dart';
 ///
@@ -25,26 +22,28 @@
 ///
 /// ## Synchronous API / 同步 API
 ///
-/// Use [VipsImageWrapper] for synchronous image processing:
-/// 使用 [VipsImageWrapper] 进行同步图像处理：
+/// Use [VipsPipeline] for synchronous image processing:
+/// 使用 [VipsPipeline] 进行同步图像处理：
 ///
 /// ```dart
-/// final image = VipsImageWrapper.fromFile('input.jpg');
-/// final resized = image.resize(0.5);
-/// resized.writeToFile('output.jpg');
-/// resized.dispose();
-/// image.dispose();
+/// final pipeline = VipsPipeline.fromFile('input.jpg')
+///   ..resize(0.5)
+///   ..gaussblur(2.0);
+/// pipeline.toFile('output.jpg');
+/// pipeline.dispose();
 /// ```
 ///
 /// ## Asynchronous API / 异步 API
 ///
-/// For async operations that don't block the UI thread, use:
-/// 对于不阻塞 UI 线程的异步操作，使用：
+/// For async operations that don't block the UI thread, use [VipsPipelineCompute]:
+/// 对于不阻塞 UI 线程的异步操作，使用 [VipsPipelineCompute]：
 ///
-/// - [VipsCompute] - Simple one-off operations using Flutter's compute.
-///   简单的一次性操作，使用 Flutter 的 compute。
-/// - [VipsImageAsync] - Persistent isolate for batch processing.
-///   用于批量处理的持久 isolate。
+/// ```dart
+/// final result = await VipsPipelineCompute.processFile(
+///   'input.jpg',
+///   (p) => p.resize(0.5).gaussblur(2.0),
+/// );
+/// ```
 ///
 /// ## Supported Operations / 支持的操作
 ///
@@ -72,10 +71,6 @@ export 'src/platform_loader.dart' show PlatformVipsLoader, initVips;
 // 导出基于 compute 的异步 API（使用 Flutter 的 compute）。
 export 'src/compute/types.dart' show VipsComputeResult;
 export 'src/compute/pipeline_compute.dart' show VipsPipelineCompute;
-
-// Export isolate-based async API for batch processing.
-// 导出基于 isolate 的异步 API，用于批量处理。
-export 'src/vips_isolate.dart' show VipsImageAsync, VipsImageData;
 
 // Re-export api package for pipeline-based processing.
 // 重新导出 api 包，用于基于管道的处理。

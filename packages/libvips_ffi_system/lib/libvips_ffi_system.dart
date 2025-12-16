@@ -27,9 +27,11 @@
 ///   // Initialize using system library
 ///   await initVipsSystemAsync();
 ///
-///   // Use libvips...
-///   final image = VipsImageWrapper.fromFile('input.jpg');
-///   // ...
+///   // Use libvips with VipsPipeline
+///   final pipeline = VipsPipeline.fromFile('input.jpg');
+///   pipeline.resize(0.5).blur(2.0);
+///   pipeline.toFile('output.jpg');
+///   pipeline.dispose();
 ///
 ///   shutdownVips();
 /// }

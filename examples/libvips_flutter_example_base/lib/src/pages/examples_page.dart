@@ -48,11 +48,10 @@ class _ExamplesPageState extends State<ExamplesPage> {
       title: 'Resize / 调整大小',
       description: 'Scale image by a factor (0.5 = half size)',
       code: '''
-final image = VipsImageWrapper.fromFile('input.jpg');
-final resized = image.resize(0.5);  // 50% size
-resized.writeToFile('output.jpg');
-resized.dispose();
-image.dispose();''',
+final pipeline = VipsPipeline.fromFile('input.jpg');
+pipeline.resize(0.5);  // 50% size
+pipeline.toFile('output.jpg');
+pipeline.dispose();''',
       asyncCode: '''
 // Using VipsCompute (recommended for Flutter)
 final result = await VipsCompute.resizeFile(
@@ -60,67 +59,64 @@ final result = await VipsCompute.resizeFile(
   0.5,  // scale factor
 );
 // result.data contains the processed image bytes''',
-      operation: (img) => img.resize(0.5),
+      operation: (p) => p.resize(0.5),
       specBuilder: (path) => PipelineSpec().input(path).resize(0.5).outputPng(),
     ),
     ExampleItem(
       title: 'Thumbnail / 缩略图',
       description: 'Create thumbnail with target width (maintains aspect ratio)',
       code: '''
-final image = VipsImageWrapper.fromFile('input.jpg');
-final thumb = image.thumbnail(200);  // 200px width
-thumb.writeToFile('thumb.jpg');
-thumb.dispose();
-image.dispose();''',
+final pipeline = VipsPipeline.fromFile('input.jpg');
+pipeline.thumbnail(200);  // 200px width
+pipeline.toFile('thumb.jpg');
+pipeline.dispose();''',
       asyncCode: '''
 // Direct thumbnail from file (most efficient)
 final result = await VipsCompute.thumbnailFile(
   'input.jpg',
   200,  // target width
 );''',
-      operation: (img) => img.thumbnail(200),
+      operation: (p) => p.thumbnail(200),
       specBuilder: (path) => PipelineSpec().input(path).thumbnail(200).outputPng(),
     ),
     ExampleItem(
       title: 'Rotate / 旋转',
       description: 'Rotate image by angle in degrees',
       code: '''
-final image = VipsImageWrapper.fromFile('input.jpg');
-final rotated = image.rotate(90);  // 90 degrees
-rotated.writeToFile('rotated.jpg');
-rotated.dispose();
-image.dispose();''',
+final pipeline = VipsPipeline.fromFile('input.jpg');
+pipeline.rotate(90);  // 90 degrees
+pipeline.toFile('rotated.jpg');
+pipeline.dispose();''',
       asyncCode: '''
 final result = await VipsCompute.rotateFile(
   'input.jpg',
   90,  // degrees
 );''',
-      operation: (img) => img.rotate(90),
+      operation: (p) => p.rotate(90),
       specBuilder: (path) => PipelineSpec().input(path).rotate(90).outputPng(),
     ),
     ExampleItem(
       title: 'Crop / 裁剪',
       description: 'Extract a rectangular region from image',
       code: '''
-final image = VipsImageWrapper.fromFile('input.jpg');
-final cropped = image.crop(
+final pipeline = VipsPipeline.fromFile('input.jpg');
+pipeline.crop(
   100,  // left
   100,  // top
   200,  // width
   200,  // height
 );
-cropped.writeToFile('cropped.jpg');
-cropped.dispose();
-image.dispose();''',
+pipeline.toFile('cropped.jpg');
+pipeline.dispose();''',
       asyncCode: '''
 final result = await VipsCompute.cropFile(
   'input.jpg',
   100, 100,  // left, top
   200, 200,  // width, height
 );''',
-      operation: (img) {
-        final size = img.width < img.height ? img.width : img.height;
-        return img.crop(0, 0, size ~/ 2, size ~/ 2);
+      operation: (p) {
+        final size = p.image.width < p.image.height ? p.image.width : p.image.height;
+        return p.crop(0, 0, size ~/ 2, size ~/ 2);
       },
       specBuilder: (path) => PipelineSpec().input(path).crop(0, 0, 200, 200).outputPng(),
     ),
@@ -128,141 +124,127 @@ final result = await VipsCompute.cropFile(
       title: 'Flip / 翻转',
       description: 'Flip image horizontally or vertically',
       code: '''
-final image = VipsImageWrapper.fromFile('input.jpg');
+final pipeline = VipsPipeline.fromFile('input.jpg');
 
 // Horizontal flip (mirror)
-final flippedH = image.flip(VipsDirection.horizontal);
-
-// Vertical flip
-final flippedV = image.flip(VipsDirection.vertical);
-
-flippedH.dispose();
-flippedV.dispose();
-image.dispose();''',
+pipeline.flip(VipsDirection.horizontal);
+pipeline.toFile('flipped.jpg');
+pipeline.dispose();''',
       asyncCode: '''
 // Horizontal flip
 final result = await VipsCompute.flipFile(
   'input.jpg',
   VipsDirection.horizontal,
 );''',
-      operation: (img) => img.flip(VipsDirection.horizontal),
+      operation: (p) => p.flip(VipsDirection.horizontal),
       specBuilder: (path) => PipelineSpec().input(path).flipHorizontal().outputPng(),
     ),
     ExampleItem(
       title: 'Blur / 模糊',
       description: 'Apply Gaussian blur with sigma value',
       code: '''
-final image = VipsImageWrapper.fromFile('input.jpg');
-final blurred = image.gaussianBlur(5.0);  // sigma = 5
-blurred.writeToFile('blurred.jpg');
-blurred.dispose();
-image.dispose();''',
+final pipeline = VipsPipeline.fromFile('input.jpg');
+pipeline.blur(5.0);  // sigma = 5
+pipeline.toFile('blurred.jpg');
+pipeline.dispose();''',
       asyncCode: '''
 final result = await VipsCompute.blurFile(
   'input.jpg',
   5.0,  // sigma (blur amount)
 );''',
-      operation: (img) => img.gaussianBlur(5.0),
+      operation: (p) => p.blur(5.0),
       specBuilder: (path) => PipelineSpec().input(path).blur(5.0).outputPng(),
     ),
     ExampleItem(
       title: 'Sharpen / 锐化',
       description: 'Sharpen image using unsharp masking',
       code: '''
-final image = VipsImageWrapper.fromFile('input.jpg');
-final sharpened = image.sharpen();
-sharpened.writeToFile('sharpened.jpg');
-sharpened.dispose();
-image.dispose();''',
+final pipeline = VipsPipeline.fromFile('input.jpg');
+pipeline.sharpen();
+pipeline.toFile('sharpened.jpg');
+pipeline.dispose();''',
       asyncCode: '''
 final result = await VipsCompute.sharpenFile('input.jpg');''',
-      operation: (img) => img.sharpen(),
+      operation: (p) => p.sharpen(),
       specBuilder: (path) => PipelineSpec().input(path).sharpen().outputPng(),
     ),
     ExampleItem(
       title: 'Invert / 反色',
       description: 'Invert image colors (negative effect)',
       code: '''
-final image = VipsImageWrapper.fromFile('input.jpg');
-final inverted = image.invert();
-inverted.writeToFile('inverted.jpg');
-inverted.dispose();
-image.dispose();''',
+final pipeline = VipsPipeline.fromFile('input.jpg');
+pipeline.invert();
+pipeline.toFile('inverted.jpg');
+pipeline.dispose();''',
       asyncCode: '''
 final result = await VipsCompute.invertFile('input.jpg');''',
-      operation: (img) => img.invert(),
+      operation: (p) => p.invert(),
       specBuilder: (path) => PipelineSpec().input(path).invert().outputPng(),
     ),
     ExampleItem(
       title: 'Brightness / 亮度',
       description: 'Adjust image brightness (1.0 = no change)',
       code: '''
-final image = VipsImageWrapper.fromFile('input.jpg');
-final brighter = image.brightness(1.3);  // +30%
-final darker = image.brightness(0.7);    // -30%
-brighter.dispose();
-darker.dispose();
-image.dispose();''',
+final pipeline = VipsPipeline.fromFile('input.jpg');
+pipeline.linear(1.3, 0);  // +30% brightness
+pipeline.toFile('brighter.jpg');
+pipeline.dispose();''',
       asyncCode: '''
 final result = await VipsCompute.brightnessFile(
   'input.jpg',
   1.3,  // factor (1.3 = 30% brighter)
 );''',
-      operation: (img) => img.brightness(1.3),
+      operation: (p) => p.linear(1.3, 0),
       specBuilder: (path) => PipelineSpec().input(path).brightness(1.3).outputPng(),
     ),
     ExampleItem(
       title: 'Contrast / 对比度',
       description: 'Adjust image contrast (1.0 = no change)',
       code: '''
-final image = VipsImageWrapper.fromFile('input.jpg');
-final highContrast = image.contrast(1.5);  // +50%
-final lowContrast = image.contrast(0.5);   // -50%
-highContrast.dispose();
-lowContrast.dispose();
-image.dispose();''',
+final pipeline = VipsPipeline.fromFile('input.jpg');
+pipeline.linear(1.5, 128 * (1 - 1.5));  // +50% contrast
+pipeline.toFile('contrast.jpg');
+pipeline.dispose();''',
       asyncCode: '''
 final result = await VipsCompute.contrastFile(
   'input.jpg',
   1.5,  // factor (1.5 = 50% more contrast)
 );''',
-      operation: (img) => img.contrast(1.5),
+      operation: (p) => p.linear(1.5, 128 * (1 - 1.5)),
       specBuilder: (path) => PipelineSpec().input(path).contrast(1.5).outputPng(),
     ),
     ExampleItem(
       title: 'Grayscale / 灰度',
       description: 'Convert image to grayscale',
       code: '''
-final image = VipsImageWrapper.fromFile('input.jpg');
-final gray = image.colourspace(VipsInterpretation.bw);
-gray.writeToFile('grayscale.jpg');
-gray.dispose();
-image.dispose();''',
+final pipeline = VipsPipeline.fromFile('input.jpg');
+pipeline.colourspace(VipsInterpretation.bw);
+pipeline.toFile('grayscale.jpg');
+pipeline.dispose();''',
       asyncCode: '''
 final result = await VipsCompute.processFile(
   'input.jpg',
   (img) => img.colourspace(VipsInterpretation.bw),
 );''',
-      operation: (img) => img.colourspace(VipsInterpretation.bw),
+      operation: (p) => p.colourspace(VipsInterpretation.bw),
       specBuilder: (path) => PipelineSpec().input(path).grayscale().outputPng(),
     ),
     ExampleItem(
       title: 'Smart Crop / 智能裁剪',
       description: 'Crop to focus on the most interesting part',
       code: '''
-final image = VipsImageWrapper.fromFile('input.jpg');
-final cropped = image.smartCrop(300, 300);  // 300x300
-cropped.writeToFile('smart_cropped.jpg');
-cropped.dispose();
-image.dispose();''',
+final pipeline = VipsPipeline.fromFile('input.jpg');
+pipeline.smartCrop(300, 300);  // 300x300
+pipeline.toFile('smart_cropped.jpg');
+pipeline.dispose();''',
       asyncCode: '''
 final result = await VipsCompute.processFile(
   'input.jpg',
   (img) => img.smartCrop(300, 300),
 );''',
-      operation: (img) {
-        final size = img.width < img.height ? img.width ~/ 2 : img.height ~/ 2;
-        return img.smartCrop(size, size);
+      operation: (p) {
+        final size = p.image.width < p.image.height ? p.image.width ~/ 2 : p.image.height ~/ 2;
+        return p.smartCrop(size, size);
       },
       specBuilder: (path) => PipelineSpec().input(path).smartCrop(300, 300).outputPng(),
     ),
@@ -270,34 +252,29 @@ final result = await VipsCompute.processFile(
       title: 'Auto Rotate / 自动旋转',
       description: 'Rotate based on EXIF orientation tag',
       code: '''
-final image = VipsImageWrapper.fromFile('input.jpg');
-final rotated = image.autoRotate();
-rotated.writeToFile('auto_rotated.jpg');
-rotated.dispose();
-image.dispose();''',
+final pipeline = VipsPipeline.fromFile('input.jpg');
+pipeline.autoRotate();
+pipeline.toFile('auto_rotated.jpg');
+pipeline.dispose();''',
       asyncCode: '''
 final result = await VipsCompute.autoRotateFile('input.jpg');''',
-      operation: (img) => img.autoRotate(),
+      operation: (p) => p.autoRotate(),
       specBuilder: (path) => PipelineSpec().input(path).autoRotate().outputPng(),
     ),
     ExampleItem(
       title: 'Chain Operations / 链式操作',
       description: 'Combine multiple operations',
       code: '''
-final image = VipsImageWrapper.fromFile('input.jpg');
+final pipeline = VipsPipeline.fromFile('input.jpg');
 
-// Chain operations (remember to dispose intermediates!)
-final step1 = image.resize(0.5);
-final step2 = step1.gaussianBlur(2.0);
-final step3 = step2.sharpen();
+// Chain operations (fluent API - no intermediate cleanup needed!)
+pipeline
+  .resize(0.5)
+  .blur(2.0)
+  .sharpen();
 
-step3.writeToFile('output.jpg');
-
-// Dispose in reverse order
-step3.dispose();
-step2.dispose();
-step1.dispose();
-image.dispose();''',
+pipeline.toFile('output.jpg');
+pipeline.dispose();''',
       asyncCode: '''
 // Using processFile for custom chains
 final result = await VipsCompute.processFile(
@@ -309,12 +286,7 @@ final result = await VipsCompute.processFile(
     return blurred;
   },
 );''',
-      operation: (img) {
-        final step1 = img.resize(0.5);
-        final step2 = step1.gaussianBlur(2.0);
-        step1.dispose();
-        return step2;
-      },
+      operation: (p) => p.resize(0.5).blur(2.0).sharpen(),
       specBuilder: (path) => PipelineSpec()
           .input(path)
           .resize(0.5)
@@ -418,17 +390,16 @@ final result = await VipsCompute.processFile(
       } else {
         // Fallback to sync API for operations not in PipelineSpec
         _log('Using sync API (no specBuilder)...');
-        final image = VipsImageWrapper.fromFile(_selectedImagePath!);
-        _log('Image loaded: ${image.width}x${image.height}');
+        final pipeline = VipsPipeline.fromFile(_selectedImagePath!);
+        _log('Image loaded: ${pipeline.image.width}x${pipeline.image.height}');
         
-        final processed = example.operation(image);
-        _log('Operation complete: ${processed.width}x${processed.height}');
+        example.operation(pipeline);
+        _log('Operation complete: ${pipeline.image.width}x${pipeline.image.height}');
         
-        data = processed.writeToBuffer('.png');
+        data = pipeline.toBuffer(format: '.png');
         _log('Buffer size: ${data.length} bytes');
         
-        processed.dispose();
-        image.dispose();
+        pipeline.dispose();
         _log('Resources disposed');
       }
       
@@ -880,7 +851,7 @@ class ExampleItem {
   final String description;
   final String code;
   final String asyncCode;
-  final VipsImageWrapper Function(VipsImageWrapper) operation;
+  final VipsPipeline Function(VipsPipeline) operation;
   final PipelineSpec Function(String path)? specBuilder;
 
   const ExampleItem({
@@ -923,8 +894,8 @@ TextSpan _buildHighlightedCode(String code) {
   
   // Types (capitalized words that are likely types)
   final types = {
-    'VipsImageWrapper', 'VipsCompute', 'VipsDirection', 'VipsInterpretation',
-    'VipsPointerManager', 'Image', 'Uint8List', 'File',
+    'VipsPipeline', 'VipsCompute', 'VipsDirection', 'VipsInterpretation',
+    'VipsPointerManager', 'VipsPipelineCompute', 'PipelineSpec', 'Image', 'Uint8List', 'File',
   };
   
   // Simple tokenizer

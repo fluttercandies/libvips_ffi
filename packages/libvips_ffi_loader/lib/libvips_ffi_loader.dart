@@ -34,9 +34,11 @@
 ///     onStateChanged: (state) => print('Loading state: $state'),
 ///   );
 ///
-///   // Now you can use libvips
-///   final image = VipsImageWrapper.fromFile('input.jpg');
-///   // ...
+///   // Now you can use libvips with VipsPipeline
+///   final pipeline = VipsPipeline.fromFile('input.jpg');
+///   pipeline.resize(0.5);
+///   pipeline.toFile('output.jpg');
+///   pipeline.dispose();
 /// }
 /// ```
 library libvips_ffi_loader;

@@ -2,14 +2,14 @@
 ///
 /// libvips 图像处理库的纯 Dart FFI 绑定。
 ///
-/// This library provides Dart bindings for the libvips image processing
-/// library without any Flutter dependency.
-/// 此库为 libvips 图像处理库提供纯 Dart 绑定，无 Flutter 依赖。
+/// This library provides low-level Dart bindings for the libvips image
+/// processing library without any Flutter dependency.
+/// 此库为 libvips 图像处理库提供底层 Dart 绑定，无 Flutter 依赖。
+///
+/// For high-level API, use `libvips_ffi_api` package with `VipsPipeline`.
+/// 若需高级 API，请使用 `libvips_ffi_api` 包的 `VipsPipeline`。
 ///
 /// ## Getting Started / 入门
-///
-/// First, initialize the library:
-/// 首先，初始化库：
 ///
 /// ```dart
 /// import 'package:libvips_ffi_core/libvips_ffi_core.dart';
@@ -25,24 +25,7 @@
 ///   shutdownVips();
 /// }
 /// ```
-///
-/// ## Synchronous API / 同步 API
-///
-/// Use [VipsImageWrapper] for synchronous image processing:
-/// 使用 [VipsImageWrapper] 进行同步图像处理：
-///
-/// ```dart
-/// final image = VipsImageWrapper.fromFile('input.jpg');
-/// final resized = image.resize(0.5);
-/// resized.writeToFile('output.jpg');
-/// resized.dispose();
-/// image.dispose();
-/// ```
 library libvips_ffi_core;
-
-// Export core image processing API.
-// 导出核心图像处理 API。
-export 'src/vips_image.dart';
 
 // Export raw bindings for advanced users.
 // 为高级用户导出原始绑定。
@@ -69,3 +52,11 @@ export 'src/loader/library_loader.dart'
     show VipsLibraryLoader, SystemVipsLoader, PathVipsLoader, DirectVipsLoader;
 
 export 'src/platform_types.dart' show VipsPlatform, VipsArch;
+
+// Export enums for high-level API use.
+// 导出枚举供高级 API 使用。
+export 'src/vips_enums.dart' show VipsDirection, VipsInterpretation;
+
+// Export pointer manager for memory diagnostics.
+// 导出指针管理器用于内存诊断。
+export 'src/vips_pointer_manager.dart' show VipsPointerManager;

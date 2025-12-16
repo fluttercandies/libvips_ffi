@@ -6,5 +6,7 @@ environment:
   sdk: ^3.5.0
 
 dependencies:
+  libvips_ffi_api:
+    path: ../../packages/libvips_ffi_api
   libvips_ffi_system:
     path: ../../packages/libvips_ffi_system

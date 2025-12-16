@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:libvips_ffi_api/libvips_ffi_api.dart' hide vipsVersion, vipsVersionString;
 import 'package:libvips_ffi_system/libvips_ffi_system.dart';
 
 Future<void> main(List<String> args) async {
@@ -132,11 +133,11 @@ Future<void> _runInfo(List<String> args) async {
     return;
   }
   final input = args[0];
-  final image = VipsImageWrapper.fromFile(input);
+  final pipeline = VipsPipeline.fromFile(input);
   print('\nImage Info: $input');
-  print('  Size: ${image.width}x${image.height}');
-  print('  Bands: ${image.bands}');
-  image.dispose();
+  print('  Size: ${pipeline.image.width}x${pipeline.image.height}');
+  print('  Bands: ${pipeline.image.bands}');
+  pipeline.dispose();
 }
 
 Future<void> _runResize(List<String> args) async {
@@ -149,17 +150,16 @@ Future<void> _runResize(List<String> args) async {
   final scale = double.parse(args[2]);
 
   print('\nResizing $input -> $output (scale: $scale)');
-  final image = VipsImageWrapper.fromFile(input);
-  print('  Original: ${image.width}x${image.height}');
+  final pipeline = VipsPipeline.fromFile(input);
+  print('  Original: ${pipeline.image.width}x${pipeline.image.height}');
 
-  final resized = image.resize(scale);
-  print('  Resized: ${resized.width}x${resized.height}');
+  pipeline.resize(scale);
+  print('  Resized: ${pipeline.image.width}x${pipeline.image.height}');
 
-  resized.writeToFile(output);
+  pipeline.toFile(output);
   print('  Saved to: $output');
 
-  resized.dispose();
-  image.dispose();
+  pipeline.dispose();
 }
 
 Future<void> _runCrop(List<String> args) async {
@@ -175,17 +175,16 @@ Future<void> _runCrop(List<String> args) async {
   final h = int.parse(args[5]);
 
   print('\nCropping $input -> $output (x:$x, y:$y, w:$w, h:$h)');
-  final image = VipsImageWrapper.fromFile(input);
-  print('  Original: ${image.width}x${image.height}');
+  final pipeline = VipsPipeline.fromFile(input);
+  print('  Original: ${pipeline.image.width}x${pipeline.image.height}');
 
-  final cropped = image.crop(x, y, w, h);
-  print('  Cropped: ${cropped.width}x${cropped.height}');
+  pipeline.crop(x, y, w, h);
+  print('  Cropped: ${pipeline.image.width}x${pipeline.image.height}');
 
-  cropped.writeToFile(output);
+  pipeline.toFile(output);
   print('  Saved to: $output');
 
-  cropped.dispose();
-  image.dispose();
+  pipeline.dispose();
 }
 
 Future<void> _runRotate(List<String> args) async {
@@ -198,17 +197,16 @@ Future<void> _runRotate(List<String> args) async {
   final angle = double.parse(args[2]);
 
   print('\nRotating $input -> $output (angle: $angle°)');
-  final image = VipsImageWrapper.fromFile(input);
-  print('  Original: ${image.width}x${image.height}');
+  final pipeline = VipsPipeline.fromFile(input);
+  print('  Original: ${pipeline.image.width}x${pipeline.image.height}');
 
-  final rotated = image.rotate(angle);
-  print('  Rotated: ${rotated.width}x${rotated.height}');
+  pipeline.rotate(angle);
+  print('  Rotated: ${pipeline.image.width}x${pipeline.image.height}');
 
-  rotated.writeToFile(output);
+  pipeline.toFile(output);
   print('  Saved to: $output');
 
-  rotated.dispose();
-  image.dispose();
+  pipeline.dispose();
 }
 
 Future<void> _runFlip(List<String> args) async {
@@ -223,15 +221,14 @@ Future<void> _runFlip(List<String> args) async {
       : VipsDirection.vertical;
 
   print('\nFlipping $input -> $output (${args[2]})');
-  final image = VipsImageWrapper.fromFile(input);
+  final pipeline = VipsPipeline.fromFile(input);
 
-  final flipped = image.flip(direction);
+  pipeline.flip(direction);
 
-  flipped.writeToFile(output);
+  pipeline.toFile(output);
   print('  Saved to: $output');
 
-  flipped.dispose();
-  image.dispose();
+  pipeline.dispose();
 }
 
 Future<void> _runBlur(List<String> args) async {
@@ -244,15 +241,14 @@ Future<void> _runBlur(List<String> args) async {
   final sigma = args.length > 2 ? double.parse(args[2]) : 3.0;
 
   print('\nBlurring $input -> $output (sigma: $sigma)');
-  final image = VipsImageWrapper.fromFile(input);
+  final pipeline = VipsPipeline.fromFile(input);
 
-  final blurred = image.gaussianBlur(sigma);
+  pipeline.blur(sigma);
 
-  blurred.writeToFile(output);
+  pipeline.toFile(output);
   print('  Saved to: $output');
 
-  blurred.dispose();
-  image.dispose();
+  pipeline.dispose();
 }
 
 Future<void> _runSharpen(List<String> args) async {
@@ -264,15 +260,14 @@ Future<void> _runSharpen(List<String> args) async {
   final output = args[1];
 
   print('\nSharpening $input -> $output');
-  final image = VipsImageWrapper.fromFile(input);
+  final pipeline = VipsPipeline.fromFile(input);
 
-  final sharpened = image.sharpen();
+  pipeline.sharpen();
 
-  sharpened.writeToFile(output);
+  pipeline.toFile(output);
   print('  Saved to: $output');
 
-  sharpened.dispose();
-  image.dispose();
+  pipeline.dispose();
 }
 
 Future<void> _runInvert(List<String> args) async {
@@ -284,15 +279,14 @@ Future<void> _runInvert(List<String> args) async {
   final output = args[1];
 
   print('\nInverting $input -> $output');
-  final image = VipsImageWrapper.fromFile(input);
+  final pipeline = VipsPipeline.fromFile(input);
 
-  final inverted = image.invert();
+  pipeline.invert();
 
-  inverted.writeToFile(output);
+  pipeline.toFile(output);
   print('  Saved to: $output');
 
-  inverted.dispose();
-  image.dispose();
+  pipeline.dispose();
 }
 
 Future<void> _runGrayscale(List<String> args) async {
@@ -304,15 +298,14 @@ Future<void> _runGrayscale(List<String> args) async {
   final output = args[1];
 
   print('\nConverting to grayscale $input -> $output');
-  final image = VipsImageWrapper.fromFile(input);
+  final pipeline = VipsPipeline.fromFile(input);
 
-  final gray = image.colourspace(VipsInterpretation.bw);
+  pipeline.colourspace(VipsInterpretation.bw);
 
-  gray.writeToFile(output);
+  pipeline.toFile(output);
   print('  Saved to: $output');
 
-  gray.dispose();
-  image.dispose();
+  pipeline.dispose();
 }
 
 Future<void> _runThumbnail(List<String> args) async {
@@ -325,15 +318,14 @@ Future<void> _runThumbnail(List<String> args) async {
   final width = int.parse(args[2]);
 
   print('\nCreating thumbnail $input -> $output (width: $width)');
-  final image = VipsImageWrapper.fromFile(input);
-  print('  Original: ${image.width}x${image.height}');
+  final pipeline = VipsPipeline.fromFile(input);
+  print('  Original: ${pipeline.image.width}x${pipeline.image.height}');
 
-  final thumb = image.thumbnail(width);
-  print('  Thumbnail: ${thumb.width}x${thumb.height}');
+  pipeline.thumbnail(width);
+  print('  Thumbnail: ${pipeline.image.width}x${pipeline.image.height}');
 
-  thumb.writeToFile(output);
+  pipeline.toFile(output);
   print('  Saved to: $output');
 
-  thumb.dispose();
-  image.dispose();
+  pipeline.dispose();
 }

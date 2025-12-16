@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:libvips_ffi_api/libvips_ffi_api.dart';
+import 'package:libvips_ffi_core/libvips_ffi_core.dart' as core;
 
 import '../platform_loader.dart';
 import 'types.dart';
@@ -30,8 +31,9 @@ class PipelineCallbackParams {
 ///
 /// 在 isolate 中执行 PipelineSpec。
 VipsComputeResult executePipelineIsolate(PipelineComputeParams params) {
-  // Initialize libvips in this isolate
+  // Initialize both core libvips and api bindings in this isolate
   initVips();
+  initVipsApi(core.vipsLibrary);
 
   try {
     // Execute the pipeline spec - execute() handles everything internally

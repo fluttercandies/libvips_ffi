@@ -13,8 +13,8 @@ typedef LogCallback = void Function(String message);
 /// Async test operation type (takes image data)
 typedef AsyncTestOperation = Future<VipsImageData> Function(Uint8List imageData);
 
-/// Compute test operation type (takes file path, more efficient)
-typedef ComputeTestOperation = Future<VipsComputeResult> Function(String filePath);
+/// PipelineSpec test operation type (takes file path, returns image data)
+typedef PipelineSpecTestOperation = Future<Uint8List> Function(String filePath);
 
 /// Vips test runner using async API (runs in isolate)
 class VipsTestRunner {
@@ -238,7 +238,7 @@ class VipsTestRunner {
   Future<(String, Uint8List?)> runSingleTestCompute(
     String imagePath,
     String name,
-    ComputeTestOperation operation,
+    PipelineSpecTestOperation operation,
   ) async {
     _log('=== Running $name Test (Compute) ===');
     _log('Image path: $imagePath');
@@ -255,17 +255,16 @@ class VipsTestRunner {
     }
 
     _log('Executing $name operation...');
-    final result = await operation(imagePath);
-    _log('Operation result: ${result.width}x${result.height}');
+    final imageData = await operation(imagePath);
+    _log('Operation result: ${imageData.length} bytes');
 
     stopwatch.stop();
     _log('$name completed in ${stopwatch.elapsedMilliseconds}ms');
 
     final resultText = '✓ $name completed in ${stopwatch.elapsedMilliseconds}ms\n'
-        '  Output: ${result.width}x${result.height}\n'
-        '  Size: ${(result.data.length / 1024).toStringAsFixed(1)} KB';
+        '  Size: ${(imageData.length / 1024).toStringAsFixed(1)} KB';
 
-    return (resultText, result.data);
+    return (resultText, imageData);
   }
 
   /// Run a single test (sync version for backward compatibility)
@@ -392,40 +391,36 @@ class VipsTestOperationsAsync {
       VipsImageAsync.colourspace(data, VipsInterpretation.bw);
 }
 
-/// Predefined pipeline test operations (uses VipsPipelineCompute)
-class VipsTestOperationsPipeline {
-  static Future<VipsComputeResult> resize(String path) =>
-      VipsPipelineCompute.processFile(path, (p) => p.resize(0.5));
-  static Future<VipsComputeResult> thumbnail(String path) =>
-      VipsPipelineCompute.processFile(path, (p) => p.thumbnail(200));
-  static Future<VipsComputeResult> rotate(String path) =>
-      VipsPipelineCompute.processFile(path, (p) => p.rotate(90));
-  static Future<VipsComputeResult> flipH(String path) =>
-      VipsPipelineCompute.processFile(path, (p) => p.flip(VipsDirection.horizontal));
-  static Future<VipsComputeResult> flipV(String path) =>
-      VipsPipelineCompute.processFile(path, (p) => p.flip(VipsDirection.vertical));
-  static Future<VipsComputeResult> blur(String path) =>
-      VipsPipelineCompute.processFile(path, (p) => p.blur(5.0));
-  static Future<VipsComputeResult> sharpen(String path) =>
-      VipsPipelineCompute.processFile(path, (p) => p.sharpen());
-  static Future<VipsComputeResult> invert(String path) =>
-      VipsPipelineCompute.processFile(path, (p) => p.invert());
-  static Future<VipsComputeResult> brightness(String path) =>
-      VipsPipelineCompute.processFile(path, (p) => p.brightness(1.2));
-  static Future<VipsComputeResult> contrast(String path) =>
-      VipsPipelineCompute.processFile(path, (p) => p.contrast(1.3));
-  static Future<VipsComputeResult> autoRotate(String path) =>
-      VipsPipelineCompute.processFile(path, (p) => p.autoRotate());
-  static Future<VipsComputeResult> crop(String path) =>
-      VipsPipelineCompute.processFile(path, (p) {
-        final size = p.image.width < p.image.height ? p.image.width : p.image.height;
-        return p.crop(0, 0, size ~/ 2, size ~/ 2);
-      });
-  static Future<VipsComputeResult> smartCrop(String path) =>
-      VipsPipelineCompute.processFile(path, (p) {
-        final size = p.image.width < p.image.height ? p.image.width ~/ 2 : p.image.height ~/ 2;
-        return p.smartCrop(size, size);
-      });
-  static Future<VipsComputeResult> grayscale(String path) =>
-      VipsPipelineCompute.processFile(path, (p) => p.colourspace(VipsInterpretation.bw));
+/// Predefined async test operations using PipelineSpec (runs in isolate)
+class VipsTestOperationsPipelineSpec {
+  static Future<Uint8List> resize(String path) =>
+      VipsPipelineCompute.execute(PipelineSpec().input(path).resize(0.5).outputPng());
+  static Future<Uint8List> thumbnail(String path) =>
+      VipsPipelineCompute.execute(PipelineSpec().input(path).thumbnail(200).outputPng());
+  static Future<Uint8List> rotate(String path) =>
+      VipsPipelineCompute.execute(PipelineSpec().input(path).rotate(90).outputPng());
+  static Future<Uint8List> flipH(String path) =>
+      VipsPipelineCompute.execute(PipelineSpec().input(path).flipHorizontal().outputPng());
+  static Future<Uint8List> flipV(String path) =>
+      VipsPipelineCompute.execute(PipelineSpec().input(path).flipVertical().outputPng());
+  static Future<Uint8List> blur(String path) =>
+      VipsPipelineCompute.execute(PipelineSpec().input(path).blur(5.0).outputPng());
+  static Future<Uint8List> sharpen(String path) =>
+      VipsPipelineCompute.execute(PipelineSpec().input(path).sharpen().outputPng());
+  static Future<Uint8List> invert(String path) =>
+      VipsPipelineCompute.execute(PipelineSpec().input(path).invert().outputPng());
+  static Future<Uint8List> brightness(String path) =>
+      VipsPipelineCompute.execute(PipelineSpec().input(path).brightness(1.2).outputPng());
+  static Future<Uint8List> contrast(String path) =>
+      VipsPipelineCompute.execute(PipelineSpec().input(path).contrast(1.3).outputPng());
+  static Future<Uint8List> autoRotate(String path) =>
+      VipsPipelineCompute.execute(PipelineSpec().input(path).autoRotate().outputPng());
+  static Future<Uint8List> grayscale(String path) =>
+      VipsPipelineCompute.execute(PipelineSpec().input(path).grayscale().outputPng());
+  // Note: crop and smartCrop need image dimensions which PipelineSpec doesn't have access to
+  // These will use a fixed size for now
+  static Future<Uint8List> crop(String path) =>
+      VipsPipelineCompute.execute(PipelineSpec().input(path).crop(0, 0, 200, 200).outputPng());
+  static Future<Uint8List> smartCrop(String path) =>
+      VipsPipelineCompute.execute(PipelineSpec().input(path).smartCrop(200, 200).outputPng());
 }

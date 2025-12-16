@@ -79,23 +79,56 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
     });
 
     try {
-      // Define operations to benchmark: syncOp only (Pipeline benchmark uses VipsPipelineCompute)
-      final operations = <String, VipsImageWrapper Function(VipsImageWrapper)>{
-        'Resize (0.5x)': (img) => img.resize(0.5),
-        'Thumbnail (200px)': (img) => img.thumbnail(200),
-        'Rotate (90°)': (img) => img.rotate(90),
-        'Flip Horizontal': (img) => img.flip(VipsDirection.horizontal),
-        'Gaussian Blur (σ=3)': (img) => img.gaussianBlur(3.0),
-        'Sharpen': (img) => img.sharpen(),
-        'Invert': (img) => img.invert(),
-        'Brightness (+20%)': (img) => img.brightness(1.2),
-        'Contrast (+30%)': (img) => img.contrast(1.3),
-        'Auto Rotate': (img) => img.autoRotate(),
+      // Define operations to benchmark: (syncOp, pipelineSpec builder)
+      final operations = <String, (
+        VipsImageWrapper Function(VipsImageWrapper),
+        PipelineSpec Function(String),
+      )>{
+        'Resize (0.5x)': (
+          (img) => img.resize(0.5),
+          (path) => PipelineSpec().input(path).resize(0.5).outputPng(),
+        ),
+        'Thumbnail (200px)': (
+          (img) => img.thumbnail(200),
+          (path) => PipelineSpec().input(path).thumbnail(200).outputPng(),
+        ),
+        'Rotate (90°)': (
+          (img) => img.rotate(90),
+          (path) => PipelineSpec().input(path).rotate(90).outputPng(),
+        ),
+        'Flip Horizontal': (
+          (img) => img.flip(VipsDirection.horizontal),
+          (path) => PipelineSpec().input(path).flipHorizontal().outputPng(),
+        ),
+        'Gaussian Blur (σ=3)': (
+          (img) => img.gaussianBlur(3.0),
+          (path) => PipelineSpec().input(path).blur(3.0).outputPng(),
+        ),
+        'Sharpen': (
+          (img) => img.sharpen(),
+          (path) => PipelineSpec().input(path).sharpen().outputPng(),
+        ),
+        'Invert': (
+          (img) => img.invert(),
+          (path) => PipelineSpec().input(path).invert().outputPng(),
+        ),
+        'Brightness (+20%)': (
+          (img) => img.brightness(1.2),
+          (path) => PipelineSpec().input(path).brightness(1.2).outputPng(),
+        ),
+        'Contrast (+30%)': (
+          (img) => img.contrast(1.3),
+          (path) => PipelineSpec().input(path).contrast(1.3).outputPng(),
+        ),
+        'Auto Rotate': (
+          (img) => img.autoRotate(),
+          (path) => PipelineSpec().input(path).autoRotate().outputPng(),
+        ),
       };
 
       for (final entry in operations.entries) {
         final name = entry.key;
-        final syncOp = entry.value;
+        final (syncOp, specBuilder) = entry.value;
 
         setState(() {
           _status = 'Benchmarking: $name...';
@@ -119,20 +152,11 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
         }
         final syncAvg = syncTimes.reduce((a, b) => a + b) / syncTimes.length;
 
-        // Pipeline benchmark - uses VipsPipelineCompute with isolate
+        // Pipeline benchmark - uses VipsPipelineCompute with PipelineSpec (runs in isolate)
         final pipelineTimes = <int>[];
         for (var i = 0; i < _iterations; i++) {
           final stopwatch = Stopwatch()..start();
-          // Use VipsPipelineCompute.processFile with the sync operation wrapped
-          await VipsPipelineCompute.processFile(
-            _selectedImagePath!,
-            (p) {
-              // Apply same operation to pipeline
-              final img = VipsImageWrapper.fromPointer(p.image.pointer);
-              syncOp(img);
-              return p;
-            },
-          );
+          await VipsPipelineCompute.execute(specBuilder(_selectedImagePath!));
           stopwatch.stop();
           pipelineTimes.add(stopwatch.elapsedMilliseconds);
         }

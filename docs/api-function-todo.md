@@ -49,6 +49,11 @@
 | sum | vips_sum() | ✅ | arithmetic_bindings |
 | tan | vips_tan() | ✅ | arithmetic_bindings |
 | find_trim | vips_find_trim() | ✅ | arithmetic_bindings |
+| clamp | vips_clamp() | ✅ | arithmetic_bindings |
+| hough_circle | vips_hough_circle() | ✅ | arithmetic_bindings |
+| hough_line | vips_hough_line() | ✅ | arithmetic_bindings |
+| profile | vips_profile() | ✅ | arithmetic_bindings |
+| project | vips_project() | ✅ | arithmetic_bindings |
 
 ## Relational / Boolean (关系/布尔操作)
 
@@ -368,6 +373,7 @@
 | radsave | vips_radsave() | ✅ | io_bindings |
 | rawload | vips_rawload() | ✅ | io_bindings |
 | rawsave | vips_rawsave() | ✅ | io_bindings |
+| dzsave | vips_dzsave() | ✅ | io_bindings |
 
 ## Composite (合成操作)
 
@@ -397,7 +403,7 @@
 
 | 类别 | 已实现 (✅) | 未实现 (❌) | 完成率 |
 |------|------------|------------|--------|
-| Arithmetic | 35 | 0 | **100%** |
+| Arithmetic | 41 | 0 | **100%** |
 | Relational | 38 | 0 | **100%** |
 | Colour | 34 | 0 | **100%** |
 | Conversion | 38 | 0 | **100%** |
@@ -409,11 +415,11 @@
 | Morphology | 6 | 0 | **100%** |
 | Mosaicing | 6 | 0 | **100%** |
 | Resample | 16 | 0 | **100%** |
-| I/O | 46 | 0 | **100%** |
+| I/O | 47 | 0 | **100%** |
 | Composite | 2 | 0 | **100%** |
 | Complex | 10 | 0 | **100%** |
 
-**总计**: ~306 已实现 / ~306 总函数 = **100%**
+**总计**: ~313 已实现 / ~313 总函数 = **100%**
 
 ---
 

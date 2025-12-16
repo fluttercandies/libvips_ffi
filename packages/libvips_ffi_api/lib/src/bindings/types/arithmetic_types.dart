@@ -400,3 +400,65 @@ typedef VipsMinpairDart = int Function(
   ffi.Pointer<ffi.Pointer<VipsImage>> out,
   ffi.Pointer<ffi.Void> terminator,
 );
+
+// ============ Clamp ============
+typedef VipsClampNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsClampDart = int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+// ============ Hough Transform ============
+typedef VipsHoughCircleNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsHoughCircleDart = int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef VipsHoughLineNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsHoughLineDart = int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Pointer<VipsImage>> out,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+// ============ Profile & Project ============
+typedef VipsProfileNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Pointer<VipsImage>> columns,
+  ffi.Pointer<ffi.Pointer<VipsImage>> rows,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsProfileDart = int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Pointer<VipsImage>> columns,
+  ffi.Pointer<ffi.Pointer<VipsImage>> rows,
+  ffi.Pointer<ffi.Void> terminator,
+);
+
+typedef VipsProjectNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Pointer<VipsImage>> columns,
+  ffi.Pointer<ffi.Pointer<VipsImage>> rows,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsProjectDart = int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Pointer<VipsImage>> columns,
+  ffi.Pointer<ffi.Pointer<VipsImage>> rows,
+  ffi.Pointer<ffi.Void> terminator,
+);

@@ -264,4 +264,9 @@ class VipsIoBindings {
 
   int rawload(ffi.Pointer<ffi.Char> filename, ffi.Pointer<ffi.Pointer<VipsImage>> out, int width, int height, int bands) => _rawload(filename, out, width, height, bands, ffi.nullptr);
   int rawsave(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Char> filename) => _rawsave(in$, filename, ffi.nullptr);
+
+  // ============ DeepZoom ============
+  late final _dzsave = _lib.lookup<ffi.NativeFunction<VipsDzsaveNative>>('vips_dzsave').asFunction<VipsDzsaveDart>();
+
+  int dzsave(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Char> name) => _dzsave(in$, name, ffi.nullptr);
 }

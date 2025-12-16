@@ -122,4 +122,30 @@ class VipsArithmeticBindings {
 
   int minpair(ffi.Pointer<VipsImage> left, ffi.Pointer<VipsImage> right, ffi.Pointer<ffi.Pointer<VipsImage>> out) =>
       _minpair(left, right, out, ffi.nullptr);
+
+  // ============ Clamp ============
+  late final _clamp = _lib.lookup<ffi.NativeFunction<VipsClampNative>>('vips_clamp').asFunction<VipsClampDart>();
+
+  int clamp(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Pointer<VipsImage>> out) =>
+      _clamp(in$, out, ffi.nullptr);
+
+  // ============ Hough Transform ============
+  late final _houghCircle = _lib.lookup<ffi.NativeFunction<VipsHoughCircleNative>>('vips_hough_circle').asFunction<VipsHoughCircleDart>();
+  late final _houghLine = _lib.lookup<ffi.NativeFunction<VipsHoughLineNative>>('vips_hough_line').asFunction<VipsHoughLineDart>();
+
+  int houghCircle(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Pointer<VipsImage>> out) =>
+      _houghCircle(in$, out, ffi.nullptr);
+
+  int houghLine(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Pointer<VipsImage>> out) =>
+      _houghLine(in$, out, ffi.nullptr);
+
+  // ============ Profile & Project ============
+  late final _profile = _lib.lookup<ffi.NativeFunction<VipsProfileNative>>('vips_profile').asFunction<VipsProfileDart>();
+  late final _project = _lib.lookup<ffi.NativeFunction<VipsProjectNative>>('vips_project').asFunction<VipsProjectDart>();
+
+  int profile(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Pointer<VipsImage>> columns, ffi.Pointer<ffi.Pointer<VipsImage>> rows) =>
+      _profile(in$, columns, rows, ffi.nullptr);
+
+  int project(ffi.Pointer<VipsImage> in$, ffi.Pointer<ffi.Pointer<VipsImage>> columns, ffi.Pointer<ffi.Pointer<VipsImage>> rows) =>
+      _project(in$, columns, rows, ffi.nullptr);
 }

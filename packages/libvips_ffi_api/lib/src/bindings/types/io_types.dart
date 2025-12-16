@@ -514,3 +514,15 @@ typedef VipsRawsaveDart = int Function(
   ffi.Pointer<ffi.Char> filename,
   ffi.Pointer<ffi.Void> terminator,
 );
+
+// ============ DeepZoom ============
+typedef VipsDzsaveNative = ffi.Int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Char> name,
+  ffi.VarArgs<(ffi.Pointer<ffi.Void>,)>,
+);
+typedef VipsDzsaveDart = int Function(
+  ffi.Pointer<VipsImage> in$,
+  ffi.Pointer<ffi.Char> name,
+  ffi.Pointer<ffi.Void> terminator,
+);

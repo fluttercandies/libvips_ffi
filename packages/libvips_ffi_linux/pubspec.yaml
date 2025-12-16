@@ -3,13 +3,21 @@ description: Pre-compiled libvips for Linux. Part of the libvips_ffi package fam
 version: 0.1.0+8.16.0
 homepage: https://github.com/CaiJingLong/libvips_ffi
 repository: https://github.com/CaiJingLong/libvips_ffi
+issue_tracker: https://github.com/CaiJingLong/libvips_ffi/issues
+
+topics:
+  - image
+  - image-processing
+  - ffi
+  - libvips
+  - linux
 
 environment:
   sdk: ^3.5.0
   flutter: '>=3.10.0'
 
 dependencies:
-  libvips_ffi_core: ^0.1.0
+  libvips_ffi_core: ^0.1.0+8.16.0
 
 flutter:
   plugin:

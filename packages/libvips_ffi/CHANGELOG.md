@@ -11,7 +11,35 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## Unreleased
+## 0.1.0+8.16.0
+
+### Added
+
+- **libvips_ffi_api package**: High-level Dart API with Pipeline-style chainable operations
+- **VipsPipeline API**: Synchronous chainable image processing API
+- **VipsPipelineCompute API**: Async processing API using Flutter's `compute()`
+- **PipelineSpec API**: Serializable pipeline definitions with JSON support
+- **New FFI bindings**: `vips_clamp`, `vips_hough_circle`, `vips_hough_line`, `vips_profile`, `vips_project`, `vips_dzsave`
+- **Pipeline extensions**: `clamp()`, `houghCircle()`, `houghLine()`, `toDeepZoom()`
+- **Multi-image operations**: Boolean operations, statistics methods, convolution methods
+- **Image collage**: Support for creating image collages
+
+### Changed
+
+- **Architecture refactor**: Split into `libvips_ffi_core` (pure Dart FFI) and `libvips_ffi_api` (high-level API)
+- **API migration**: Migrated from `VipsCompute` to `VipsPipelineCompute`
+- **Code refactor**: Converted image mixins to Dart extensions
+- **VarArgs support**: Implemented support for libvips variadic functions
+
+### Documentation
+
+- Updated all documentation to use VipsPipeline API
+- Added API function comparison document
+- Improved package family documentation
+
+---
+
+## 0.0.1+8.16.0
 
 ### Features
 

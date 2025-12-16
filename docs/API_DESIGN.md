@@ -9,6 +9,8 @@
 - **高性能**：内部保持 VipsImageWrapper，避免中间编解码开销
 - **模块化**：使用 Extension 按功能分文件，单文件建议 400 行内（特殊需求最多 700 行）
 - **Flutter 兼容**：考虑 compute/isolate 调用便利性
+- **不依赖 core 的高级封装**：VipsImageWrapper 等
+- **libvips 操作完整覆盖**：完整覆盖 libvips 操作，而不仅仅是 core 中的封装，它是全量的 vips 重实现。
 
 ## 1.1 关键设计决策
 

@@ -6,10 +6,10 @@
 
 - **仅依赖 core**：不负责库加载，由上层（Flutter 包或用户代码）处理
 - **Pipeline 链式 API**：参考 sharp (Node.js) 的设计风格
-- **高性能**：内部保持 VipsImageWrapper，避免中间编解码开销
+- **高性能**：内部使用 VipsImg 封装，避免中间编解码开销
 - **模块化**：使用 Extension 按功能分文件，单文件建议 400 行内（特殊需求最多 700 行）
 - **Flutter 兼容**：考虑 compute/isolate 调用便利性
-- **不依赖 core 的高级封装**：VipsImageWrapper 等
+- **独立的高级封装**：api 包有自己的 VipsImg 封装类
 - **libvips 操作完整覆盖**：完整覆盖 libvips 操作，而不仅仅是 core 中的封装，它是全量的 vips 重实现。
 
 ## 1.1 关键设计决策
@@ -22,7 +22,7 @@
   - `vips_bindings_generated.dart`（ffigen 生成的基础绑定）
   - `DynamicLibrary`（已加载的库实例）
   - 基础 FFI 类型定义
-- api 包**不依赖 core 的高级封装**（如 VipsImageWrapper）
+- api 包有**自己的图像封装类**（VipsImg）
 - api 包有**自己的 variadic bindings 实现**（ffigen 无法处理 variadic 函数）
 - api 包有**自己的类型定义和封装类**（VipsImage、Pipeline 等）
 - **api 包不负责库加载**，由上层（Flutter 包、loader 包、用户代码）处理
@@ -48,13 +48,13 @@
 
 ### 2.1 VipsPipeline 类
 
-核心链式处理类，内部持有 `VipsImageWrapper`：
+核心链式处理类，内部持有 `VipsImg`：
 
 ```dart
 /// 链式图像处理管道
-/// 内部持有 VipsImageWrapper，只在输出时转换为 buffer
+/// 内部持有 VipsImg，只在输出时转换为 buffer
 class VipsPipeline {
-  VipsImageWrapper _image;
+  VipsImg _image;
   
   // ======= 构造方法 =======
   
@@ -62,16 +62,16 @@ class VipsPipeline {
   
   /// 从文件创建
   factory VipsPipeline.fromFile(String path) {
-    return VipsPipeline._(VipsImageWrapper.fromFile(path));
+    return VipsPipeline._(VipsImg.fromFile(path));
   }
   
   /// 从 buffer 创建
   factory VipsPipeline.fromBuffer(Uint8List data) {
-    return VipsPipeline._(VipsImageWrapper.fromBuffer(data));
+    return VipsPipeline._(VipsImg.fromBuffer(data));
   }
   
-  /// 从现有 VipsImageWrapper 创建
-  factory VipsPipeline.fromImage(VipsImageWrapper image) {
+  /// 从现有 VipsImg 创建
+  factory VipsPipeline.fromImage(VipsImg image) {
     return VipsPipeline._(image);
   }
   
@@ -94,9 +94,7 @@ class VipsPipeline {
   }
   
   /// 获取当前图像（调用者负责释放）
-  VipsImageWrapper getImage() {
-    return _image;
-  }
+  VipsImg get image => _image;
   
   /// 创建检查点（返回当前状态的 buffer，可用于分支）
   Uint8List checkpoint({String format = '.png'}) {

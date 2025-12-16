@@ -46,9 +46,11 @@ void main() async {
     },
   );
 
-  // After init, you can call APIs from libvips_ffi_core.
-  final image = VipsImageWrapper.fromFile('input.jpg');
-  image.dispose();
+  // After init, use VipsPipeline from libvips_ffi_api
+  final pipeline = VipsPipeline.fromFile('input.jpg');
+  pipeline.resize(0.5);
+  pipeline.toFile('output.jpg');
+  pipeline.dispose();
 }
 ```
 

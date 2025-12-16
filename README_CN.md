@@ -79,12 +79,11 @@ import 'package:libvips_ffi/libvips_ffi.dart';
 void main() {
   initVips();
   
-  // 同步 API (简单操作)
-  final image = VipsImageWrapper.fromFile('input.jpg');
-  final resized = image.resize(0.5);
-  resized.writeToFile('output.jpg');
-  resized.dispose();
-  image.dispose();
+  // 同步 API，使用 VipsPipeline（流式链式）
+  final pipeline = VipsPipeline.fromFile('input.jpg');
+  pipeline.resize(0.5);
+  pipeline.toFile('output.jpg');
+  pipeline.dispose();
   
   // 异步 API (Flutter UI 推荐)
   final result = await VipsCompute.resizeFile('input.jpg', 0.5);
@@ -137,12 +136,11 @@ void main() {
   // 需要先安装: brew install vips (macOS) 或 apt install libvips-dev (Linux)
   initVipsSystem();
   
-  final image = VipsImageWrapper.fromFile('input.jpg');
-  final resized = image.resize(0.5);
-  resized.writeToFile('output.jpg');
+  final pipeline = VipsPipeline.fromFile('input.jpg');
+  pipeline.resize(0.5);
+  pipeline.toFile('output.jpg');
+  pipeline.dispose();
   
-  resized.dispose();
-  image.dispose();
   shutdownVips();
 }
 ```
@@ -178,16 +176,21 @@ void main() {
 
 | API | 使用场景 | 阻塞 UI? |
 |-----|----------|----------|
-| `VipsImageWrapper` (同步) | 简单脚本、CLI 工具 | 是 |
-| `VipsCompute` (异步) | Flutter 应用、UI 密集型应用 | 否 (在 isolate 中运行) |
+| `VipsPipeline` (同步) | 简单脚本、CLI 工具 | 是 |
+| `VipsPipelineCompute` (异步) | Flutter 应用、UI 密集型应用 | 否 (在 isolate 中运行) |
 
 ```dart
 // 同步 - 阻塞直到完成
-final image = VipsImageWrapper.fromFile('input.jpg');
-final resized = image.resize(0.5);
+final pipeline = VipsPipeline.fromFile('input.jpg');
+pipeline.resize(0.5).blur(2.0);
+pipeline.toFile('output.jpg');
+pipeline.dispose();
 
 // 异步 - 在后台 isolate 中运行
-final result = await VipsCompute.resizeFile('input.jpg', 0.5);
+final result = await VipsPipelineCompute.processFile(
+  'input.jpg',
+  (p) => p.resize(0.5).blur(2.0),
+);
 ```
 
 ## 版本号规则

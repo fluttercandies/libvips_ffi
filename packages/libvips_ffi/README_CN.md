@@ -62,21 +62,20 @@ void main() {
   // 查看版本
   print('libvips version: $vipsVersionString');
 
-  // 加载图片
-  final image = VipsImageWrapper.fromFile('/path/to/image.jpg');
-  print('尺寸: ${image.width}x${image.height}');
+  // 使用 VipsPipeline 加载和处理图片（流式 API）
+  final pipeline = VipsPipeline.fromFile('/path/to/image.jpg');
+  print('尺寸: ${pipeline.image.width}x${pipeline.image.height}');
 
-  // 处理图片
-  final resized = image.resize(0.5);  // 缩小到 50%
-  final blurred = resized.gaussianBlur(3.0);
+  // 链式操作（无需手动清理中间结果！）
+  pipeline
+    .resize(0.5)    // 缩小到50%
+    .blur(3.0);     // 高斯模糊
 
   // 保存结果
-  blurred.writeToFile('/path/to/output.jpg');
+  pipeline.toFile('/path/to/output.jpg');
 
-  // 使用完记得释放资源（按逆序释放）
-  blurred.dispose();
-  resized.dispose();
-  image.dispose();
+  // 使用完后释放
+  pipeline.dispose();
 
   shutdownVips();
 }
@@ -166,17 +165,13 @@ final autoRotated = image.autoRotate();
 ### 内存管理
 
 ```dart
-// 使用完图片后务必释放
-final image = VipsImageWrapper.fromFile('input.jpg');
+// VipsPipeline 自动管理中间图像
+final pipeline = VipsPipeline.fromFile('input.jpg');
 try {
-  final result = image.resize(0.5);
-  try {
-    result.writeToFile('output.jpg');
-  } finally {
-    result.dispose();
-  }
+  pipeline.resize(0.5).blur(2.0);
+  pipeline.toFile('output.jpg');
 } finally {
-  image.dispose();
+  pipeline.dispose();  // 单次释放清理所有资源
 }
 
 // 检查内存泄漏（仅开发阶段使用）

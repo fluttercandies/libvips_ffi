@@ -11,15 +11,15 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## 0.0.1+8.16.0
+## Unreleased
 
 ### Features
 
 - **High-performance image processing** using libvips FFI bindings
 - **Cross-platform support** for Android (arm64-v8a, armeabi-v7a, x86_64) and iOS
-- **Sync API** via `VipsImageWrapper` for direct image operations
-- **Async API** via `VipsImageAsync` using Dart Isolates to avoid UI blocking
-- **Compute API** via `VipsCompute` using Flutter's `compute()` for one-off operations
+- **Sync API** via `VipsPipeline` for fluent chainable image operations
+- **Async API** via `VipsPipelineCompute` using Flutter's `compute()` for isolate-based processing
+- **Spec API** via `PipelineSpec` for serializable pipeline definitions
 
 ### Image Operations
 

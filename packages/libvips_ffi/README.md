@@ -62,21 +62,20 @@ void main() {
   // Check version
   print('libvips version: $vipsVersionString');
 
-  // Load an image
-  final image = VipsImageWrapper.fromFile('/path/to/image.jpg');
-  print('Size: ${image.width}x${image.height}');
+  // Load and process image with VipsPipeline (fluent API)
+  final pipeline = VipsPipeline.fromFile('/path/to/image.jpg');
+  print('Size: ${pipeline.image.width}x${pipeline.image.height}');
 
-  // Process image
-  final resized = image.resize(0.5);  // 50% size
-  final blurred = resized.gaussianBlur(3.0);
+  // Chain operations (no intermediate cleanup needed!)
+  pipeline
+    .resize(0.5)    // 50% size
+    .blur(3.0);     // Gaussian blur
 
   // Save result
-  blurred.writeToFile('/path/to/output.jpg');
+  pipeline.toFile('/path/to/output.jpg');
 
-  // Always dispose when done (in reverse order)
-  blurred.dispose();
-  resized.dispose();
-  image.dispose();
+  // Dispose when done
+  pipeline.dispose();
 
   shutdownVips();
 }
@@ -125,58 +124,36 @@ Future<void> moreExamples() async {
 ### Common Operations
 
 ```dart
-// Resize by scale factor
-final resized = image.resize(0.5);  // 50% of original
+// Using VipsPipeline - chain operations fluently
+final pipeline = VipsPipeline.fromFile('input.jpg');
 
-// Create thumbnail (maintains aspect ratio)
-final thumb = image.thumbnail(200);  // 200px width
+pipeline
+  .resize(0.5)                              // 50% of original
+  .thumbnail(200)                           // 200px width thumbnail
+  .rotate(90)                               // 90 degrees
+  .crop(100, 100, 200, 200)                 // left, top, width, height
+  .flip(VipsDirection.horizontal)           // Flip horizontal
+  .blur(5.0)                                // Gaussian blur (sigma)
+  .sharpen()                                // Sharpen
+  .linear(1.3, 0)                           // Brightness (+30%)
+  .colourspace(VipsInterpretation.bw)       // Grayscale
+  .smartCrop(300, 300)                      // Smart crop
+  .autoRotate();                            // Auto-rotate based on EXIF
 
-// Rotate by angle
-final rotated = image.rotate(90);  // 90 degrees
-
-// Crop region
-final cropped = image.crop(100, 100, 200, 200);  // left, top, width, height
-
-// Flip
-final flippedH = image.flip(VipsDirection.horizontal);
-final flippedV = image.flip(VipsDirection.vertical);
-
-// Blur
-final blurred = image.gaussianBlur(5.0);  // sigma value
-
-// Sharpen
-final sharpened = image.sharpen();
-
-// Adjust brightness (1.0 = no change, >1 = brighter)
-final brighter = image.brightness(1.3);
-
-// Adjust contrast
-final highContrast = image.contrast(1.5);
-
-// Convert to grayscale
-final gray = image.colourspace(VipsInterpretation.bw);
-
-// Smart crop (focus on interesting area)
-final smartCropped = image.smartCrop(300, 300);
-
-// Auto-rotate based on EXIF
-final autoRotated = image.autoRotate();
+pipeline.toFile('output.jpg');
+pipeline.dispose();
 ```
 
 ### Memory Management
 
 ```dart
-// Always dispose images when done
-final image = VipsImageWrapper.fromFile('input.jpg');
+// VipsPipeline handles intermediate images automatically
+final pipeline = VipsPipeline.fromFile('input.jpg');
 try {
-  final result = image.resize(0.5);
-  try {
-    result.writeToFile('output.jpg');
-  } finally {
-    result.dispose();
-  }
+  pipeline.resize(0.5).blur(2.0);
+  pipeline.toFile('output.jpg');
 } finally {
-  image.dispose();
+  pipeline.dispose();  // Single dispose cleans up everything
 }
 
 // Check for memory leaks (development only)

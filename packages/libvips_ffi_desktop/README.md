@@ -16,12 +16,11 @@ import 'package:libvips_ffi_desktop/libvips_ffi_desktop.dart';
 void main() {
   initVipsDesktop();
   
-  final image = VipsImageWrapper.fromFile('input.jpg');
-  final resized = image.resize(0.5);
-  resized.writeToFile('output.jpg');
+  final pipeline = VipsPipeline.fromFile('input.jpg');
+  pipeline.resize(0.5);
+  pipeline.toFile('output.jpg');
+  pipeline.dispose();
   
-  resized.dispose();
-  image.dispose();
   shutdownVips();
 }
 ```

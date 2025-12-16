@@ -29,14 +29,13 @@ void main() {
   // Or initialize with a pre-loaded library
   // initVipsWithLibrary(DynamicLibrary.open('libvips.dylib'));
   
-  // Load and process image
-  final image = VipsImageWrapper.fromFile('input.jpg');
-  final resized = image.resize(0.5);
-  resized.writeToFile('output.jpg');
+  // Load and process image with VipsPipeline (from libvips_ffi_api)
+  final pipeline = VipsPipeline.fromFile('input.jpg');
+  pipeline.resize(0.5);
+  pipeline.toFile('output.jpg');
+  pipeline.dispose();
   
   // Cleanup
-  resized.dispose();
-  image.dispose();
   shutdownVips();
 }
 ```

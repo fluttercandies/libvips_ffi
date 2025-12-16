@@ -23,8 +23,11 @@ void main() async {
   // Initialize from system package manager
   await initVipsSystemAsync();
   
-  // Use libvips...
-  final image = VipsImageWrapper.fromFile('input.jpg');
+  // Use libvips with VipsPipeline
+  final pipeline = VipsPipeline.fromFile('input.jpg');
+  pipeline.resize(0.5);
+  pipeline.toFile('output.jpg');
+  pipeline.dispose();
   
   shutdownVips();
 }

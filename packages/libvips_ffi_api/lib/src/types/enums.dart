@@ -1,38 +1,7 @@
-/// Flip direction for image operations.
-enum VipsDirection {
-  horizontal(0),
-  vertical(1);
-
-  final int value;
-  const VipsDirection(this.value);
-}
-
-/// Colour space / interpretation for image data.
-enum VipsInterpretation {
-  error(-1),
-  multiband(0),
-  bw(1),
-  histogram(10),
-  xyz(12),
-  lab(13),
-  cmyk(15),
-  labq(16),
-  rgb(17),
-  cmc(18),
-  lch(19),
-  labs(21),
-  srgb(22),
-  yxy(23),
-  fourier(24),
-  rgb16(25),
-  grey16(26),
-  matrix(27),
-  scrgb(28),
-  hsv(29);
-
-  final int value;
-  const VipsInterpretation(this.value);
-}
+// Re-export enums from core package to avoid duplication.
+// 重新导出 core 包的枚举以避免重复。
+export 'package:libvips_ffi_core/libvips_ffi_core.dart'
+    show VipsDirection, VipsInterpretation;
 
 /// Image format for casting operations.
 enum VipsBandFormat {

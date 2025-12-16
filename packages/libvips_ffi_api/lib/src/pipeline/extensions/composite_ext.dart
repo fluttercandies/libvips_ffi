@@ -44,7 +44,7 @@ extension VipsCompositeExtension on VipsPipeline {
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
       final result = apiBindings.join(
-        image.pointer, other.pointer, outPtr, direction.value,
+        image.pointer, other.pointer, outPtr, direction.index,
       );
       if (result != 0) {
         throw VipsApiException(

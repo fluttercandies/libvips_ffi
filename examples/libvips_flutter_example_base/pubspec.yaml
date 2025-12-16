@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   libvips_ffi: ^0.1.0
+  libvips_ffi_api: ^0.1.0
   path_provider: ^2.1.0
   image_picker: ^1.0.0
   file_selector: ^1.0.0

@@ -68,11 +68,24 @@ export 'package:libvips_ffi_core/libvips_ffi_core.dart';
 // 导出平台加载器和 initVips 函数
 export 'src/platform_loader.dart' show PlatformVipsLoader, initVips;
 
-// Export compute-based async API (simpler, uses Flutter's compute).
-// 导出基于 compute 的异步 API（更简单，使用 Flutter 的 compute）。
-export 'src/compute/api.dart' show VipsCompute;
-export 'src/compute/types.dart' show VipsComputeResult, CollageItemData;
+// Export compute-based async API (uses Flutter's compute).
+// 导出基于 compute 的异步 API（使用 Flutter 的 compute）。
+export 'src/compute/types.dart' show VipsComputeResult;
+export 'src/compute/pipeline_compute.dart' show VipsPipelineCompute;
 
 // Export isolate-based async API for batch processing.
 // 导出基于 isolate 的异步 API，用于批量处理。
 export 'src/vips_isolate.dart' show VipsImageAsync, VipsImageData;
+
+// Re-export api package for pipeline-based processing.
+// 重新导出 api 包，用于基于管道的处理。
+// Note: Extensions are automatically available when VipsPipeline is in scope.
+// 注意：当 VipsPipeline 在作用域内时，扩展自动可用。
+export 'package:libvips_ffi_api/libvips_ffi_api.dart'
+    hide
+        // Hide conflicting/duplicate names from core
+        vipsVersion,
+        vipsVersionString,
+        initVipsApi,
+        shutdownVipsApi,
+        VipsApiException;

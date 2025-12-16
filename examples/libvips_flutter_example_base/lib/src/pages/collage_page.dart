@@ -5,7 +5,6 @@ import 'dart:ui' as ui;
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:libvips_ffi/libvips_ffi.dart';
 
 /// Collage page for combining multiple images.
 ///
@@ -666,50 +665,20 @@ class _CollagePageState extends State<CollagePage> {
       print('[CollagePage] Export size: ${outputWidth}x$outputHeight');
       print('[CollagePage] Output scale: $outputScale');
       
-      // Build collage data for libvips processing
-      // Each image is scaled from display size to output size
-      final collageData = _items.map((item) {
-        // Scale position from display to output
-        final outputX = (item.x * outputScale).toInt();
-        final outputY = (item.y * outputScale).toInt();
-        // Scale size from display to output
-        final outputW = (item.width * outputScale).toInt();
-        final outputH = (item.height * outputScale).toInt();
-        
-        print('[CollagePage] Item: display=(${item.x.toInt()}, ${item.y.toInt()}, ${item.width.toInt()}x${item.height.toInt()}) -> output=($outputX, $outputY, ${outputW}x$outputH)');
-        
-        return CollageItemData(
-          imageData: item.imageData,
-          x: outputX,
-          y: outputY,
-          width: outputW,
-          height: outputH,
-        );
-      }).toList();
-      
-      print('[CollagePage] Calling VipsCompute.createCollage...');
-      
-      // Use libvips to create the collage with scaled output size
-      final result = await VipsCompute.createCollage(
-        collageData,
-        outputWidth,
-        outputHeight,
-        backgroundColor: _colorToHex(_backgroundColor),
-      );
-      
+      // TODO: Implement collage export using VipsPipeline
+      // The old VipsCompute.createCollage API was removed.
+      // Need to implement using VipsPipeline with insert/composite operations.
       stopwatch.stop();
       
-      print('[CollagePage] Export completed in ${stopwatch.elapsedMilliseconds}ms');
-      print('[CollagePage] Result: ${result.width}x${result.height}, ${result.data.length} bytes');
+      print('[CollagePage] Export not yet implemented with new API');
       
-      setState(() {
-        _exportedData = result.data;
-        _exportTime = stopwatch.elapsed;
-      });
-      
-      // Show preview dialog
       if (mounted) {
-        _showExportPreview();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Collage export not yet implemented with new Pipeline API'),
+            duration: Duration(seconds: 3),
+          ),
+        );
       }
     } catch (e, stack) {
       print('[CollagePage] Export error: $e');

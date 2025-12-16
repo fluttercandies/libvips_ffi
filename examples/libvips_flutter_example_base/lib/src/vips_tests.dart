@@ -392,42 +392,40 @@ class VipsTestOperationsAsync {
       VipsImageAsync.colourspace(data, VipsInterpretation.bw);
 }
 
-/// Predefined compute test operations (more efficient, loads from file directly)
-class VipsTestOperationsCompute {
+/// Predefined pipeline test operations (uses VipsPipelineCompute)
+class VipsTestOperationsPipeline {
   static Future<VipsComputeResult> resize(String path) =>
-      VipsCompute.resizeFile(path, 0.5);
+      VipsPipelineCompute.processFile(path, (p) => p.resize(0.5));
   static Future<VipsComputeResult> thumbnail(String path) =>
-      VipsCompute.thumbnailFile(path, 200);
+      VipsPipelineCompute.processFile(path, (p) => p.thumbnail(200));
   static Future<VipsComputeResult> rotate(String path) =>
-      VipsCompute.rotateFile(path, 90);
+      VipsPipelineCompute.processFile(path, (p) => p.rotate(90));
   static Future<VipsComputeResult> flipH(String path) =>
-      VipsCompute.flipFile(path, VipsDirection.horizontal);
+      VipsPipelineCompute.processFile(path, (p) => p.flip(VipsDirection.horizontal));
   static Future<VipsComputeResult> flipV(String path) =>
-      VipsCompute.flipFile(path, VipsDirection.vertical);
+      VipsPipelineCompute.processFile(path, (p) => p.flip(VipsDirection.vertical));
   static Future<VipsComputeResult> blur(String path) =>
-      VipsCompute.blurFile(path, 5.0);
+      VipsPipelineCompute.processFile(path, (p) => p.blur(5.0));
   static Future<VipsComputeResult> sharpen(String path) =>
-      VipsCompute.sharpenFile(path);
+      VipsPipelineCompute.processFile(path, (p) => p.sharpen());
   static Future<VipsComputeResult> invert(String path) =>
-      VipsCompute.invertFile(path);
+      VipsPipelineCompute.processFile(path, (p) => p.invert());
   static Future<VipsComputeResult> brightness(String path) =>
-      VipsCompute.brightnessFile(path, 1.2);
+      VipsPipelineCompute.processFile(path, (p) => p.brightness(1.2));
   static Future<VipsComputeResult> contrast(String path) =>
-      VipsCompute.contrastFile(path, 1.3);
+      VipsPipelineCompute.processFile(path, (p) => p.contrast(1.3));
   static Future<VipsComputeResult> autoRotate(String path) =>
-      VipsCompute.autoRotateFile(path);
-  // Note: crop, smartCrop, grayscale need additional methods in VipsCompute
-  // or can use processFile with custom operation
+      VipsPipelineCompute.processFile(path, (p) => p.autoRotate());
   static Future<VipsComputeResult> crop(String path) =>
-      VipsCompute.processFile(path, (img) {
-        final size = img.width < img.height ? img.width : img.height;
-        return img.crop(0, 0, size ~/ 2, size ~/ 2);
+      VipsPipelineCompute.processFile(path, (p) {
+        final size = p.image.width < p.image.height ? p.image.width : p.image.height;
+        return p.crop(0, 0, size ~/ 2, size ~/ 2);
       });
   static Future<VipsComputeResult> smartCrop(String path) =>
-      VipsCompute.processFile(path, (img) {
-        final size = img.width < img.height ? img.width ~/ 2 : img.height ~/ 2;
-        return img.smartCrop(size, size);
+      VipsPipelineCompute.processFile(path, (p) {
+        final size = p.image.width < p.image.height ? p.image.width ~/ 2 : p.image.height ~/ 2;
+        return p.smartCrop(size, size);
       });
   static Future<VipsComputeResult> grayscale(String path) =>
-      VipsCompute.processFile(path, (img) => img.colourspace(VipsInterpretation.bw));
+      VipsPipelineCompute.processFile(path, (p) => p.colourspace(VipsInterpretation.bw));
 }

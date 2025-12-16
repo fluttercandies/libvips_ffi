@@ -39,7 +39,7 @@ extension VipsGeometryExtension on VipsPipeline {
     clearVipsError();
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
-      final result = apiBindings.flip(image.pointer, outPtr, direction.value);
+      final result = apiBindings.flip(image.pointer, outPtr, direction.index);
       if (result != 0) {
         throw VipsApiException(
           'Failed to flip. ${getVipsError() ?? "Unknown error"}',
@@ -125,7 +125,7 @@ extension VipsGeometryExtension on VipsPipeline {
     final outPtr = calloc<ffi.Pointer<VipsImage>>();
     try {
       final result = apiBindings.gravity(
-        image.pointer, outPtr, direction.value, width, height,
+        image.pointer, outPtr, direction.index, width, height,
       );
       if (result != 0) {
         throw VipsApiException(

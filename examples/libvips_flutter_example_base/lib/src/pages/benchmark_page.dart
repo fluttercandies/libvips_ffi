@@ -15,23 +15,23 @@ void _log(String message) {
 class BenchmarkResult {
   final String name;
   final double syncAvgMs;
-  final double computeAvgMs;
+  final double pipelineAvgMs;
   final int iterations;
 
   BenchmarkResult({
     required this.name,
     required this.syncAvgMs,
-    required this.computeAvgMs,
+    required this.pipelineAvgMs,
     required this.iterations,
   });
 
-  String get winner => computeAvgMs < syncAvgMs ? 'Compute' : 'Sync';
+  String get winner => pipelineAvgMs < syncAvgMs ? 'Pipeline' : 'Sync';
   
   double get leadPercent {
-    if (computeAvgMs < syncAvgMs) {
-      return ((syncAvgMs - computeAvgMs) / syncAvgMs * 100);
+    if (pipelineAvgMs < syncAvgMs) {
+      return ((syncAvgMs - pipelineAvgMs) / syncAvgMs * 100);
     } else {
-      return ((computeAvgMs - syncAvgMs) / computeAvgMs * 100);
+      return ((pipelineAvgMs - syncAvgMs) / pipelineAvgMs * 100);
     }
   }
 }
@@ -79,56 +79,23 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
     });
 
     try {
-      // Define operations to benchmark: (syncOp, computeOp)
-      final operations = <String, (
-        VipsImageWrapper Function(VipsImageWrapper),
-        Future<VipsComputeResult> Function(),
-      )>{
-        'Resize (0.5x)': (
-          (img) => img.resize(0.5),
-          () => VipsCompute.resizeFile(_selectedImagePath!, 0.5),
-        ),
-        'Thumbnail (200px)': (
-          (img) => img.thumbnail(200),
-          () => VipsCompute.thumbnailFile(_selectedImagePath!, 200),
-        ),
-        'Rotate (90°)': (
-          (img) => img.rotate(90),
-          () => VipsCompute.rotateFile(_selectedImagePath!, 90),
-        ),
-        'Flip Horizontal': (
-          (img) => img.flip(VipsDirection.horizontal),
-          () => VipsCompute.flipFile(_selectedImagePath!, VipsDirection.horizontal),
-        ),
-        'Gaussian Blur (σ=3)': (
-          (img) => img.gaussianBlur(3.0),
-          () => VipsCompute.blurFile(_selectedImagePath!, 3.0),
-        ),
-        'Sharpen': (
-          (img) => img.sharpen(),
-          () => VipsCompute.sharpenFile(_selectedImagePath!),
-        ),
-        'Invert': (
-          (img) => img.invert(),
-          () => VipsCompute.invertFile(_selectedImagePath!),
-        ),
-        'Brightness (+20%)': (
-          (img) => img.brightness(1.2),
-          () => VipsCompute.brightnessFile(_selectedImagePath!, 1.2),
-        ),
-        'Contrast (+30%)': (
-          (img) => img.contrast(1.3),
-          () => VipsCompute.contrastFile(_selectedImagePath!, 1.3),
-        ),
-        'Auto Rotate': (
-          (img) => img.autoRotate(),
-          () => VipsCompute.autoRotateFile(_selectedImagePath!),
-        ),
+      // Define operations to benchmark: syncOp only (Pipeline benchmark uses VipsPipelineCompute)
+      final operations = <String, VipsImageWrapper Function(VipsImageWrapper)>{
+        'Resize (0.5x)': (img) => img.resize(0.5),
+        'Thumbnail (200px)': (img) => img.thumbnail(200),
+        'Rotate (90°)': (img) => img.rotate(90),
+        'Flip Horizontal': (img) => img.flip(VipsDirection.horizontal),
+        'Gaussian Blur (σ=3)': (img) => img.gaussianBlur(3.0),
+        'Sharpen': (img) => img.sharpen(),
+        'Invert': (img) => img.invert(),
+        'Brightness (+20%)': (img) => img.brightness(1.2),
+        'Contrast (+30%)': (img) => img.contrast(1.3),
+        'Auto Rotate': (img) => img.autoRotate(),
       };
 
       for (final entry in operations.entries) {
         final name = entry.key;
-        final (syncOp, computeOp) = entry.value;
+        final syncOp = entry.value;
 
         setState(() {
           _status = 'Benchmarking: $name...';
@@ -152,23 +119,32 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
         }
         final syncAvg = syncTimes.reduce((a, b) => a + b) / syncTimes.length;
 
-        // Compute benchmark - uses Flutter's compute, runs in separate isolate
-        final computeTimes = <int>[];
+        // Pipeline benchmark - uses VipsPipelineCompute with isolate
+        final pipelineTimes = <int>[];
         for (var i = 0; i < _iterations; i++) {
           final stopwatch = Stopwatch()..start();
-          await computeOp();
+          // Use VipsPipelineCompute.processFile with the sync operation wrapped
+          await VipsPipelineCompute.processFile(
+            _selectedImagePath!,
+            (p) {
+              // Apply same operation to pipeline
+              final img = VipsImageWrapper.fromPointer(p.image.pointer);
+              syncOp(img);
+              return p;
+            },
+          );
           stopwatch.stop();
-          computeTimes.add(stopwatch.elapsedMilliseconds);
+          pipelineTimes.add(stopwatch.elapsedMilliseconds);
         }
-        final computeAvg = computeTimes.reduce((a, b) => a + b) / computeTimes.length;
+        final pipelineAvg = pipelineTimes.reduce((a, b) => a + b) / pipelineTimes.length;
 
-        _log('$name - Sync: ${syncAvg.toStringAsFixed(1)}ms, Compute: ${computeAvg.toStringAsFixed(1)}ms');
+        _log('$name - Sync: ${syncAvg.toStringAsFixed(1)}ms, Pipeline: ${pipelineAvg.toStringAsFixed(1)}ms');
 
         setState(() {
           _results.add(BenchmarkResult(
             name: name,
             syncAvgMs: syncAvg,
-            computeAvgMs: computeAvg,
+            pipelineAvgMs: pipelineAvg,
             iterations: _iterations,
           ));
         });
@@ -366,7 +342,7 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
   }
 
   Widget _buildResultCard(BenchmarkResult r) {
-    final isComputeWinner = r.winner == 'Compute';
+    final isComputeWinner = r.winner == 'Pipeline';
     final winnerColor = isComputeWinner ? Colors.blue : Colors.orange;
     
     return Card(
@@ -422,8 +398,8 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
                 Expanded(
                   child: _buildTimeBox(
                     'Compute',
-                    r.computeAvgMs,
-                    r.winner == 'Compute',
+                    r.pipelineAvgMs,
+                    r.winner == 'Pipeline',
                     Colors.blue,
                   ),
                 ),
@@ -470,10 +446,10 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
     if (_results.isEmpty) return '';
 
     final syncWins = _results.where((r) => r.winner == 'Sync').length;
-    final computeWins = _results.where((r) => r.winner == 'Compute').length;
+    final computeWins = _results.where((r) => r.winner == 'Pipeline').length;
 
     final totalSync = _results.map((r) => r.syncAvgMs).reduce((a, b) => a + b);
-    final totalCompute = _results.map((r) => r.computeAvgMs).reduce((a, b) => a + b);
+    final totalCompute = _results.map((r) => r.pipelineAvgMs).reduce((a, b) => a + b);
 
     return 'Summary: Sync wins $syncWins, Compute wins $computeWins\n'
         'Total time - Sync: ${totalSync.toStringAsFixed(1)}ms, Compute: ${totalCompute.toStringAsFixed(1)}ms\n\n'
@@ -500,7 +476,7 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
     
     for (final r in _results) {
       buffer.writeln(
-        '| ${r.name} | ${r.syncAvgMs.toStringAsFixed(1)} | ${r.computeAvgMs.toStringAsFixed(1)} | ${r.winner} | +${r.leadPercent.toStringAsFixed(1)}% |'
+        '| ${r.name} | ${r.syncAvgMs.toStringAsFixed(1)} | ${r.pipelineAvgMs.toStringAsFixed(1)} | ${r.winner} | +${r.leadPercent.toStringAsFixed(1)}% |'
       );
     }
     
@@ -509,9 +485,9 @@ class _BenchmarkPageState extends State<BenchmarkPage> {
     buffer.writeln();
     
     final syncWins = _results.where((r) => r.winner == 'Sync').length;
-    final computeWins = _results.where((r) => r.winner == 'Compute').length;
+    final computeWins = _results.where((r) => r.winner == 'Pipeline').length;
     final totalSync = _results.map((r) => r.syncAvgMs).reduce((a, b) => a + b);
-    final totalCompute = _results.map((r) => r.computeAvgMs).reduce((a, b) => a + b);
+    final totalCompute = _results.map((r) => r.pipelineAvgMs).reduce((a, b) => a + b);
     
     buffer.writeln('- **Sync wins:** $syncWins');
     buffer.writeln('- **Compute wins:** $computeWins');

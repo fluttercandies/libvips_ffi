@@ -377,9 +377,14 @@ final result = await VipsCompute.processFile(
     try {
       final example = _examples[_selectedExampleIndex];
       final stopwatch = Stopwatch()..start();
-      final result = await VipsCompute.processFile(
+      final result = await VipsPipelineCompute.processFile(
         _selectedImagePath!,
-        example.operation,
+        (p) {
+          // Apply the sync operation to the pipeline image
+          final img = VipsImageWrapper.fromPointer(p.image.pointer);
+          example.operation(img);
+          return p;
+        },
       );
       stopwatch.stop();
       

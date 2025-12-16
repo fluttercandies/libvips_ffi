@@ -139,4 +139,278 @@ extension VipsConversionExtension on VipsPipeline {
       calloc.free(cPtr);
     }
   }
+
+  // ============ Rotation ============
+
+  /// Rotate 90 degrees clockwise.
+  VipsPipeline rot90() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.rot90(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed rot90. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Rotate 180 degrees.
+  VipsPipeline rot180() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.rot180(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed rot180. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Rotate 270 degrees clockwise (90 counter-clockwise).
+  VipsPipeline rot270() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.rot270(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed rot270. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Copy image.
+  VipsPipeline copy() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.copy(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed copy. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Premultiply alpha channel.
+  VipsPipeline premultiply() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.premultiply(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed premultiply. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Unpremultiply alpha channel.
+  VipsPipeline unpremultiply() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.unpremultiply(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed unpremultiply. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Replicate image.
+  VipsPipeline replicate(int across, int down) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.replicate(image.pointer, outPtr, across, down);
+      if (result != 0) {
+        throw VipsApiException('Failed replicate. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Band mean (average all bands).
+  VipsPipeline bandmean() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.bandmean(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed bandmean. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Band fold.
+  VipsPipeline bandfold() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.bandfold(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed bandfold. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Band unfold.
+  VipsPipeline bandunfold() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.bandunfold(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed bandunfold. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Byte swap.
+  VipsPipeline byteswap() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.byteswap(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed byteswap. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Scale image.
+  VipsPipeline scale() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.scale(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed scale. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Sequential access.
+  VipsPipeline sequential() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.sequential(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed sequential. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Subsample image.
+  VipsPipeline subsample(int xfac, int yfac) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.subsample(image.pointer, outPtr, xfac, yfac);
+      if (result != 0) {
+        throw VipsApiException('Failed subsample. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Wrap image.
+  VipsPipeline wrap() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.wrap(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed wrap. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Most significant byte.
+  VipsPipeline msb() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.msb(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed msb. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Rotate 45 degrees.
+  VipsPipeline rot45() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = conversionBindings.rot45(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed rot45. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
 }

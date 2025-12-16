@@ -97,4 +97,30 @@ extension VipsCompositeExtension on VipsPipeline {
   VipsPipeline compositeOver(VipsImg overlay) {
     return composite(overlay, VipsBlendMode.over);
   }
+
+  /// Composite overlay onto base image.
+  ///
+  /// [overlay]: image to composite (will be disposed after operation)
+  /// Composite two images with blend mode.
+  VipsPipeline composite2(VipsImg overlay, int mode) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = apiBindings.composite2(image.pointer, overlay.pointer, outPtr, mode);
+      if (result != 0) {
+        throw VipsApiException(
+          'Failed to composite. ${getVipsError() ?? "Unknown error"}',
+        );
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Blend images with over mode.
+  VipsPipeline over(VipsImg overlay) {
+    return composite2(overlay, 0); // VIPS_BLEND_MODE_OVER = 0
+  }
 }

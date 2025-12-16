@@ -58,11 +58,19 @@ export 'src/pipeline/vips_pipeline.dart' show VipsPipeline;
 // Pipeline extensions
 export 'src/pipeline/extensions/resample_ext.dart';
 export 'src/pipeline/extensions/geometry_ext.dart';
+export 'src/pipeline/extensions/arithmetic_ext.dart';
+export 'src/pipeline/extensions/complex_ext.dart';
 export 'src/pipeline/extensions/convolution_ext.dart';
 export 'src/pipeline/extensions/colour_ext.dart';
 export 'src/pipeline/extensions/conversion_ext.dart';
 export 'src/pipeline/extensions/composite_ext.dart';
 export 'src/pipeline/extensions/create_ext.dart';
+export 'src/pipeline/extensions/mosaicing_ext.dart';
+export 'src/pipeline/extensions/relational_ext.dart';
+export 'src/pipeline/extensions/morphology_ext.dart';
+export 'src/pipeline/extensions/frequency_ext.dart';
+export 'src/pipeline/extensions/histogram_ext.dart';
+export 'src/pipeline/extensions/draw_ext.dart';
 
 // Types
 export 'src/types/enums.dart';

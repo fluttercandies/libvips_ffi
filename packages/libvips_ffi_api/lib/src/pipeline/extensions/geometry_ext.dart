@@ -156,4 +156,36 @@ extension VipsGeometryExtension on VipsPipeline {
       calloc.free(outPtr);
     }
   }
+
+  /// Join two images side by side.
+  VipsPipeline join(VipsImg in2, int direction) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = apiBindings.join(image.pointer, in2.pointer, outPtr, direction);
+      if (result != 0) {
+        throw VipsApiException('Failed join. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Insert one image into another.
+  VipsPipeline insert(VipsImg sub, int x, int y) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = apiBindings.insert(image.pointer, sub.pointer, outPtr, x, y);
+      if (result != 0) {
+        throw VipsApiException('Failed insert. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
 }

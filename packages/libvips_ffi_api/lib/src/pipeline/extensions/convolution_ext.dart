@@ -86,4 +86,132 @@ extension VipsConvolutionExtension on VipsPipeline {
       calloc.free(outPtr);
     }
   }
+
+  /// Apply Prewitt edge detection.
+  VipsPipeline prewitt() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = convolutionBindings.prewitt(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed prewitt. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Apply Scharr edge detection.
+  VipsPipeline scharr() {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = convolutionBindings.scharr(image.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed scharr. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Convolution with kernel.
+  VipsPipeline conv(VipsImg kernel) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = convolutionBindings.conv(image.pointer, outPtr, kernel.pointer);
+      if (result != 0) {
+        throw VipsApiException('Failed conv. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Integer convolution.
+  VipsPipeline convi(VipsImg kernel) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = convolutionBindings.convi(image.pointer, outPtr, kernel.pointer);
+      if (result != 0) {
+        throw VipsApiException('Failed convi. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Float convolution.
+  VipsPipeline convf(VipsImg kernel) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = convolutionBindings.convf(image.pointer, outPtr, kernel.pointer);
+      if (result != 0) {
+        throw VipsApiException('Failed convf. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Compass edge detection.
+  VipsPipeline compass(VipsImg mask) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = convolutionBindings.compass(image.pointer, outPtr, mask.pointer);
+      if (result != 0) {
+        throw VipsApiException('Failed compass. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Fast correlation.
+  VipsPipeline fastcor(VipsImg ref) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = convolutionBindings.fastcor(image.pointer, ref.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed fastcor. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
+
+  /// Spatial correlation.
+  VipsPipeline spcor(VipsImg ref) {
+    clearVipsError();
+    final outPtr = calloc<ffi.Pointer<VipsImage>>();
+    try {
+      final result = convolutionBindings.spcor(image.pointer, ref.pointer, outPtr);
+      if (result != 0) {
+        throw VipsApiException('Failed spcor. ${getVipsError() ?? "Unknown error"}');
+      }
+      replaceImage(VipsImg.fromPointer(outPtr.value));
+      return this;
+    } finally {
+      calloc.free(outPtr);
+    }
+  }
 }

@@ -13,8 +13,11 @@ import '../vips_api_init.dart';
 class VipsImg {
   ffi.Pointer<VipsImage> _pointer;
   bool _disposed = false;
+  
+  // Buffer pointer for images created from buffer (libvips uses lazy evaluation)
+  ffi.Pointer<ffi.Uint8>? _bufferPtr;
 
-  VipsImg._(this._pointer);
+  VipsImg._(this._pointer, [this._bufferPtr]);
 
   /// Create from a raw pointer (takes ownership).
   factory VipsImg.fromPointer(ffi.Pointer<VipsImage> pointer) {
@@ -42,25 +45,27 @@ class VipsImg {
   }
 
   /// Load image from buffer.
+  /// 
+  /// Note: The buffer data is copied to native memory and kept alive until
+  /// this VipsImg is disposed. This is necessary because libvips uses lazy
+  /// evaluation and may not decode the image until later operations.
   factory VipsImg.fromBuffer(Uint8List data) {
     clearVipsError();
     final dataPtr = calloc<ffi.Uint8>(data.length);
-    try {
-      dataPtr.asTypedList(data.length).setAll(0, data);
-      final ptr = apiBindings.imageNewFromBuffer(
-        dataPtr.cast(),
-        data.length,
-        ''.toNativeUtf8().cast(), // empty option string
-      );
-      if (ptr == ffi.nullptr) {
-        throw VipsApiException(
-          'Failed to load image from buffer. ${getVipsError() ?? "Unknown error"}',
-        );
-      }
-      return VipsImg._(ptr);
-    } finally {
+    dataPtr.asTypedList(data.length).setAll(0, data);
+    final ptr = apiBindings.imageNewFromBuffer(
+      dataPtr.cast(),
+      data.length,
+      ''.toNativeUtf8().cast(), // empty option string
+    );
+    if (ptr == ffi.nullptr) {
       calloc.free(dataPtr);
+      throw VipsApiException(
+        'Failed to load image from buffer. ${getVipsError() ?? "Unknown error"}',
+      );
     }
+    // Keep buffer alive until dispose - libvips uses lazy evaluation
+    return VipsImg._(ptr, dataPtr);
   }
 
   /// Get the raw pointer (for internal use).
@@ -332,6 +337,11 @@ class VipsImg {
   void dispose() {
     if (_disposed) return;
     vipsBindings.g_object_unref(_pointer.cast());
+    // Free buffer if this image was created from buffer
+    if (_bufferPtr != null) {
+      calloc.free(_bufferPtr!);
+      _bufferPtr = null;
+    }
     _disposed = true;
   }
 

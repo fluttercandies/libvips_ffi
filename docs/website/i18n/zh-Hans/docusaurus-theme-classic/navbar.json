@@ -1,0 +1,22 @@
+{
+  "title": {
+    "message": "libvips_ffi",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "libvips_ffi 图标",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.Docs": {
+    "message": "文档",
+    "description": "Navbar item with label Docs"
+  },
+  "item.label.pub.dev": {
+    "message": "pub.dev",
+    "description": "Navbar item with label pub.dev"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "label": "包",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "libvips_ffi 包家族中每个包的文档"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "version.label": {
+    "message": "当前版本",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Getting Started": {
+    "message": "快速入门",
+    "description": "The label for category 'Getting Started' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Getting Started.link.generated-index.description": {
+    "message": "学习如何安装和配置 libvips_ffi",
+    "description": "The generated-index page description for category 'Getting Started' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Guide": {
+    "message": "指南",
+    "description": "The label for category 'Guide' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Guide.link.generated-index.description": {
+    "message": "libvips_ffi 使用的全面指南",
+    "description": "The generated-index page description for category 'Guide' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Packages": {
+    "message": "包",
+    "description": "The label for category 'Packages' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Packages.link.generated-index.description": {
+    "message": "libvips_ffi 包家族中每个包的文档",
+    "description": "The generated-index page description for category 'Packages' in sidebar 'tutorialSidebar'"
+  }
+}

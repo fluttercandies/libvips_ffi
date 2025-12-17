@@ -81,6 +81,7 @@ export 'src/types/save_options.dart';
 // Spec (for serializable pipelines)
 export 'src/spec/operation_spec.dart';
 export 'src/spec/pipeline_spec.dart';
+export 'src/spec/join_pipeline_spec.dart';
 
 // Binding classes
 export 'src/bindings/vips_bindings.dart' show VipsApiBindings;

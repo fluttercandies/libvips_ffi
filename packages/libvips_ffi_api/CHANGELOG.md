@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2+8.16.0
+
+- Add `JoinPipelineSpec` for joining multiple images
+  - Support vertical and horizontal join directions
+  - Support input from file paths or buffer data
+  - `JoinInput`, `JoinInputPath`, `JoinInputBuffer` input classes
+
 ## 0.1.1+8.16.0
 
 - Fix `VipsImg.fromBuffer` memory management for libvips lazy evaluation

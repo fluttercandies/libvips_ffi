@@ -11,6 +11,16 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## 0.1.1+8.16.0
+
+### Added
+
+- **Image join support**: `VipsPipelineCompute.executeJoin()` and `executeJoinToFile()` for combining multiple images
+- **JoinPipelineSpec**: Serializable spec for joining images vertically or horizontally
+- **JoinPipelineComputeParams**: Parameters for join operations in isolate
+
+---
+
 ## 0.1.0+8.16.0
 
 ### Added

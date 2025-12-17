@@ -1,6 +1,6 @@
 name: libvips_ffi
 description: "Flutter FFI bindings for libvips - a fast, multi-threaded image processing library. Supports resize, crop, rotate, blur, sharpen, and more."
-version: 0.1.0+8.16.0
+version: 0.1.1+8.16.0
 homepage: https://github.com/fluttercandies/libvips_ffi
 repository: https://github.com/fluttercandies/libvips_ffi
 issue_tracker: https://github.com/fluttercandies/libvips_ffi/issues
@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
   ffi: ^2.1.0
   libvips_ffi_core: ^0.1.0+8.16.0
-  libvips_ffi_api: ^0.1.0+8.16.0
+  libvips_ffi_api: ^0.1.2+8.16.0
 
 dev_dependencies:
   ffigen: ^16.0.0

@@ -12,6 +12,14 @@ class PipelineComputeParams {
   PipelineComputeParams({required this.spec});
 }
 
+/// Parameters for join pipeline compute operations.
+class JoinPipelineComputeParams {
+  final JoinPipelineSpec spec;
+  final String? outputPath;
+
+  JoinPipelineComputeParams({required this.spec, this.outputPath});
+}
+
 /// Parameters for VipsPipeline callback-based operations.
 class PipelineCallbackParams {
   final String? inputPath;
@@ -25,6 +33,26 @@ class PipelineCallbackParams {
     required this.operation,
     this.outputFormat = '.png',
   });
+}
+
+/// Execute a JoinPipelineSpec in an isolate.
+///
+/// 在 isolate 中执行 JoinPipelineSpec。
+VipsComputeResult executeJoinPipelineIsolate(JoinPipelineComputeParams params) {
+  initVips();
+  initVipsApi(core.vipsLibrary);
+
+  try {
+    if (params.outputPath != null) {
+      params.spec.executeToFile(params.outputPath!);
+      return VipsComputeResult(data: Uint8List(0), width: 0, height: 0, bands: 0);
+    } else {
+      final result = params.spec.execute();
+      return VipsComputeResult(data: result, width: 0, height: 0, bands: 0);
+    }
+  } finally {
+    // Note: don't shutdown vips here as it may be reused
+  }
 }
 
 /// Execute a PipelineSpec in an isolate.
@@ -174,4 +202,41 @@ class VipsPipelineCompute {
   ///
   /// 创建新的 PipelineSpec 用于构建操作。
   static PipelineSpec create() => PipelineSpec();
+
+  /// Execute a JoinPipelineSpec asynchronously.
+  ///
+  /// 异步执行 JoinPipelineSpec。
+  ///
+  /// Example:
+  /// ```dart
+  /// final result = await VipsPipelineCompute.executeJoin(
+  ///   JoinPipelineSpec()
+  ///     .addInputPath('/path/to/image1.png')
+  ///     .addInputPath('/path/to/image2.png')
+  ///     .vertical()
+  ///     .outputPng(),
+  /// );
+  /// ```
+  static Future<Uint8List> executeJoin(JoinPipelineSpec spec) async {
+    final result = await compute(
+      executeJoinPipelineIsolate,
+      JoinPipelineComputeParams(spec: spec),
+    );
+    return result.data;
+  }
+
+  /// Execute a JoinPipelineSpec and save to file.
+  ///
+  /// 执行 JoinPipelineSpec 并保存到文件。
+  static Future<void> executeJoinToFile(JoinPipelineSpec spec, String outputPath) async {
+    await compute(
+      executeJoinPipelineIsolate,
+      JoinPipelineComputeParams(spec: spec, outputPath: outputPath),
+    );
+  }
+
+  /// Create a new JoinPipelineSpec for joining multiple images.
+  ///
+  /// 创建新的 JoinPipelineSpec 用于合并多个图像。
+  static JoinPipelineSpec createJoin() => JoinPipelineSpec();
 }

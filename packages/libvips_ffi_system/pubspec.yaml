@@ -1,8 +1,8 @@
 name: libvips_ffi_system
 description: System package manager library loader for libvips_ffi. Supports Homebrew (macOS), apt/dnf (Linux), vcpkg/chocolatey (Windows).
 version: 0.1.0+8.16.0
-homepage: https://github.com/CaiJingLong/libvips_ffi
-repository: https://github.com/CaiJingLong/libvips_ffi
+homepage: https://github.com/fluttercandies/libvips_ffi
+repository: https://github.com/fluttercandies/libvips_ffi
 
 topics:
   - image

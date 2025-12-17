@@ -11,9 +11,18 @@ import 'package:libvips_ffi/libvips_ffi.dart';
 
 import '../data/example_data.dart';
 
-void _log(String message) {
+const _logFile = '/tmp/logs/category_examples.log';
+
+Future<void> _log(String message) async {
+  final timestamp = DateTime.now().toIso8601String();
+  final logMessage = '[$timestamp] $message';
   debugPrint('[CategoryExamplesPage] $message');
   developer.log(message, name: 'CategoryExamplesPage');
+  try {
+    final file = File(_logFile);
+    await file.parent.create(recursive: true);
+    await file.writeAsString('$logMessage\n', mode: FileMode.append);
+  } catch (_) {}
 }
 
 /// Category-based examples page showing code samples organized by API type.

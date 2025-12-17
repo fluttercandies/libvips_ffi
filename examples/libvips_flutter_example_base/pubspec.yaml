@@ -1,6 +1,6 @@
 name: libvips_flutter_example_base
 description: Base UI components for libvips_ffi Flutter example apps.
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.0.0
 
@@ -18,3 +18,5 @@ dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/

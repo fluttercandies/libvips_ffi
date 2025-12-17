@@ -5,6 +5,7 @@
 library libvips_flutter_example_base;
 
 export 'src/home_page.dart';
+export 'src/join_example.dart';
 export 'src/pages/developer_tools_page.dart';
 export 'src/pages/examples_page.dart';
 export 'src/pages/all_tests_page.dart';

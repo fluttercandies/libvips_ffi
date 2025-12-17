@@ -8,20 +8,20 @@ Image format and type conversion operations.
 
 ## Function Mapping
 
-| libvips C | Dart Binding | Pipeline Method |
-|-----------|--------------|-----------------|
-| `vips_crop()` | `apiBindings.crop()` | `pipeline.crop()` |
-| `vips_extract_area()` | `apiBindings.extractArea()` | - |
-| `vips_smartcrop()` | `apiBindings.smartcrop()` | `pipeline.smartCrop()` |
-| `vips_flip()` | `apiBindings.flip()` | `pipeline.flipHorizontal()` / `flipVertical()` |
-| `vips_embed()` | `apiBindings.embed()` | - |
-| `vips_gravity()` | `apiBindings.gravity()` | - |
-| `vips_zoom()` | `apiBindings.zoom()` | - |
-| `vips_autorot()` | `apiBindings.autorot()` | `pipeline.autoRotate()` |
-| `vips_cast()` | `conversionBindings.cast()` | - |
-| `vips_bandjoin()` | `conversionBindings.bandjoin()` | - |
-| `vips_bandmean()` | `conversionBindings.bandmean()` | - |
-| `vips_copy()` | `conversionBindings.copy()` | - |
+| libvips C | Dart Binding | Pipeline Method | PipelineSpec |
+|-----------|--------------|-----------------|--------------|
+| `vips_crop()` | `apiBindings.crop()` | `pipeline.crop()` | `spec.crop()` |
+| `vips_extract_area()` | `apiBindings.extractArea()` | - | - |
+| `vips_smartcrop()` | `apiBindings.smartcrop()` | `pipeline.smartCrop()` | `spec.smartCrop()` |
+| `vips_flip()` | `apiBindings.flip()` | `pipeline.flip()` | `spec.flip()` / `spec.flipHorizontal()` / `spec.flipVertical()` |
+| `vips_embed()` | `apiBindings.embed()` | `pipeline.embed()` | `spec.embed()` |
+| `vips_gravity()` | `apiBindings.gravity()` | `pipeline.gravity()` | `spec.gravity()` |
+| `vips_zoom()` | `apiBindings.zoom()` | `pipeline.zoom()` | `spec.zoom()` |
+| `vips_autorot()` | `apiBindings.autorot()` | `pipeline.autoRotate()` | `spec.autoRotate()` |
+| `vips_cast()` | `conversionBindings.cast()` | `pipeline.cast()` | `spec.cast()` |
+| `vips_bandjoin()` | `conversionBindings.bandjoin()` | - | - |
+| `vips_bandmean()` | `conversionBindings.bandmean()` | `pipeline.bandmean()` | `spec.bandmean()` |
+| `vips_copy()` | `conversionBindings.copy()` | `pipeline.copy()` | `spec.copy()` |
 
 ## crop / extract_area
 

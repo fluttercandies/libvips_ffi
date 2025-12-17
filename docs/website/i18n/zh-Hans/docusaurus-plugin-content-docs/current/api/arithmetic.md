@@ -8,18 +8,21 @@ sidebar_position: 7
 
 ## 函数映射
 
-| libvips C | Dart 绑定 | Pipeline 方法 |
-|-----------|----------|---------------|
-| `vips_add()` | `arithmeticBindings.add()` | - |
-| `vips_subtract()` | `arithmeticBindings.subtract()` | - |
-| `vips_multiply()` | `arithmeticBindings.multiply()` | - |
-| `vips_divide()` | `arithmeticBindings.divide()` | - |
-| `vips_abs()` | `arithmeticBindings.abs()` | - |
-| `vips_min()` | `arithmeticBindings.min()` | - |
-| `vips_max()` | `arithmeticBindings.max()` | - |
-| `vips_avg()` | `arithmeticBindings.avg()` | - |
-| `vips_stats()` | `arithmeticBindings.stats()` | - |
-| `vips_clamp()` | `arithmeticBindings.clamp()` | `pipeline.clamp()` |
+| libvips C | Dart 绑定 | Pipeline 方法 | PipelineSpec |
+|-----------|----------|---------------|--------------|
+| `vips_add()` | `arithmeticBindings.add()` | - | - |
+| `vips_subtract()` | `arithmeticBindings.subtract()` | - | - |
+| `vips_multiply()` | `arithmeticBindings.multiply()` | - | - |
+| `vips_divide()` | `arithmeticBindings.divide()` | - | - |
+| `vips_abs()` | `arithmeticBindings.abs()` | `pipeline.abs()` | `spec.abs()` |
+| `vips_min()` | `arithmeticBindings.min()` | - | - |
+| `vips_max()` | `arithmeticBindings.max()` | - | - |
+| `vips_avg()` | `arithmeticBindings.avg()` | - | - |
+| `vips_stats()` | `arithmeticBindings.stats()` | - | - |
+| `vips_clamp()` | `arithmeticBindings.clamp()` | `pipeline.clamp()` | - |
+| `vips_ceil()` | - | `pipeline.ceil()` | `spec.ceil()` |
+| `vips_floor()` | - | `pipeline.floor()` | `spec.floor()` |
+| `vips_sign()` | - | `pipeline.sign()` | `spec.sign()` |
 
 ## add
 

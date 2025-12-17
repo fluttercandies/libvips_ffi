@@ -8,19 +8,19 @@ Resize and resampling operations.
 
 ## Function Mapping
 
-| libvips C | Dart Binding | Pipeline Method |
-|-----------|--------------|-----------------|
-| `vips_resize()` | `apiBindings.resize()` | `pipeline.resize()` |
-| `vips_thumbnail()` | `apiBindings.thumbnail()` | - |
-| `vips_thumbnail_image()` | `apiBindings.thumbnailImage()` | `pipeline.thumbnail()` |
-| `vips_thumbnail_buffer()` | `apiBindings.thumbnailBuffer()` | - |
-| `vips_reduce()` | `apiBindings.reduce()` | - |
-| `vips_shrink()` | `apiBindings.shrink()` | - |
-| `vips_rotate()` | `apiBindings.rotate()` | `pipeline.rotate()` |
-| `vips_affine()` | `resampleBindings.affine()` | - |
-| `vips_similarity()` | `resampleBindings.similarity()` | - |
-| `vips_mapim()` | `resampleBindings.mapim()` | - |
-| `vips_quadratic()` | `resampleBindings.quadratic()` | - |
+| libvips C | Dart Binding | Pipeline Method | PipelineSpec |
+|-----------|--------------|-----------------|--------------|
+| `vips_resize()` | `apiBindings.resize()` | `pipeline.resize()` | `spec.resize()` |
+| `vips_thumbnail()` | `apiBindings.thumbnail()` | - | - |
+| `vips_thumbnail_image()` | `apiBindings.thumbnailImage()` | `pipeline.thumbnail()` | `spec.thumbnail()` |
+| `vips_thumbnail_buffer()` | `apiBindings.thumbnailBuffer()` | - | - |
+| `vips_reduce()` | `apiBindings.reduce()` | `pipeline.reduce()` | `spec.reduce()` |
+| `vips_shrink()` | `apiBindings.shrink()` | `pipeline.shrink()` | `spec.shrink()` |
+| `vips_rotate()` | `apiBindings.rotate()` | `pipeline.rotate()` | `spec.rotate()` |
+| `vips_affine()` | `resampleBindings.affine()` | - | - |
+| `vips_similarity()` | `resampleBindings.similarity()` | - | - |
+| `vips_mapim()` | `resampleBindings.mapim()` | - | - |
+| `vips_quadratic()` | `resampleBindings.quadratic()` | - | - |
 
 ## resize
 

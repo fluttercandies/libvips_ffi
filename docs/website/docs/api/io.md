@@ -10,30 +10,30 @@ Image loading and saving operations.
 
 ### Loading
 
-| libvips C | Dart Binding | Pipeline Method |
-|-----------|--------------|-----------------|
-| `vips_image_new_from_file()` | `apiBindings.imageNewFromFile()` | `VipsPipeline.fromFile()` |
-| `vips_image_new_from_buffer()` | `apiBindings.imageNewFromBuffer()` | `VipsPipeline.fromBuffer()` |
-| `vips_jpegload()` | `ioBindings.jpegload()` | - |
-| `vips_pngload()` | `ioBindings.pngload()` | - |
-| `vips_webpload()` | `ioBindings.webpload()` | - |
-| `vips_gifload()` | `ioBindings.gifload()` | - |
-| `vips_tiffload()` | `ioBindings.tiffload()` | - |
-| `vips_heifload()` | `ioBindings.heifload()` | - |
+| libvips C | Dart Binding | Pipeline Method | PipelineSpec |
+|-----------|--------------|-----------------|--------------|
+| `vips_image_new_from_file()` | `apiBindings.imageNewFromFile()` | `VipsPipeline.fromFile()` | `spec.input()` |
+| `vips_image_new_from_buffer()` | `apiBindings.imageNewFromBuffer()` | `VipsPipeline.fromBuffer()` | `spec.inputBuffer()` |
+| `vips_jpegload()` | `ioBindings.jpegload()` | - | - |
+| `vips_pngload()` | `ioBindings.pngload()` | - | - |
+| `vips_webpload()` | `ioBindings.webpload()` | - | - |
+| `vips_gifload()` | `ioBindings.gifload()` | - | - |
+| `vips_tiffload()` | `ioBindings.tiffload()` | - | - |
+| `vips_heifload()` | `ioBindings.heifload()` | - | - |
 
 ### Saving
 
-| libvips C | Dart Binding | Pipeline Method |
-|-----------|--------------|-----------------|
-| `vips_image_write_to_file()` | `apiBindings.imageWriteToFile()` | `pipeline.toFile()` |
-| `vips_image_write_to_buffer()` | `apiBindings.imageWriteToBuffer()` | `pipeline.toBuffer()` |
-| `vips_jpegsave_buffer()` | `ioBindings.jpegsaveBuffer()` | `pipeline.toJpeg()` |
-| `vips_pngsave_buffer()` | `ioBindings.pngsaveBuffer()` | `pipeline.toPng()` |
-| `vips_webpsave_buffer()` | `ioBindings.webpsaveBuffer()` | `pipeline.toWebp()` |
-| `vips_gifsave_buffer()` | `ioBindings.gifsaveBuffer()` | `pipeline.toGif()` |
-| `vips_tiffsave_buffer()` | `ioBindings.tiffsaveBuffer()` | `pipeline.toTiff()` |
-| `vips_heifsave_buffer()` | `ioBindings.heifsaveBuffer()` | `pipeline.toHeif()` |
-| `vips_dzsave()` | `ioBindings.dzsave()` | `pipeline.toDeepZoom()` |
+| libvips C | Dart Binding | Pipeline Method | PipelineSpec |
+|-----------|--------------|-----------------|--------------|
+| `vips_image_write_to_file()` | `apiBindings.imageWriteToFile()` | `pipeline.toFile()` | - |
+| `vips_image_write_to_buffer()` | `apiBindings.imageWriteToBuffer()` | `pipeline.toBuffer()` | `spec.execute()` |
+| `vips_jpegsave_buffer()` | `ioBindings.jpegsaveBuffer()` | `pipeline.toJpeg()` | `spec.outputJpeg()` |
+| `vips_pngsave_buffer()` | `ioBindings.pngsaveBuffer()` | `pipeline.toPng()` | `spec.outputPng()` |
+| `vips_webpsave_buffer()` | `ioBindings.webpsaveBuffer()` | `pipeline.toWebp()` | `spec.outputWebp()` |
+| `vips_gifsave_buffer()` | `ioBindings.gifsaveBuffer()` | `pipeline.toGif()` | - |
+| `vips_tiffsave_buffer()` | `ioBindings.tiffsaveBuffer()` | `pipeline.toTiff()` | - |
+| `vips_heifsave_buffer()` | `ioBindings.heifsaveBuffer()` | `pipeline.toHeif()` | - |
+| `vips_dzsave()` | `ioBindings.dzsave()` | `pipeline.toDeepZoom()` | - |
 
 ## image_new_from_file
 

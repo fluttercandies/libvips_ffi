@@ -8,16 +8,16 @@ Convolution operations including blur, sharpen, and edge detection.
 
 ## Function Mapping
 
-| libvips C | Dart Binding | Pipeline Method |
-|-----------|--------------|-----------------|
-| `vips_gaussblur()` | `apiBindings.gaussblur()` | `pipeline.gaussianBlur()` |
-| `vips_sharpen()` | `apiBindings.sharpen()` | `pipeline.sharpen()` |
-| `vips_sobel()` | `apiBindings.sobel()` | - |
-| `vips_canny()` | `apiBindings.canny()` | - |
-| `vips_conv()` | `convolutionBindings.conv()` | - |
-| `vips_conva()` | `convolutionBindings.conva()` | - |
-| `vips_convsep()` | `convolutionBindings.convsep()` | - |
-| `vips_compass()` | `convolutionBindings.compass()` | - |
+| libvips C | Dart Binding | Pipeline Method | PipelineSpec |
+|-----------|--------------|-----------------|--------------|
+| `vips_gaussblur()` | `apiBindings.gaussblur()` | `pipeline.blur()` | `spec.blur()` |
+| `vips_sharpen()` | `apiBindings.sharpen()` | `pipeline.sharpen()` | `spec.sharpen()` |
+| `vips_sobel()` | `apiBindings.sobel()` | `pipeline.sobel()` | `spec.sobel()` |
+| `vips_canny()` | `apiBindings.canny()` | `pipeline.canny()` | `spec.canny()` |
+| `vips_conv()` | `convolutionBindings.conv()` | - | - |
+| `vips_conva()` | `convolutionBindings.conva()` | - | - |
+| `vips_convsep()` | `convolutionBindings.convsep()` | - | - |
+| `vips_compass()` | `convolutionBindings.compass()` | - | - |
 
 ## gaussblur
 

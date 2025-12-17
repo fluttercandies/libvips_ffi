@@ -8,14 +8,14 @@ Morphological operations for image processing.
 
 ## Function Mapping
 
-| libvips C | Dart Binding | Description |
-|-----------|--------------|-------------|
-| `vips_morph()` | `morphologyBindings.morph()` | Apply morphological operation |
-| `vips_rank()` | `morphologyBindings.rank()` | Rank filter |
-| `vips_median()` | `morphologyBindings.median()` | Median filter |
-| `vips_countlines()` | `morphologyBindings.countlines()` | Count lines |
-| `vips_labelregions()` | `morphologyBindings.labelregions()` | Label connected regions |
-| `vips_fill_nearest()` | `morphologyBindings.fillNearest()` | Fill with nearest pixel |
+| libvips C | Dart Binding | Pipeline Method | PipelineSpec |
+|-----------|--------------|-----------------|--------------|
+| `vips_morph()` | `morphologyBindings.morph()` | - | - |
+| `vips_rank()` | `morphologyBindings.rank()` | `pipeline.rank()` | `spec.rank()` |
+| `vips_median()` | `morphologyBindings.median()` | `pipeline.median()` | `spec.median()` |
+| `vips_countlines()` | `morphologyBindings.countlines()` | - | - |
+| `vips_labelregions()` | `morphologyBindings.labelregions()` | `pipeline.labelregions()` | `spec.labelregions()` |
+| `vips_fill_nearest()` | `morphologyBindings.fillNearest()` | `pipeline.fillNearest()` | `spec.fillNearest()` |
 
 ## morph
 

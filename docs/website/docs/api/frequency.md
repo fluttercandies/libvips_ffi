@@ -8,13 +8,13 @@ FFT (Fast Fourier Transform) and frequency domain operations.
 
 ## Function Mapping
 
-| libvips C | Dart Binding | Description |
-|-----------|--------------|-------------|
-| `vips_fwfft()` | `frequencyBindings.fwfft()` | Forward FFT |
-| `vips_invfft()` | `frequencyBindings.invfft()` | Inverse FFT |
-| `vips_freqmult()` | `frequencyBindings.freqmult()` | Frequency domain multiplication |
-| `vips_spectrum()` | `frequencyBindings.spectrum()` | Compute power spectrum |
-| `vips_phasecor()` | `frequencyBindings.phasecor()` | Phase correlation |
+| libvips C | Dart Binding | Pipeline Method | PipelineSpec |
+|-----------|--------------|-----------------|--------------|
+| `vips_fwfft()` | `frequencyBindings.fwfft()` | `pipeline.fwfft()` | `spec.fwfft()` |
+| `vips_invfft()` | `frequencyBindings.invfft()` | `pipeline.invfft()` | `spec.invfft()` |
+| `vips_freqmult()` | `frequencyBindings.freqmult()` | - | - |
+| `vips_spectrum()` | `frequencyBindings.spectrum()` | `pipeline.spectrum()` | `spec.spectrum()` |
+| `vips_phasecor()` | `frequencyBindings.phasecor()` | - | - |
 
 ## fwfft
 

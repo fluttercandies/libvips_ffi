@@ -8,22 +8,24 @@ Mathematical operations on images.
 
 ## Function Mapping
 
-| libvips C | Dart Binding | Pipeline Method |
-|-----------|--------------|-----------------|
-| `vips_add()` | `arithmeticBindings.add()` | - |
-| `vips_subtract()` | `arithmeticBindings.subtract()` | - |
-| `vips_multiply()` | `arithmeticBindings.multiply()` | - |
-| `vips_divide()` | `arithmeticBindings.divide()` | - |
-| `vips_abs()` | `arithmeticBindings.abs()` | - |
-| `vips_sign()` | `arithmeticBindings.sign()` | - |
-| `vips_min()` | `arithmeticBindings.min()` | - |
-| `vips_max()` | `arithmeticBindings.max()` | - |
-| `vips_avg()` | `arithmeticBindings.avg()` | - |
-| `vips_deviate()` | `arithmeticBindings.deviate()` | - |
-| `vips_stats()` | `arithmeticBindings.stats()` | - |
-| `vips_math()` | `arithmeticBindings.math()` | - |
-| `vips_math2()` | `arithmeticBindings.math2()` | - |
-| `vips_clamp()` | `arithmeticBindings.clamp()` | `pipeline.clamp()` |
+| libvips C | Dart Binding | Pipeline Method | PipelineSpec |
+|-----------|--------------|-----------------|--------------|
+| `vips_add()` | `arithmeticBindings.add()` | - | - |
+| `vips_subtract()` | `arithmeticBindings.subtract()` | - | - |
+| `vips_multiply()` | `arithmeticBindings.multiply()` | - | - |
+| `vips_divide()` | `arithmeticBindings.divide()` | - | - |
+| `vips_abs()` | `arithmeticBindings.abs()` | `pipeline.abs()` | `spec.abs()` |
+| `vips_sign()` | `arithmeticBindings.sign()` | `pipeline.sign()` | `spec.sign()` |
+| `vips_min()` | `arithmeticBindings.min()` | - | - |
+| `vips_max()` | `arithmeticBindings.max()` | - | - |
+| `vips_avg()` | `arithmeticBindings.avg()` | - | - |
+| `vips_deviate()` | `arithmeticBindings.deviate()` | - | - |
+| `vips_stats()` | `arithmeticBindings.stats()` | - | - |
+| `vips_math()` | `arithmeticBindings.math()` | - | - |
+| `vips_math2()` | `arithmeticBindings.math2()` | - | - |
+| `vips_clamp()` | `arithmeticBindings.clamp()` | `pipeline.clamp()` | - |
+| `vips_ceil()` | - | `pipeline.ceil()` | `spec.ceil()` |
+| `vips_floor()` | - | `pipeline.floor()` | `spec.floor()` |
 
 ## add
 

@@ -8,18 +8,18 @@ sidebar_position: 6
 
 ## 函数映射
 
-| libvips C | Dart 绑定 | Pipeline 方法 |
-|-----------|----------|---------------|
-| `vips_crop()` | `apiBindings.crop()` | `pipeline.crop()` |
-| `vips_extract_area()` | `apiBindings.extractArea()` | - |
-| `vips_smartcrop()` | `apiBindings.smartcrop()` | `pipeline.smartCrop()` |
-| `vips_flip()` | `apiBindings.flip()` | `pipeline.flipHorizontal()` / `flipVertical()` |
-| `vips_embed()` | `apiBindings.embed()` | - |
-| `vips_gravity()` | `apiBindings.gravity()` | - |
-| `vips_zoom()` | `apiBindings.zoom()` | - |
-| `vips_autorot()` | `apiBindings.autorot()` | `pipeline.autoRotate()` |
-| `vips_cast()` | `conversionBindings.cast()` | - |
-| `vips_bandjoin()` | `conversionBindings.bandjoin()` | - |
+| libvips C | Dart 绑定 | Pipeline 方法 | PipelineSpec |
+|-----------|----------|---------------|--------------|
+| `vips_crop()` | `apiBindings.crop()` | `pipeline.crop()` | `spec.crop()` |
+| `vips_extract_area()` | `apiBindings.extractArea()` | - | - |
+| `vips_smartcrop()` | `apiBindings.smartcrop()` | `pipeline.smartCrop()` | `spec.smartCrop()` |
+| `vips_flip()` | `apiBindings.flip()` | `pipeline.flip()` | `spec.flip()` |
+| `vips_embed()` | `apiBindings.embed()` | `pipeline.embed()` | `spec.embed()` |
+| `vips_gravity()` | `apiBindings.gravity()` | `pipeline.gravity()` | `spec.gravity()` |
+| `vips_zoom()` | `apiBindings.zoom()` | `pipeline.zoom()` | `spec.zoom()` |
+| `vips_autorot()` | `apiBindings.autorot()` | `pipeline.autoRotate()` | `spec.autoRotate()` |
+| `vips_cast()` | `conversionBindings.cast()` | `pipeline.cast()` | `spec.cast()` |
+| `vips_bandjoin()` | `conversionBindings.bandjoin()` | - | - |
 
 ## crop / extract_area
 

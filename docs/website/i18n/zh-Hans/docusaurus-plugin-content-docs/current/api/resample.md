@@ -8,17 +8,17 @@ sidebar_position: 2
 
 ## 函数映射
 
-| libvips C | Dart 绑定 | Pipeline 方法 |
-|-----------|----------|---------------|
-| `vips_resize()` | `apiBindings.resize()` | `pipeline.resize()` |
-| `vips_thumbnail()` | `apiBindings.thumbnail()` | - |
-| `vips_thumbnail_image()` | `apiBindings.thumbnailImage()` | `pipeline.thumbnail()` |
-| `vips_thumbnail_buffer()` | `apiBindings.thumbnailBuffer()` | - |
-| `vips_reduce()` | `apiBindings.reduce()` | - |
-| `vips_shrink()` | `apiBindings.shrink()` | - |
-| `vips_rotate()` | `apiBindings.rotate()` | `pipeline.rotate()` |
-| `vips_affine()` | `resampleBindings.affine()` | - |
-| `vips_similarity()` | `resampleBindings.similarity()` | - |
+| libvips C | Dart 绑定 | Pipeline 方法 | PipelineSpec |
+|-----------|----------|---------------|--------------|
+| `vips_resize()` | `apiBindings.resize()` | `pipeline.resize()` | `spec.resize()` |
+| `vips_thumbnail()` | `apiBindings.thumbnail()` | - | - |
+| `vips_thumbnail_image()` | `apiBindings.thumbnailImage()` | `pipeline.thumbnail()` | `spec.thumbnail()` |
+| `vips_thumbnail_buffer()` | `apiBindings.thumbnailBuffer()` | - | - |
+| `vips_reduce()` | `apiBindings.reduce()` | `pipeline.reduce()` | `spec.reduce()` |
+| `vips_shrink()` | `apiBindings.shrink()` | `pipeline.shrink()` | `spec.shrink()` |
+| `vips_rotate()` | `apiBindings.rotate()` | `pipeline.rotate()` | `spec.rotate()` |
+| `vips_affine()` | `resampleBindings.affine()` | - | - |
+| `vips_similarity()` | `resampleBindings.similarity()` | - | - |
 
 ## resize
 

@@ -8,18 +8,18 @@ Complex number operations for signal processing and FFT.
 
 ## Function Mapping
 
-| libvips C | Dart Binding | Description |
-|-----------|--------------|-------------|
-| `vips_complex()` | `complexBindings.complex()` | Unary complex operation |
-| `vips_complex2()` | `complexBindings.complex2()` | Binary complex operation |
-| `vips_complexget()` | `complexBindings.complexget()` | Extract component |
-| `vips_complexform()` | `complexBindings.complexform()` | Form complex from components |
-| `vips_polar()` | `complexBindings.polar()` | Cartesian to polar |
-| `vips_rect()` | `complexBindings.rect()` | Polar to Cartesian |
-| `vips_conj()` | `complexBindings.conj()` | Complex conjugate |
-| `vips_real()` | `complexBindings.real()` | Get real part |
-| `vips_imag()` | `complexBindings.imag()` | Get imaginary part |
-| `vips_cross_phase()` | `complexBindings.crossPhase()` | Cross-phase correlation |
+| libvips C | Dart Binding | Pipeline Method | PipelineSpec |
+|-----------|--------------|-----------------|--------------|
+| `vips_complex()` | `complexBindings.complex()` | - | - |
+| `vips_complex2()` | `complexBindings.complex2()` | - | - |
+| `vips_complexget()` | `complexBindings.complexget()` | - | - |
+| `vips_complexform()` | `complexBindings.complexform()` | - | - |
+| `vips_polar()` | `complexBindings.polar()` | `pipeline.polar()` | `spec.polar()` |
+| `vips_rect()` | `complexBindings.rect()` | `pipeline.rect()` | `spec.rect()` |
+| `vips_conj()` | `complexBindings.conj()` | `pipeline.conj()` | `spec.conj()` |
+| `vips_real()` | `complexBindings.real()` | `pipeline.real()` | `spec.real()` |
+| `vips_imag()` | `complexBindings.imag()` | `pipeline.imag()` | `spec.imag()` |
+| `vips_cross_phase()` | `complexBindings.crossPhase()` | - | - |
 
 ## complex
 

@@ -8,17 +8,17 @@ sidebar_position: 4
 
 ## 函数映射
 
-| libvips C | Dart 绑定 | Pipeline 方法 |
-|-----------|----------|---------------|
-| `vips_colourspace()` | `apiBindings.colourspace()` | `pipeline.colourspace()` |
-| `vips_linear1()` | `apiBindings.linear1()` | `pipeline.brightness()` / `contrast()` |
-| `vips_invert()` | `apiBindings.invert()` | `pipeline.invert()` |
-| `vips_flatten()` | `apiBindings.flatten()` | - |
-| `vips_gamma()` | `apiBindings.gamma()` | - |
-| `vips_Lab2XYZ()` | `colourBindings.lab2XYZ()` | - |
-| `vips_XYZ2Lab()` | `colourBindings.xyz2Lab()` | - |
-| `vips_icc_import()` | `colourBindings.iccImport()` | - |
-| `vips_icc_export()` | `colourBindings.iccExport()` | - |
+| libvips C | Dart 绑定 | Pipeline 方法 | PipelineSpec |
+|-----------|----------|---------------|--------------|
+| `vips_colourspace()` | `apiBindings.colourspace()` | `pipeline.colourspace()` | `spec.colourspace()` |
+| `vips_linear1()` | `apiBindings.linear1()` | `pipeline.brightness()` / `contrast()` | `spec.brightness()` / `spec.contrast()` |
+| `vips_invert()` | `apiBindings.invert()` | `pipeline.invert()` | `spec.invert()` |
+| `vips_flatten()` | `apiBindings.flatten()` | `pipeline.flatten()` | `spec.flatten()` |
+| `vips_gamma()` | `apiBindings.gamma()` | `pipeline.gamma()` | `spec.gamma()` |
+| `vips_Lab2XYZ()` | `colourBindings.lab2XYZ()` | - | - |
+| `vips_XYZ2Lab()` | `colourBindings.xyz2Lab()` | - | - |
+| `vips_icc_import()` | `colourBindings.iccImport()` | - | - |
+| `vips_icc_export()` | `colourBindings.iccExport()` | - | - |
 
 ## colourspace
 

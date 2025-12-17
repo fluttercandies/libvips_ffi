@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:libvips_ffi/libvips_ffi.dart';
 
+import 'pages/category_examples_page.dart';
 import 'pages/collage_page.dart';
 import 'pages/developer_tools_page.dart';
 import 'pages/examples_page.dart';
@@ -112,6 +113,19 @@ class _HomePageState extends State<HomePage> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const ExamplesPage()),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            _buildNavButton(
+              context,
+              title: 'API Examples / API 示例',
+              subtitle: 'Examples organized by API category',
+              icon: Icons.category,
+              color: Colors.teal,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CategoryExamplesPage()),
               ),
             ),
             const SizedBox(height: 12),

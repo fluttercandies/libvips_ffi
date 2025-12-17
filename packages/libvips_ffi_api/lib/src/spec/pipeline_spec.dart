@@ -231,6 +231,52 @@ class PipelineSpec {
     return this;
   }
 
+  // ======= Histogram Operations =======
+
+  PipelineSpec histEqual() {
+    _operations.add(const HistEqualSpec());
+    return this;
+  }
+
+  PipelineSpec histCum() {
+    _operations.add(const HistCumSpec());
+    return this;
+  }
+
+  PipelineSpec histNorm() {
+    _operations.add(const HistNormSpec());
+    return this;
+  }
+
+  // ======= Morphology Operations =======
+
+  PipelineSpec median([int size = 3]) {
+    _operations.add(MedianSpec(size));
+    return this;
+  }
+
+  PipelineSpec rank(int width, int height, int index) {
+    _operations.add(RankSpec(width, height, index));
+    return this;
+  }
+
+  // ======= Rotation Operations =======
+
+  PipelineSpec rot90() {
+    _operations.add(const Rot90Spec());
+    return this;
+  }
+
+  PipelineSpec rot180() {
+    _operations.add(const Rot180Spec());
+    return this;
+  }
+
+  PipelineSpec rot270() {
+    _operations.add(const Rot270Spec());
+    return this;
+  }
+
   // ======= Execution =======
 
   /// Execute the pipeline and return result buffer.

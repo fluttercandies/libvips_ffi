@@ -3,9 +3,15 @@ sidebar_position: 1
 slug: /
 ---
 
-# Introduction
+# libvips_ffi
 
-**libvips_ffi** is a high-performance image processing library for Flutter and Dart, powered by [libvips](https://www.libvips.org/).
+High-performance image processing for Flutter and Dart.
+
+:::warning Disclaimer
+This is a **third-party** language binding for libvips, **not an official libvips project**. It is maintained independently by [FlutterCandies](https://github.com/fluttercandies). The libvips team does not provide support for this package. For issues and questions, please use [GitHub Issues](https://github.com/fluttercandies/libvips_ffi/issues).
+:::
+
+Powered by [libvips](https://www.libvips.org/).
 
 ## Why libvips_ffi?
 

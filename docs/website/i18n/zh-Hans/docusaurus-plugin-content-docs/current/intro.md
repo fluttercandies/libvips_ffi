@@ -3,9 +3,15 @@ sidebar_position: 1
 slug: /
 ---
 
-# 简介
+# libvips_ffi
 
-**libvips_ffi** 是一个高性能的 Flutter 和 Dart 图像处理库，基于 [libvips](https://www.libvips.org/) 构建。
+Flutter 和 Dart 高性能图像处理库。
+
+:::warning 声明
+这是 libvips 的**第三方**语言绑定，**非 libvips 官方项目**。由 [FlutterCandies](https://github.com/fluttercandies) 独立维护。libvips 官方团队不为本包提供支持。如有问题，请使用 [GitHub Issues](https://github.com/fluttercandies/libvips_ffi/issues)。
+:::
+
+基于 [libvips](https://www.libvips.org/) 构建。
 
 ## 为什么选择 libvips_ffi？
 

@@ -2,6 +2,8 @@
 
 Meta package for libvips_ffi desktop support (macOS, Windows, Linux).
 
+📖 **[Documentation](https://fluttercandies.github.io/libvips_ffi/)** | 📖 **[中文文档](https://fluttercandies.github.io/libvips_ffi/zh-Hans/)**
+
 ## Features
 
 - Unified API for all desktop platforms

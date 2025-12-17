@@ -2,9 +2,11 @@
 
 This is the English README for the libvips_ffi package.
 中文文档请参见：
-[README_CN.md](https://github.com/CaiJingLong/libvips_ffi/blob/main/libvips_ffi/README_CN.md)
+[README_CN.md](https://github.com/fluttercandies/libvips_ffi/blob/main/packages/libvips_ffi/README_CN.md)
 
 Flutter FFI bindings for [libvips](https://www.libvips.org/) - a fast image processing library.
+
+📖 **[Full Documentation](https://fluttercandies.github.io/libvips_ffi/)** | 📖 **[中文文档](https://fluttercandies.github.io/libvips_ffi/zh-Hans/)**
 
 ## Version
 
@@ -34,7 +36,7 @@ Example: `0.0.1+8.16.0` means plugin version 0.0.1 with libvips 8.16.0
 | iOS (arm64) | ~7.48 MB |
 
 For detailed size breakdown by architecture, see:
-[Native Library Sizes](https://github.com/CaiJingLong/libvips_ffi/blob/main/docs/NATIVE_LIBRARY_SIZES.md)
+[Native Library Sizes](https://github.com/fluttercandies/libvips_ffi/blob/main/docs/NATIVE_LIBRARY_SIZES.md)
 
 ## Installation
 
@@ -44,8 +46,8 @@ Add this to your package's `pubspec.yaml` file:
 dependencies:
   libvips_ffi:
     git:
-      url: https://github.com/CaiJingLong/libvips_ffi
-      path: libvips_ffi
+      url: https://github.com/fluttercandies/libvips_ffi
+      path: packages/libvips_ffi
 ```
 
 ## Quick Start

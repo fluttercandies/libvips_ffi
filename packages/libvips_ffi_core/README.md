@@ -2,6 +2,8 @@
 
 Pure Dart FFI bindings for [libvips](https://www.libvips.org/) image processing library. No Flutter dependency.
 
+📖 **[Documentation](https://fluttercandies.github.io/libvips_ffi/)** | 📖 **[中文文档](https://fluttercandies.github.io/libvips_ffi/zh-Hans/)**
+
 ## Features
 
 - Pure Dart implementation (no Flutter required)

@@ -1,0 +1,89 @@
+---
+sidebar_position: 7
+---
+
+# Arithmetic
+
+Mathematical operations on images.
+
+## Function Mapping
+
+| libvips C | Dart Binding | Pipeline Method |
+|-----------|--------------|-----------------|
+| `vips_add()` | `arithmeticBindings.add()` | - |
+| `vips_subtract()` | `arithmeticBindings.subtract()` | - |
+| `vips_multiply()` | `arithmeticBindings.multiply()` | - |
+| `vips_divide()` | `arithmeticBindings.divide()` | - |
+| `vips_abs()` | `arithmeticBindings.abs()` | - |
+| `vips_sign()` | `arithmeticBindings.sign()` | - |
+| `vips_min()` | `arithmeticBindings.min()` | - |
+| `vips_max()` | `arithmeticBindings.max()` | - |
+| `vips_avg()` | `arithmeticBindings.avg()` | - |
+| `vips_deviate()` | `arithmeticBindings.deviate()` | - |
+| `vips_stats()` | `arithmeticBindings.stats()` | - |
+| `vips_math()` | `arithmeticBindings.math()` | - |
+| `vips_math2()` | `arithmeticBindings.math2()` | - |
+| `vips_clamp()` | `arithmeticBindings.clamp()` | `pipeline.clamp()` |
+
+## add
+
+Add two images pixel-wise.
+
+```dart
+arithmeticBindings.add(image1, image2, output);
+```
+
+## subtract
+
+Subtract one image from another.
+
+```dart
+arithmeticBindings.subtract(image1, image2, output);
+```
+
+## multiply
+
+Multiply two images pixel-wise.
+
+```dart
+arithmeticBindings.multiply(image1, image2, output);
+```
+
+## divide
+
+Divide one image by another.
+
+```dart
+arithmeticBindings.divide(image1, image2, output);
+```
+
+## clamp
+
+Clamp pixel values to a range.
+
+```dart
+// Pipeline API
+pipeline.clamp(min: 0, max: 255)
+
+// Low-level binding
+arithmeticBindings.clamp(input, output, min, max);
+```
+
+## stats
+
+Calculate image statistics (min, max, mean, etc.).
+
+```dart
+final statsImage = arithmeticBindings.stats(input);
+// Returns a 1-band image with statistics
+```
+
+## math
+
+Apply mathematical function to image.
+
+```dart
+arithmeticBindings.math(input, output, VipsOperationMath.sin);
+```
+
+**Operations:** `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `log`, `log10`, `exp`, `exp10`

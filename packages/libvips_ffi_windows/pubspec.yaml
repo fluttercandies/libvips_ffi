@@ -4,6 +4,7 @@ version: 0.1.0+8.17.3
 homepage: https://github.com/fluttercandies/libvips_ffi
 repository: https://github.com/fluttercandies/libvips_ffi
 issue_tracker: https://github.com/fluttercandies/libvips_ffi/issues
+documentation: https://fluttercandies.github.io/libvips_ffi/
 
 topics:
   - image

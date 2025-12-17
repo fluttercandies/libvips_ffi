@@ -2,6 +2,8 @@
 
 High-level Dart API for libvips image processing library.
 
+📖 **[Documentation](https://fluttercandies.github.io/libvips_ffi/)** | 📖 **[中文文档](https://fluttercandies.github.io/libvips_ffi/zh-Hans/)**
+
 ## Features
 
 - **Pipeline-style API**: Chainable operations inspired by sharp (Node.js)

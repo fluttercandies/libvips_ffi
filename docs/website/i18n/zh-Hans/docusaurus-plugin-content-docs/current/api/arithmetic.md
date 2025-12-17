@@ -55,10 +55,11 @@ arithmeticBindings.divide(image1, image2, output);
 
 ## clamp
 
-将像素值限制在范围内。
+将像素值限制在 0-1 范围内。
 
 ```dart
-pipeline.clamp(min: 0, max: 255)
+// Pipeline API（限制到 0-1 范围）
+pipeline.clamp()
 ```
 
 ## stats

@@ -45,17 +45,8 @@ int resize(
 ### Pipeline API
 
 ```dart
-// By scale factor
-pipeline.resize(scale: 0.5)  // 50% size
-
-// By width (auto-calculate height)
-pipeline.resize(width: 800)
-
-// By height (auto-calculate width)
-pipeline.resize(height: 600)
-
-// By both (may change aspect ratio)
-pipeline.resize(width: 800, height: 600)
+// By scale factor (0.5 = 50% size, 2.0 = double size)
+pipeline.resize(0.5)
 ```
 
 ## thumbnail_image
@@ -81,11 +72,8 @@ int thumbnailImage(
 ### Pipeline API
 
 ```dart
-pipeline.thumbnail(
-  width: 200,
-  height: 200,
-  crop: VipsCrop.attention,  // Smart crop
-)
+// Create thumbnail with target width
+pipeline.thumbnail(200)
 ```
 
 ## rotate
@@ -111,7 +99,8 @@ int rotate(
 ### Pipeline API
 
 ```dart
-pipeline.rotate(angle: 45)  // Rotate 45 degrees clockwise
+// Rotate by angle in degrees (positive = counter-clockwise)
+pipeline.rotate(45)
 ```
 
 ## reduce

@@ -59,14 +59,11 @@ arithmeticBindings.divide(image1, image2, output);
 
 ## clamp
 
-Clamp pixel values to a range.
+Clamp pixel values to range 0-1.
 
 ```dart
-// Pipeline API
-pipeline.clamp(min: 0, max: 255)
-
-// Low-level binding
-arithmeticBindings.clamp(input, output, min, max);
+// Pipeline API (clamps to 0-1 range)
+pipeline.clamp()
 ```
 
 ## stats

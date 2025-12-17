@@ -25,17 +25,8 @@ sidebar_position: 2
 按比例因子缩放图像。
 
 ```dart
-// 按比例因子
-pipeline.resize(scale: 0.5)  // 50% 大小
-
-// 按宽度（自动计算高度）
-pipeline.resize(width: 800)
-
-// 按高度（自动计算宽度）
-pipeline.resize(height: 600)
-
-// 同时指定（可能改变宽高比）
-pipeline.resize(width: 800, height: 600)
+// 按比例因子 (0.5 = 缩小一半, 2.0 = 放大一倍)
+pipeline.resize(0.5)
 ```
 
 ## thumbnail_image
@@ -43,11 +34,8 @@ pipeline.resize(width: 800, height: 600)
 创建智能裁剪的缩略图。
 
 ```dart
-pipeline.thumbnail(
-  width: 200,
-  height: 200,
-  crop: VipsCrop.attention,  // 智能裁剪
-)
+// 创建指定宽度的缩略图
+pipeline.thumbnail(200)
 ```
 
 ## rotate
@@ -55,7 +43,8 @@ pipeline.thumbnail(
 按任意角度旋转图像。
 
 ```dart
-pipeline.rotate(angle: 45)  // 顺时针旋转 45 度
+// 按角度旋转（正值 = 逆时针）
+pipeline.rotate(45)
 ```
 
 ## reduce

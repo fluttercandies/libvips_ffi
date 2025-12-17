@@ -22,12 +22,8 @@ sidebar_position: 10
 使用结构元素应用形态学操作。
 
 ```dart
-morphologyBindings.morph(
-  input,
-  output,
-  mask,
-  VipsMorph.dilate,  // 或 .erode
-);
+// morph(input, output, mask, morphOp)
+morphologyBindings.morph(input, output, mask, VipsMorph.dilate.index);
 ```
 
 **操作：**
@@ -69,7 +65,8 @@ morphologyBindings.median(input, output, 3);  // 3x3 中值
 标记二值图像中的连通区域。
 
 ```dart
-final labeled = morphologyBindings.labelregions(input);
+// labelregions(input, maskOut)
+morphologyBindings.labelregions(input, maskOut);
 // 每个连通区域获得唯一的整数标签
 ```
 

@@ -32,15 +32,12 @@ Draw operations modify the image in-place. Make a copy first if you need to pres
 Draw a filled rectangle.
 
 ```dart
-drawBindings.drawRect(
-  image,
-  ink: [255, 0, 0],  // Red
-  left: 100,
-  top: 100,
-  width: 200,
-  height: 150,
-  fill: true,
-);
+// drawRect(image, ink, n, left, top, width, height)
+// ink: pointer to double array, n: number of values
+drawBindings.drawRect(image, inkPtr, 3, 100, 100, 200, 150);
+
+// drawRect1 for single value (grayscale)
+drawBindings.drawRect1(image, 255.0, 100, 100, 200, 150);
 ```
 
 ## drawCircle
@@ -48,14 +45,11 @@ drawBindings.drawRect(
 Draw a circle.
 
 ```dart
-drawBindings.drawCircle(
-  image,
-  ink: [0, 255, 0],  // Green
-  cx: 200,
-  cy: 200,
-  radius: 50,
-  fill: true,
-);
+// drawCircle(image, ink, n, cx, cy, radius)
+drawBindings.drawCircle(image, inkPtr, 3, 200, 200, 50);
+
+// drawCircle1 for single value
+drawBindings.drawCircle1(image, 255.0, 200, 200, 50);
 ```
 
 ## drawLine
@@ -63,14 +57,11 @@ drawBindings.drawCircle(
 Draw a line.
 
 ```dart
-drawBindings.drawLine(
-  image,
-  ink: [0, 0, 255],  // Blue
-  x1: 0,
-  y1: 0,
-  x2: 400,
-  y2: 300,
-);
+// drawLine(image, ink, n, x1, y1, x2, y2)
+drawBindings.drawLine(image, inkPtr, 3, 0, 0, 400, 300);
+
+// drawLine1 for single value
+drawBindings.drawLine1(image, 255.0, 0, 0, 400, 300);
 ```
 
 ## drawImage
@@ -78,13 +69,8 @@ drawBindings.drawLine(
 Composite another image onto this one.
 
 ```dart
-drawBindings.drawImage(
-  image,
-  sub: overlayImage,
-  x: 100,
-  y: 50,
-  mode: VipsCombineMode.set,
-);
+// drawImage(image, sub, x, y)
+drawBindings.drawImage(image, overlayImage, 100, 50);
 ```
 
 ## drawFlood
@@ -92,10 +78,9 @@ drawBindings.drawImage(
 Flood fill from a point.
 
 ```dart
-drawBindings.drawFlood(
-  image,
-  ink: [255, 255, 0],  // Yellow
-  x: 200,
-  y: 200,
-);
+// drawFlood(image, ink, n, x, y)
+drawBindings.drawFlood(image, inkPtr, 3, 200, 200);
+
+// drawFlood1 for single value
+drawBindings.drawFlood1(image, 255.0, 200, 200);
 ```

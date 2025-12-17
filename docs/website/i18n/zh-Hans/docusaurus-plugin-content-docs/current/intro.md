@@ -37,22 +37,22 @@ dependencies:
 ```dart
 import 'package:libvips_ffi/libvips_ffi.dart';
 
-void main() async {
+void main() {
   // 初始化 libvips
-  VipsCore.init();
+  initVips();
   
   // 使用 Pipeline 处理图像
   final result = VipsPipeline.fromFile('input.jpg')
-    .resize(width: 800)
-    .gaussianBlur(sigma: 1.5)
-    .rotate(angle: 90)
+    .resize(0.5)        // 缩放因子：0.5 = 缩小一半
+    .blur(1.5)          // 高斯模糊 sigma
+    .rotate(90)         // 旋转角度
     .toJpeg(quality: 85);
   
   // 保存到文件
   File('output.jpg').writeAsBytesSync(result);
   
   // 清理
-  VipsCore.shutdown();
+  shutdownVips();
 }
 ```
 

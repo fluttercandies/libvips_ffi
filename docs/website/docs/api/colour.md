@@ -85,14 +85,14 @@ int linear1(
 ### Pipeline API
 
 ```dart
-// Brightness adjustment
-pipeline.brightness(factor: 1.2)  // 20% brighter
+// Brightness adjustment (>1.0 = brighter)
+pipeline.brightness(1.2)
 
-// Contrast adjustment  
-pipeline.contrast(factor: 1.2)    // 20% more contrast
+// Contrast adjustment (>1.0 = more contrast)
+pipeline.contrast(1.2)
 
 // Combined
-pipeline.brightness(factor: 1.1).contrast(factor: 1.2)
+pipeline.brightness(1.1).contrast(1.2)
 ```
 
 ## invert
@@ -132,14 +132,3 @@ pipeline.grayscale()
 pipeline.colourspace(VipsInterpretation.bw)
 ```
 
-## saturation
-
-Adjust colour saturation.
-
-### Pipeline API
-
-```dart
-pipeline.saturation(factor: 1.5)  // More saturated
-pipeline.saturation(factor: 0.5)  // Less saturated
-pipeline.saturation(factor: 0)    // Grayscale
-```

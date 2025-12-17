@@ -24,7 +24,10 @@ sidebar_position: 3
 应用高斯模糊。
 
 ```dart
-pipeline.gaussianBlur(sigma: 2.0)
+// 高斯模糊（sigma 越大越模糊）
+pipeline.blur(2.0)
+// 或
+pipeline.gaussianBlur(2.0)
 ```
 
 **参数：**
@@ -37,7 +40,6 @@ pipeline.gaussianBlur(sigma: 2.0)
 
 ```dart
 pipeline.sharpen()
-pipeline.sharpen(sigma: 1.5)  // 自定义 sigma
 ```
 
 ## sobel

@@ -44,11 +44,11 @@ pipeline.colourspace(VipsInterpretation.bw)  // 灰度
 公式：`out = in * a + b`
 
 ```dart
-// 亮度调整
-pipeline.brightness(factor: 1.2)  // 增加 20% 亮度
+// 亮度调整 (>1.0 = 更亮)
+pipeline.brightness(1.2)
 
-// 对比度调整
-pipeline.contrast(factor: 1.2)    // 增加 20% 对比度
+// 对比度调整 (>1.0 = 更高对比度)
+pipeline.contrast(1.2)
 ```
 
 ## invert
@@ -69,12 +69,3 @@ pipeline.grayscale()
 pipeline.colourspace(VipsInterpretation.bw)
 ```
 
-## saturation
-
-调整颜色饱和度。
-
-```dart
-pipeline.saturation(factor: 1.5)  // 更饱和
-pipeline.saturation(factor: 0.5)  // 更不饱和
-pipeline.saturation(factor: 0)    // 灰度
-```

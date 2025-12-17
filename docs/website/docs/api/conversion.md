@@ -28,11 +28,8 @@ Image format and type conversion operations.
 Extract a rectangular region from an image.
 
 ```dart
-// Pipeline API
-pipeline.crop(x: 100, y: 100, width: 400, height: 300)
-
-// Low-level binding
-apiBindings.crop(input, output, left, top, width, height);
+// Pipeline API (left, top, width, height)
+pipeline.crop(100, 100, 400, 300)
 ```
 
 ## smartcrop
@@ -40,15 +37,8 @@ apiBindings.crop(input, output, left, top, width, height);
 Automatically crop to the most interesting region.
 
 ```dart
-// Pipeline API
-pipeline.smartCrop(
-  width: 400,
-  height: 300,
-  interesting: VipsInteresting.attention,
-)
-
-// Low-level binding
-apiBindings.smartcrop(input, output, width, height);
+// Pipeline API (width, height)
+pipeline.smartCrop(400, 300)
 ```
 
 **Interesting options:**

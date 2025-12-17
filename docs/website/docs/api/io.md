@@ -118,39 +118,17 @@ final webpBytes = pipeline.toWebp(quality: 90);
 ### JPEG
 
 ```dart
-pipeline.toJpeg(
-  quality: 85,        // 1-100
-  optimizeCoding: true,
-  interlace: false,   // Progressive JPEG
-  stripMetadata: true,
-);
+pipeline.toJpeg(quality: 85)  // quality: 1-100, default 75
 ```
 
 ### PNG
 
 ```dart
-pipeline.toPng(
-  compression: 6,     // 0-9
-  interlace: false,
-  palette: false,     // 8-bit palette mode
-);
+pipeline.toPng(compression: 6)  // compression: 0-9, default 6
 ```
 
 ### WebP
 
 ```dart
-pipeline.toWebp(
-  quality: 90,
-  lossless: false,
-  nearLossless: false,
-);
-```
-
-### TIFF
-
-```dart
-pipeline.toTiff(
-  compression: VipsTiffCompression.lzw,
-  predictor: VipsTiffPredictor.horizontal,
-);
+pipeline.toWebp(quality: 90, lossless: false)  // default quality: 75
 ```

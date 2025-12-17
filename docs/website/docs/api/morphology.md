@@ -22,12 +22,8 @@ Morphological operations for image processing.
 Apply morphological operation with a structuring element.
 
 ```dart
-morphologyBindings.morph(
-  input,
-  output,
-  mask,
-  VipsMorph.dilate,  // or .erode
-);
+// morph(input, output, mask, morphOp)
+morphologyBindings.morph(input, output, mask, VipsMorph.dilate.index);
 ```
 
 **Operations:**
@@ -67,7 +63,8 @@ morphologyBindings.median(input, output, 3);  // 3x3 median
 Label connected regions in a binary image.
 
 ```dart
-final labeled = morphologyBindings.labelregions(input);
+// labelregions(input, maskOut)
+morphologyBindings.labelregions(input, maskOut);
 // Each connected region gets a unique integer label
 ```
 

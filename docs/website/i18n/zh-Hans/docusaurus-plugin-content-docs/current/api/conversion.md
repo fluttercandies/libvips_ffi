@@ -26,7 +26,8 @@ sidebar_position: 6
 从图像中提取矩形区域。
 
 ```dart
-pipeline.crop(x: 100, y: 100, width: 400, height: 300)
+// (left, top, width, height)
+pipeline.crop(100, 100, 400, 300)
 ```
 
 ## smartcrop
@@ -34,11 +35,8 @@ pipeline.crop(x: 100, y: 100, width: 400, height: 300)
 自动裁剪到最有趣的区域。
 
 ```dart
-pipeline.smartCrop(
-  width: 400,
-  height: 300,
-  interesting: VipsInteresting.attention,
-)
+// (width, height)
+pipeline.smartCrop(400, 300)
 ```
 
 **Interesting 选项：**

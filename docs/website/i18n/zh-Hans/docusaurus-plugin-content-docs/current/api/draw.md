@@ -27,15 +27,11 @@ sidebar_position: 9
 绘制填充矩形。
 
 ```dart
-drawBindings.drawRect(
-  image,
-  ink: [255, 0, 0],  // 红色
-  left: 100,
-  top: 100,
-  width: 200,
-  height: 150,
-  fill: true,
-);
+// drawRect(image, ink, n, left, top, width, height)
+drawBindings.drawRect(image, inkPtr, 3, 100, 100, 200, 150);
+
+// drawRect1 单值（灰度）
+drawBindings.drawRect1(image, 255.0, 100, 100, 200, 150);
 ```
 
 ## drawCircle
@@ -43,14 +39,8 @@ drawBindings.drawRect(
 绘制圆形。
 
 ```dart
-drawBindings.drawCircle(
-  image,
-  ink: [0, 255, 0],  // 绿色
-  cx: 200,
-  cy: 200,
-  radius: 50,
-  fill: true,
-);
+// drawCircle(image, ink, n, cx, cy, radius)
+drawBindings.drawCircle(image, inkPtr, 3, 200, 200, 50);
 ```
 
 ## drawLine
@@ -58,14 +48,8 @@ drawBindings.drawCircle(
 绘制线条。
 
 ```dart
-drawBindings.drawLine(
-  image,
-  ink: [0, 0, 255],  // 蓝色
-  x1: 0,
-  y1: 0,
-  x2: 400,
-  y2: 300,
-);
+// drawLine(image, ink, n, x1, y1, x2, y2)
+drawBindings.drawLine(image, inkPtr, 3, 0, 0, 400, 300);
 ```
 
 ## drawImage
@@ -73,13 +57,8 @@ drawBindings.drawLine(
 将另一个图像合成到此图像上。
 
 ```dart
-drawBindings.drawImage(
-  image,
-  sub: overlayImage,
-  x: 100,
-  y: 50,
-  mode: VipsCombineMode.set,
-);
+// drawImage(image, sub, x, y)
+drawBindings.drawImage(image, overlayImage, 100, 50);
 ```
 
 ## drawFlood
@@ -87,10 +66,6 @@ drawBindings.drawImage(
 从一点开始洪水填充。
 
 ```dart
-drawBindings.drawFlood(
-  image,
-  ink: [255, 255, 0],  // 黄色
-  x: 200,
-  y: 200,
-);
+// drawFlood(image, ink, n, x, y)
+drawBindings.drawFlood(image, inkPtr, 3, 200, 200);
 ```

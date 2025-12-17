@@ -42,7 +42,10 @@ int gaussblur(
 ### Pipeline API
 
 ```dart
-pipeline.gaussianBlur(sigma: 2.0)
+// Gaussian blur with sigma (higher = more blur)
+pipeline.blur(2.0)
+// or
+pipeline.gaussianBlur(2.0)
 ```
 
 **Parameters:**
@@ -71,7 +74,6 @@ int sharpen(
 
 ```dart
 pipeline.sharpen()
-pipeline.sharpen(sigma: 1.5)  // Custom sigma
 ```
 
 ## sobel

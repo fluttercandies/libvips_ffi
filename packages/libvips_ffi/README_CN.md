@@ -208,6 +208,7 @@ dart run ffigen --config ffigen.yaml
 这些预编译二进制由对应的上游仓库通过 GitHub Actions 自动构建并发布（见上文链接）。
 
 上游构建仓库链接：
+
 - Android: [MobiPkg/Compile 构建运行](https://github.com/MobiPkg/Compile/actions/runs/20085520935)
 - iOS: [libvips_precompile_mobile 构建运行](https://github.com/CaiJingLong/libvips_precompile_mobile/actions/runs/19779932583)
 

@@ -699,6 +699,7 @@ class _CollagePageState extends State<CollagePage> {
     return (color.red << 16) | (color.green << 8) | color.blue;
   }
 
+  // ignore: unused_element
   void _showExportPreview() {
     if (_exportedData == null) return;
     

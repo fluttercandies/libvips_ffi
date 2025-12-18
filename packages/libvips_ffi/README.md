@@ -192,6 +192,7 @@ For transparency, the original build / prebuilt locations of the native librarie
 These precompiled binaries are built and published via GitHub Actions in the linked repositories above.
 
 Upstream build repository links:
+
 - Android: [MobiPkg/Compile build run](https://github.com/MobiPkg/Compile/actions/runs/20085520935)
 - iOS: [libvips_precompile_mobile build run](https://github.com/CaiJingLong/libvips_precompile_mobile/actions/runs/19779932583)
 

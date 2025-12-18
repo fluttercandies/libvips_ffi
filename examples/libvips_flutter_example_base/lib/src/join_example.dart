@@ -274,6 +274,7 @@ extension RenderRepaintBoundaryExt on RenderRepaintBoundary {
       throw ArgumentError.value(chunkRect, 'chunkSize', '宽度和高度必须小于等于size');
     }
 
+    // ignore: invalid_use_of_protected_member
     final OffsetLayer offsetLayer = layer! as OffsetLayer;
     return offsetLayer.toImage(chunkRect, pixelRatio: pixelRatio);
   }

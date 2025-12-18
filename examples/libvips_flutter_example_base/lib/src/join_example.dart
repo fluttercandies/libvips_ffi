@@ -124,8 +124,9 @@ class _JoinExamplePageState extends State<JoinExamplePage> {
             final renderObject = buildContext.findRenderObject();
             if (renderObject is RenderRepaintBoundary) {
               ImageFormat imageFormat = ImageFormat.jpeg;
-              final fileName = '${DateTime.now().millisecondsSinceEpoch}.${imageFormat.name == 'jpeg' ? 'jpg' : imageFormat.name}';
-              
+              final fileName =
+                  '${DateTime.now().millisecondsSinceEpoch}.${imageFormat.name == 'jpeg' ? 'jpg' : imageFormat.name}';
+
               // Get output path based on platform
               String path;
               if (Platform.isAndroid) {
@@ -197,55 +198,58 @@ extension RenderRepaintBoundaryExt on RenderRepaintBoundary {
     }
     int timeTotal = DateTime.now().millisecondsSinceEpoch;
     int chunkIndex = 0;
-    final tempFiles = <File>[];
-    final tempDir = await getTemporaryDirectory();
-    
-    // Step 1: Capture all chunks and save to temp files (must be on main thread for UI access)
+    final chunkDataList = <({Uint8List data, int width, int height})>[];
+
+    // Step 1: Capture all chunks as raw RGBA (no PNG encoding overhead)
     for (final chunkRect in chunksRect) {
       _log('Processing chunk $chunkIndex: $chunkRect');
       final ui.Image chunkImage =
           await toImageChunks(chunkRect: chunkRect, pixelRatio: pixelRatio);
-      _log('Chunk $chunkIndex image size: ${chunkImage.width}x${chunkImage.height}');
+      _log(
+          'Chunk $chunkIndex image size: ${chunkImage.width}x${chunkImage.height}');
       ByteData? byteData =
-          await chunkImage.toByteData(format: ui.ImageByteFormat.png);
+          await chunkImage.toByteData(format: ui.ImageByteFormat.rawRgba);
       Uint8List imageBytes = byteData!.buffer.asUint8List();
-      
-      final tempFile = File('$tempDir/chunk_$chunkIndex.png');
-      await tempFile.writeAsBytes(imageBytes);
-      tempFiles.add(tempFile);
-      _log('Chunk $chunkIndex saved to ${tempFile.path}');
+
+      chunkDataList.add((
+        data: imageBytes,
+        width: chunkImage.width,
+        height: chunkImage.height,
+      ));
+      _log('Chunk $chunkIndex captured: ${imageBytes.length} bytes');
       chunkIndex++;
     }
-    
-    if (tempFiles.isEmpty) {
+
+    if (chunkDataList.isEmpty) {
       return false;
     }
-    _log('Saved ${tempFiles.length} chunk files');
-    
+    _log('Captured ${chunkDataList.length} chunks as raw RGBA');
+
     try {
-      if (tempFiles.length == 1) {
-        // Single chunk - just copy the file
-        await tempFiles.first.copy(outPath);
-        _log('Single chunk copied to output');
-      } else {
-        // Multiple chunks - use JoinPipelineSpec
-        _log('Running JoinPipelineSpec...');
+      if (chunkDataList.length == 1) {
+        final chunk = chunkDataList.first;
         final spec = JoinPipelineSpec()
-          .addInputPaths(tempFiles.map((f) => f.path).toList())
-          .vertical()
-          .outputAs(OutputSpec(imageFormat == ImageFormat.png ? '.png' : '.jpg'));
-        
+            .addInputRawRgba(chunk.data, chunk.width, chunk.height)
+            .outputPng();
+
+        await VipsPipelineCompute.executeJoinToFile(spec, outPath);
+
+        _log('Single chunk saved to output');
+      } else {
+        _log('Running JoinPipelineSpec with raw RGBA...');
+        final spec = JoinPipelineSpec();
+        for (final chunk in chunkDataList) {
+          spec.addInputRawRgba(chunk.data, chunk.width, chunk.height);
+        }
+        spec.vertical().outputAs(
+            OutputSpec(imageFormat == ImageFormat.png ? '.png' : '.jpg'));
+
         await VipsPipelineCompute.executeJoinToFile(spec, outPath);
         _log('JoinPipelineSpec completed successfully');
       }
     } catch (e, stack) {
       _log('Error: $e\n$stack');
       rethrow;
-    } finally {
-      // Clean up temp files
-      for (final f in tempFiles) {
-        try { await f.delete(); } catch (_) {}
-      }
     }
     _log('totalTime:${DateTime.now().millisecondsSinceEpoch - timeTotal}');
     return true;

@@ -44,6 +44,41 @@ class VipsImg {
     }
   }
 
+  /// Load image from raw RGBA/RGB memory data.
+  /// 
+  /// [data] Raw pixel data in row-major order (RGBARGBA... or RGBRGB...)
+  /// [width] Image width in pixels
+  /// [height] Image height in pixels
+  /// [bands] Number of channels (3 for RGB, 4 for RGBA)
+  /// 
+  /// Note: The buffer data is copied by libvips internally.
+  factory VipsImg.fromRawRgba(Uint8List data, int width, int height, int bands) {
+    clearVipsError();
+    final expectedSize = width * height * bands;
+    if (data.length != expectedSize) {
+      throw ArgumentError(
+        'Data size mismatch: expected $expectedSize bytes (${width}x${height}x$bands), got ${data.length}',
+      );
+    }
+    final dataPtr = calloc<ffi.Uint8>(data.length);
+    dataPtr.asTypedList(data.length).setAll(0, data);
+    final ptr = vipsBindings.vips_image_new_from_memory_copy(
+      dataPtr.cast(),
+      data.length,
+      width,
+      height,
+      bands,
+      VipsBandFormat.VIPS_FORMAT_UCHAR,
+    );
+    calloc.free(dataPtr);
+    if (ptr == ffi.nullptr) {
+      throw VipsApiException(
+        'Failed to create image from raw RGBA. ${getVipsError() ?? "Unknown error"}',
+      );
+    }
+    return VipsImg._(ptr);
+  }
+
   /// Load image from buffer.
   /// 
   /// Note: The buffer data is copied to native memory and kept alive until

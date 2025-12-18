@@ -24,10 +24,19 @@ class JoinInputPath extends JoinInput {
   const JoinInputPath(this.path);
 }
 
-/// Input from buffer data.
+/// Input from buffer data (encoded image like PNG/JPEG).
 class JoinInputBuffer extends JoinInput {
   final Uint8List data;
   const JoinInputBuffer(this.data);
+}
+
+/// Input from raw RGBA/RGB memory data.
+class JoinInputRawRgba extends JoinInput {
+  final Uint8List data;
+  final int width;
+  final int height;
+  final int bands;
+  const JoinInputRawRgba(this.data, this.width, this.height, {this.bands = 4});
 }
 
 /// Serializable specification for joining multiple images.
@@ -59,9 +68,20 @@ class JoinPipelineSpec {
     return this;
   }
 
-  /// Add input image from buffer data.
+  /// Add input image from buffer data (encoded image like PNG/JPEG).
   JoinPipelineSpec addInputBuffer(Uint8List data) {
     _inputs.add(JoinInputBuffer(data));
+    return this;
+  }
+
+  /// Add input image from raw RGBA/RGB memory data.
+  /// 
+  /// [data] Raw pixel data in row-major order
+  /// [width] Image width in pixels
+  /// [height] Image height in pixels
+  /// [bands] Number of channels (3 for RGB, 4 for RGBA, default 4)
+  JoinPipelineSpec addInputRawRgba(Uint8List data, int width, int height, {int bands = 4}) {
+    _inputs.add(JoinInputRawRgba(data, width, height, bands: bands));
     return this;
   }
 
@@ -135,6 +155,8 @@ class JoinPipelineSpec {
       final img = switch (input) {
         JoinInputPath(:final path) => VipsImg.fromFile(path),
         JoinInputBuffer(:final data) => VipsImg.fromBuffer(data),
+        JoinInputRawRgba(:final data, :final width, :final height, :final bands) => 
+          VipsImg.fromRawRgba(data, width, height, bands),
       };
 
       if (pipeline == null) {
@@ -162,6 +184,8 @@ class JoinPipelineSpec {
       final img = switch (input) {
         JoinInputPath(:final path) => VipsImg.fromFile(path),
         JoinInputBuffer(:final data) => VipsImg.fromBuffer(data),
+        JoinInputRawRgba(:final data, :final width, :final height, :final bands) => 
+          VipsImg.fromRawRgba(data, width, height, bands),
       };
 
       if (pipeline == null) {

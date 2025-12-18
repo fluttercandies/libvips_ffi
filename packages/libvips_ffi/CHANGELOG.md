@@ -11,6 +11,23 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## 0.1.2+8.16.0
+
+### 🚀 Features
+
+- Added LibvipsFfiPlugin.swift for iOS platform integration
+
+### 💥 Breaking Changes
+
+- Renamed liblibvips.a to libvips.a in iOS framework configuration
+- Updated podspec configuration for static library linking
+
+### ⬆️ Dependencies
+
+- Modified iOS libvips_ffi.podspec with updated library configurations
+- Added system libraries iconv and resolv to dependencies
+- Updated linking configuration for iOS simulator and device builds
+
 ## 0.1.1+8.16.0
 
 ### Added
